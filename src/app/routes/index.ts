@@ -7,6 +7,7 @@ import { cookRoutes } from "../modules/Cook/cook.route";
 import { freelanceRoutes } from "../modules/FreelanceAggrement/freelanceAggrement.route";
 import { selfResRoutes } from "../modules/SelfResponsibility/selfResponsibility.route";
 import { hygienceCourseRoutes } from "../modules/HygieneCourses/course.route";
+import { verifyCookIdRoutes } from "../modules/VerifyCookId/verifyCook.route";
 
 const router = Router();
 
@@ -42,6 +43,10 @@ const moduleRoutes = [
   {
     path: "/courses",
     route: hygienceCourseRoutes,
+  },
+  {
+    path: "/cook-verify",
+    route: verifyCookIdRoutes,
   },
 ];
 

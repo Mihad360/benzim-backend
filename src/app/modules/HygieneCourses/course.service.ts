@@ -1,7 +1,7 @@
 import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
 import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
-import { Course } from "./course.interface";
+import { Course, Quiz } from "./course.interface";
 import CourseModel from "./course.model";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { UserModel } from "../User/user.model";
@@ -68,7 +68,39 @@ const getCourses = async (user: JwtPayload, query: Record<string, unknown>) => {
   return { meta, result };
 };
 
+const addQuizes = async (courseData: Course) => {
+  try {
+    // Check if the courseData and quizzes are provided
+    if (!courseData || !courseData.quizzes || courseData.quizzes.length === 0) {
+      throw new Error("Invalid course data or quizzes");
+    }
+
+    // Validate each quiz
+    courseData.quizzes.forEach((quiz) => {
+      if (
+        !quiz.question ||
+        !quiz.questionType ||
+        !quiz.options ||
+        quiz.options.length === 0
+      ) {
+        throw new Error(
+          "Each quiz must contain a question, questionType, and options",
+        );
+      }
+    });
+
+    // Create a new course with the provided course data (which includes quizzes)
+    const newCourse = await CourseModel.create(courseData);
+
+    return newCourse; // Return the newly created course document
+  } catch (error) {
+    console.error("Error creating course and quizzes:", error);
+    throw new AppError(HttpStatus.BAD_REQUEST, "Something went wrong");
+  }
+};
+
 export const courseServices = {
   addCourse,
   getCourses,
+  addQuizes,
 };

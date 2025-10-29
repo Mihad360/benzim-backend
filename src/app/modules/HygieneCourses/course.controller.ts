@@ -29,7 +29,19 @@ const getCourses = catchAsync(async (req, res) => {
   });
 });
 
+const addQuizes = catchAsync(async (req, res) => {
+  const result = await courseServices.addQuizes(req.body);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    data: result,
+  });
+});
+
 export const courseControllers = {
   addCourse,
   getCourses,
+  addQuizes,
 };

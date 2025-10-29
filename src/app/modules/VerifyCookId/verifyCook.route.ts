@@ -1,23 +1,24 @@
 import express, { NextFunction, Request, Response } from "express";
 import auth from "../../middlewares/auth";
+import { verifyCookIdControllers } from "./verifyCook.controller";
 import { upload } from "../../utils/sendImageToCloudinary";
-import { courseControllers } from "./course.controller";
 
 const router = express.Router();
 
-router.get("/", auth("admin", "cook"), courseControllers.getCourses);
-router.post("/add-quiz", auth("admin"), courseControllers.addQuizes);
 router.post(
-  "/add-hygiene-course",
-  auth("admin"),
-  upload.array("files"),
+  "/verify-cook-id",
+  auth("cook"),
+  upload.fields([
+    { name: "validIdImage", maxCount: 1 }, // Field for valid ID image
+    { name: "selfieImage", maxCount: 1 }, // Field for selfie image
+  ]),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {
       req.body = JSON.parse(req.body.data);
     }
     next();
   },
-  courseControllers.addCourse,
+  verifyCookIdControllers.addSelfResRules,
 );
 
-export const hygienceCourseRoutes = router;
+export const verifyCookIdRoutes = router;
