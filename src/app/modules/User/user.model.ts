@@ -26,6 +26,7 @@ const userSchema = new Schema<IUser, UserInterface>(
     klzhNumberExpiry: { type: Date, default: null },
     isSelfResContract: { type: Boolean, default: false },
     isHygiened: { type: Boolean, default: false },
+    isCookIdVerified: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

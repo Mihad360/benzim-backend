@@ -67,6 +67,19 @@ const verifyIdentity = async (
           "Something went wrong during verify",
         );
       }
+      const updateUser = await UserModel.findByIdAndUpdate(
+        userId,
+        { isCookIdVerified: true },
+        { new: true }, // To return the updated document
+      );
+
+      // Check if update was successful
+      if (!updateUser) {
+        throw new AppError(
+          HttpStatus.BAD_REQUEST,
+          "Failed to update user verification status",
+        );
+      }
       return result;
     } catch (error) {
       // Handle any errors from Cloudinary upload

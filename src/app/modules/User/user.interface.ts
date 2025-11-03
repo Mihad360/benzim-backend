@@ -20,6 +20,7 @@ export interface IUser {
   klzhNumberExpiry?: Date;
   isSelfResContract: boolean;
   isHygiened?: boolean;
+  isCookIdVerified: boolean;
 }
 
 export interface UserInterface extends Model<IUser> {

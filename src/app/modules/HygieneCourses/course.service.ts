@@ -1,7 +1,7 @@
 import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
 import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
-import { Course, Quiz } from "./course.interface";
+import { Course } from "./course.interface";
 import CourseModel from "./course.model";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { UserModel } from "../User/user.model";

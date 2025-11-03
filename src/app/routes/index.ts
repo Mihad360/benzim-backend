@@ -8,6 +8,9 @@ import { freelanceRoutes } from "../modules/FreelanceAggrement/freelanceAggremen
 import { selfResRoutes } from "../modules/SelfResponsibility/selfResponsibility.route";
 import { hygienceCourseRoutes } from "../modules/HygieneCourses/course.route";
 import { verifyCookIdRoutes } from "../modules/VerifyCookId/verifyCook.route";
+import { mealRoutes } from "../modules/Meal/meal.route";
+import { orderRoutes } from "../modules/Order/order.route";
+import { categoryRoutes } from "../modules/Category/category.route";
 
 const router = Router();
 
@@ -47,6 +50,18 @@ const moduleRoutes = [
   {
     path: "/cook-verify",
     route: verifyCookIdRoutes,
+  },
+  {
+    path: "/meal",
+    route: mealRoutes,
+  },
+  {
+    path: "/order",
+    route: orderRoutes,
+  },
+  {
+    path: "/category",
+    route: categoryRoutes,
   },
 ];
 

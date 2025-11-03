@@ -1,0 +1,64 @@
+import mongoose, { model, Schema } from "mongoose";
+import { IMeal } from "./meal.interface";
+
+const mealSchema = new mongoose.Schema<IMeal>(
+  {
+    cookId: { type: Schema.Types.ObjectId, ref: "Cook" },
+    mealName: { type: String, required: true },
+    description: { type: String, required: true },
+    availablePortion: { type: Number, required: true },
+    // dietaryCategories: {
+    //   type: [
+    //     {
+    //       type: String,
+    //       enum: ["Vegan", "Halal", "Gluten Free", "Vegetarian"],
+    //     },
+    //   ],
+    //   default: [],
+    // },
+    dietaryCategories: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
+    category: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
+    fitnessFlow: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
+    cheatFlow: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
+
+    timeForOrder: String,
+    timeForPickUpFood: String,
+    pricePerPortion: { type: Number, required: true },
+    servedWarm: {
+      type: String,
+      enum: ["Warm", "Cold"],
+      default: "Warm",
+    },
+    coldReheatPrice: { type: Number, default: 0 },
+    ingredients: { type: [String], default: [] },
+    allergyInformation: { type: String, default: "" },
+    price: { type: Number, required: true },
+    location: { type: String, default: "" },
+    pickUpTime: { type: String, default: "" },
+    offer: { type: String, default: "" },
+    imageUrls: { type: [String], default: [] },
+  },
+  { timestamps: true },
+);
+
+export const MealModel = model<IMeal>("Meal", mealSchema);
