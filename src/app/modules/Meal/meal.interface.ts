@@ -7,14 +7,14 @@ export interface IMeal {
   description: string;
   imageUrls?: string[];
   availablePortion: number;
-  //   dietaryCategories: ("Vegan" | "Halal" | "Gluten Free" | "Vegetarian")[];
-  dietaryCategories: Types.ObjectId[];
-  //   category: "Main" | "Dessert" | "Snacks" | "Drinks";
-  category: Types.ObjectId[];
-  //   fitnessFlow: "Protein" | "Low Carb" | "Smoothies";
-  fitnessFlow: Types.ObjectId[];
-  //   cheatFlow: "Comfort" | "Sweet" | "Street Food";
-  cheatFlow: Types.ObjectId[];
+  dietaryCategories: "Vegan" | "Halal" | "Gluten Free" | "Vegetarian";
+  //   dietaryCategories: Types.ObjectId[];
+  category: "Main" | "Dessert" | "Snacks" | "Drinks";
+  //   category: Types.ObjectId[];
+  fitnessFlow: "Protein" | "Low Carb" | "Smoothies";
+  //   fitnessFlow: Types.ObjectId[];
+  cheatFlow: "Comfort" | "Sweet" | "Street Food";
+  //   cheatFlow: Types.ObjectId[];
   timeForOrder?: string; // e.g. "9 AM - 12 PM"
   timeForPickUpFood?: string; // e.g. "6 PM - 8:30 PM"
   pricePerPortion: number;

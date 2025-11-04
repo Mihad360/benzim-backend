@@ -25,77 +25,148 @@ export const orderSearchTerms: string[] = [
 const orderMeal = async (mealId: string, payload: IOrder, user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
 
-  // 🧩 1️⃣ Check if user exists
+  // 🧩 1️⃣ Validate user
   const isUserExist = await UserModel.findById(userId);
   if (!isUserExist) {
     throw new AppError(HttpStatus.NOT_FOUND, "User not found");
   }
 
-  // 🧩 2️⃣ Check if meal exists
+  // 🧩 2️⃣ Validate meal
   const meal = await MealModel.findById(mealId);
   if (!meal) {
     throw new AppError(HttpStatus.NOT_FOUND, "Meal not found");
   }
 
-  // 🧩 3️⃣ Find the cook (from meal)
+  // 🧩 3️⃣ Find cook
   const cook = await CookProfileModel.findById(meal.cookId);
   if (!cook) {
     throw new AppError(HttpStatus.NOT_FOUND, "Cook not found for this meal");
   }
 
-  // 🧩 4️⃣ Calculate total price
-  const totalPrice = meal.pricePerPortion * payload.quantity;
-  const orderId = await generateOrderId();
-  payload.orderId = orderId;
+  // 🧩 4️⃣ Check if this user already has an active order for the same meal
+  const existingOrder = await OrderModel.findOne({
+    userId: isUserExist._id,
+    mealId: meal._id,
+    cookId: cook._id,
+    isDeleted: false,
+  });
 
-  // 🧩 5️⃣ Create the order
+  if (existingOrder) {
+    // 🔄 Update existing order
+    existingOrder.quantity += payload.quantity || 1;
+    existingOrder.totalPrice = meal.price * existingOrder.quantity;
+    await existingOrder.save();
+    return existingOrder;
+  }
+
+  // 🆕 Otherwise, create a new order
+  const orderId = await generateOrderId();
   const newOrder = await OrderModel.create({
-    ...payload,
+    orderId,
     userId: isUserExist._id,
     cookId: cook._id,
     mealId: meal._id,
-    quantity: payload.quantity,
-    totalPrice,
-    paymentMethod: payload.paymentMethod || "online",
+    quantity: payload.quantity || 1,
+    totalPrice: meal.price * (payload.quantity || 1),
     pickUpDate: payload.pickUpDate || "Today",
     pickUpTime: payload.pickUpTime || meal.pickUpTime || "",
     specialInstructions: payload.specialInstructions || "",
-    statusHistory: {
-      status: "new",
-      changedAt: new Date(),
-    },
+    statusHistory: [
+      {
+        status: "new",
+        changedAt: new Date(),
+      },
+    ],
   });
 
   return newOrder;
 };
 
+const excludeAoRder = async (mealId: string, user: JwtPayload) => {
+  const userId = new Types.ObjectId(user.user);
+
+  // 1️⃣ Validate user
+  const userExist = await UserModel.findById(userId);
+  if (!userExist) {
+    throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+  }
+
+  // 2️⃣ Validate meal
+  const meal = await MealModel.findById(mealId);
+  if (!meal) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Meal not found");
+  }
+
+  // 3️⃣ Validate cook
+  const cook = await CookProfileModel.findById(meal.cookId);
+  if (!cook) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Cook not found for this meal");
+  }
+
+  // 4️⃣ Find existing active order
+  const existingOrder = await OrderModel.findOne({
+    userId: userExist._id,
+    mealId: meal._id,
+    cookId: cook._id,
+    isDeleted: false,
+  });
+
+  // ❌ If no order found
+  if (!existingOrder) {
+    throw new AppError(HttpStatus.BAD_REQUEST, "No existing order to exclude");
+  }
+
+  // Additional safety check
+  if (existingOrder.quantity >= 1) {
+    existingOrder.quantity -= 1;
+    existingOrder.totalPrice = meal.price * existingOrder.quantity;
+    await existingOrder.save();
+  } else {
+    // Handle case where quantity is already 0
+    throw new AppError(HttpStatus.BAD_REQUEST, "Order quantity is already 0");
+  }
+
+  return { message: "Order quantity decreased", order: existingOrder };
+};
+
 const getOrders = async (user: JwtPayload, query: Record<string, unknown>) => {
   const userId = new Types.ObjectId(user.user);
   const isUserExist = await UserModel.findById(userId);
+
   if (!isUserExist) {
     throw new AppError(HttpStatus.NOT_FOUND, "User not found");
   }
-  const isCookExist = await CookProfileModel.findOne({
-    userId: isUserExist._id,
-  });
-  if (!isCookExist) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
+
+  let orderQuery;
+
+  if (isUserExist.role === "cook") {
+    const isCookExist = await CookProfileModel.findOne({
+      userId: isUserExist._id,
+    });
+    if (!isCookExist) {
+      throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
+    }
+    orderQuery = OrderModel.find({ cookId: isCookExist._id, isDeleted: false });
+  } else if (isUserExist.role === "user") {
+    orderQuery = OrderModel.find({ userId: isUserExist._id, isDeleted: false });
+  } else {
+    throw new AppError(HttpStatus.FORBIDDEN, "Invalid user role");
   }
-  const orders = new QueryBuilder(
-    OrderModel.find({ cookId: isCookExist._id, isDeleted: false }),
-    query,
-  )
+
+  const orders = new QueryBuilder(orderQuery, query)
     .search(orderSearchTerms)
     .filter()
     .fields()
     .paginate()
     .sort();
 
-  if (!orders) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Orders not found");
-  }
   const meta = await orders.countTotal();
   const result = await orders.modelQuery;
+
+  if (!result || result.length === 0) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Orders not found");
+  }
+
   return { meta, result };
 };
 
@@ -125,8 +196,19 @@ const updateOrderStatus = async (
   return updatedOrder;
 };
 
+const removeOrder = async (orderId: string) => {
+  const order = new Types.ObjectId(orderId);
+  const result = await OrderModel.findByIdAndDelete(order);
+  if (!result) {
+    throw new AppError(HttpStatus.BAD_REQUEST, "Delete failed");
+  }
+  return { message: "deleted successfully" };
+};
+
 export const orderServices = {
   orderMeal,
   getOrders,
   updateOrderStatus,
+  removeOrder,
+  excludeAoRder,
 };

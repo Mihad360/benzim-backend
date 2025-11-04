@@ -7,39 +7,49 @@ const mealSchema = new mongoose.Schema<IMeal>(
     mealName: { type: String, required: true },
     description: { type: String, required: true },
     availablePortion: { type: Number, required: true },
-    // dietaryCategories: {
-    //   type: [
-    //     {
-    //       type: String,
-    //       enum: ["Vegan", "Halal", "Gluten Free", "Vegetarian"],
-    //     },
-    //   ],
-    //   default: [],
-    // },
-    dietaryCategories: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Category",
-      },
-    ],
-    category: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Category",
-      },
-    ],
-    fitnessFlow: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Category",
-      },
-    ],
-    cheatFlow: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Category",
-      },
-    ],
+    dietaryCategories: {
+      type: String,
+      enum: ["Vegan", "Halal", "Gluten Free", "Vegetarian"],
+    },
+    category: {
+      type: String,
+      enum: ["Main", "Dessert", "Snacks", "Drinks"],
+      required: true,
+    },
+    fitnessFlow: {
+      type: String,
+      enum: ["Protein", "Low Carb", "Smoothies"],
+      default: "Protein",
+    },
+    cheatFlow: {
+      type: String,
+      enum: ["Comfort", "Sweet", "Street Food"],
+      default: "Comfort",
+    },
+    // dietaryCategories: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Category",
+    //   },
+    // ],
+    // category: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Category",
+    //   },
+    // ],
+    // fitnessFlow: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Category",
+    //   },
+    // ],
+    // cheatFlow: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Category",
+    //   },
+    // ],
 
     timeForOrder: String,
     timeForPickUpFood: String,

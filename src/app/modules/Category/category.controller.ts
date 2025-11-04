@@ -16,6 +16,20 @@ const addCategory = catchAsync(async (req, res) => {
   });
 });
 
+const getCategories = catchAsync(async (req, res) => {
+  const user = req.user as JwtPayload;
+  const result = await categoryServices.getCategories(user, req.query);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    meta: result.meta,
+    data: result.result,
+  });
+});
+
 export const categoryControllers = {
   addCategory,
+  getCategories,
 };

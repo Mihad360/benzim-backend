@@ -17,6 +17,19 @@ const orderMeal = catchAsync(async (req, res) => {
   });
 });
 
+const excludeAoRder = catchAsync(async (req, res) => {
+  const user = req.user as JwtPayload;
+  const id = req.params.mealId;
+  const result = await orderServices.excludeAoRder(id, user);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    data: result,
+  });
+});
+
 const getOrders = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;
   const result = await orderServices.getOrders(user, req.query);
@@ -42,8 +55,22 @@ const updateOrderStatus = catchAsync(async (req, res) => {
   });
 });
 
+const removeOrder = catchAsync(async (req, res) => {
+  const id = req.params.orderId;
+  const result = await orderServices.removeOrder(id);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    data: result,
+  });
+});
+
 export const orderControllers = {
   orderMeal,
   getOrders,
   updateOrderStatus,
+  removeOrder,
+  excludeAoRder,
 };

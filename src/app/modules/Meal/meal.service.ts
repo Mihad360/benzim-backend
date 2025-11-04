@@ -26,7 +26,7 @@ export const MEAL_SEARCHABLE_FIELDS = [
   "price",
   "location",
   "pickUpTime",
-  "offer"
+  "offer",
 ];
 
 const addMeal = async (
@@ -76,7 +76,7 @@ const addMeal = async (
           imageUrls.push(uploadResult.secure_url);
         }
       } catch (error) {
-        console.error("Cloudinary upload error:", error); 
+        console.error("Cloudinary upload error:", error);
         throw new AppError(
           HttpStatus.INTERNAL_SERVER_ERROR,
           "Error uploading image to Cloudinary",
@@ -95,21 +95,44 @@ const addMeal = async (
 const getMyMeals = async (user: JwtPayload, query: Record<string, unknown>) => {
   const userId = new Types.ObjectId(user.user);
   const isUserExist = await UserModel.findById(userId);
+
   if (!isUserExist) {
     throw new AppError(HttpStatus.NOT_FOUND, "User not found");
   }
-  const meals = new QueryBuilder(MealModel.find(), query)
+
+  let mealQuery;
+
+  if (isUserExist.role === "cook") {
+    const isCookExist = await CookProfileModel.findOne({
+      userId: isUserExist._id,
+    });
+    if (!isCookExist) {
+      throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
+    }
+
+    // Cook → only their meals
+    mealQuery = MealModel.find({ cookId: isCookExist._id });
+  } else if (isUserExist.role === "user") {
+    // User → all meals
+    mealQuery = MealModel.find();
+  } else {
+    throw new AppError(HttpStatus.FORBIDDEN, "Invalid user role");
+  }
+
+  const meals = new QueryBuilder(mealQuery, query)
     .search(MEAL_SEARCHABLE_FIELDS)
     .filter()
     .fields()
     .paginate()
     .sort();
 
-  if (!meals) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Meals not found");
-  }
   const meta = await meals.countTotal();
   const result = await meals.modelQuery;
+
+  if (!result || result.length === 0) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Meals not found");
+  }
+
   return { meta, result };
 };
 
