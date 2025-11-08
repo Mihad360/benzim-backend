@@ -148,7 +148,7 @@ const applyPromoCodeToMultipleOrders = async (payload: {
         (discountedPrice * order.quantity).toFixed(2),
     );
     order.totalPrice = totalDiscountedPrice;
-    // await order.save();
+    await order.save();
     
     const discountAmount = Number(
         (meal.price * order.quantity - totalDiscountedPrice).toFixed(2),

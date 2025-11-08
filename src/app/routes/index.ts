@@ -12,6 +12,7 @@ import { mealRoutes } from "../modules/Meal/meal.route";
 import { orderRoutes } from "../modules/Order/order.route";
 import { categoryRoutes } from "../modules/Category/category.route";
 import { offerRoutes } from "../modules/Offer/offer.route";
+import { paymentRoutes } from "../modules/Payment/payment.route";
 
 const router = Router();
 
@@ -67,6 +68,10 @@ const moduleRoutes = [
   {
     path: "/offer",
     route: offerRoutes,
+  },
+  {
+    path: "/payment",
+    route: paymentRoutes,
   },
 ];
 
