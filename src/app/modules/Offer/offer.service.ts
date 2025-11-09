@@ -7,7 +7,7 @@ import { CookProfileModel } from "../Cook/cook.model";
 import { JwtPayload } from "../../interface/global";
 import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
 import QueryBuilder from "../../builder/QueryBuilder";
-import { OrderModel } from "../Order/order.model";
+import { CartModel } from "../Order/order.model";
 import { MealModel } from "../Meal/meal.model";
 
 export const createAnOffer = async (
@@ -105,7 +105,7 @@ const applyPromoCodeToMultipleOrders = async (payload: {
   if (!offer)
     throw new AppError(HttpStatus.NOT_FOUND, "Promo code not found or expired");
   // 2️⃣ Find all orders
-  const orders = await OrderModel.find({
+  const orders = await CartModel.find({
     _id: { $in: payload.orderIds },
     isDeleted: false,
   });

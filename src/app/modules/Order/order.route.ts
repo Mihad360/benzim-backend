@@ -1,29 +1,29 @@
 import express from "express";
 import auth from "../../middlewares/auth";
-import { orderControllers } from "./order.controller";
+import { cartControllers } from "./order.controller";
 
 const router = express.Router();
 
-router.get("/", auth("cook", "admin", "user"), orderControllers.getOrders);
+router.get("/", auth("cook", "admin", "user"), cartControllers.getOrders);
 router.delete(
   "/:orderId",
   auth("cook", "admin", "user"),
-  orderControllers.removeOrder,
+  cartControllers.removeOrder,
 );
 router.patch(
   "/status/:orderId",
   auth("cook", "admin"),
-  orderControllers.updateOrderStatus,
+  cartControllers.updateOrderStatus,
 );
 router.post(
-  "/exclude-order/:mealId",
+  "/exclude-order/:cartId",
   auth("cook", "admin", "user"),
-  orderControllers.excludeAoRder,
+  cartControllers.excludeAoRder,
 );
 router.post(
   "/order-meal/:mealId",
   auth("cook", "admin", "user"),
-  orderControllers.orderMeal,
+  cartControllers.addToCartMeal,
 );
 
-export const orderRoutes = router;
+export const cartRoutes = router;

@@ -6,7 +6,6 @@ import { paymentServices } from "./payment.service";
 
 const createPayment = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;
-  const id = req.params.orderId;
   const result = await paymentServices.createPayment(user, req.body);
 
   sendResponse(res, {

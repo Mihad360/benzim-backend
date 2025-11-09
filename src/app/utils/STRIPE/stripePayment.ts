@@ -3,13 +3,16 @@ import { IPaymentMetadata } from "../../modules/Payment/payment.interface";
 
 export const Payment = async (metadata: IPaymentMetadata) => {
   try {
-    const { tip, email, totalAmount } = metadata;
+    const { tip, email, totalAmount, userId, orderIds } = metadata;
 
-    // ✅ Prepare metadata for Stripe (all values must be strings)
+    // ✅ Stripe metadata must be string | number | null only
     const stripeMetadata: Record<string, string> = {
-      userId: metadata.userId,
-      // orderId: metadata.orderId,
-      // orderNo: metadata.orderNo,
+      userId: userId.toString(),
+      orderIds: JSON.stringify(
+        Array.isArray(orderIds)
+          ? orderIds.map((id) => id.toString())
+          : [String(orderIds)],
+      ), // ✅ Array safely stringified
       totalAmount: totalAmount.toString(),
       tip: tip ? tip.toString() : "0",
     };

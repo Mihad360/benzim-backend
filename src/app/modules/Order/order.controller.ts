@@ -2,12 +2,12 @@ import HttpStatus from "http-status";
 import { JwtPayload } from "../../interface/global";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { orderServices } from "./order.service";
+import { cartServices } from "./order.service";
 
-const orderMeal = catchAsync(async (req, res) => {
+const addToCartMeal = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;
   const id = req.params.mealId;
-  const result = await orderServices.orderMeal(id, req.body, user);
+  const result = await cartServices.addToCartMeal(id, req.body, user);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -19,8 +19,8 @@ const orderMeal = catchAsync(async (req, res) => {
 
 const excludeAoRder = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;
-  const id = req.params.mealId;
-  const result = await orderServices.excludeAoRder(id, user);
+  const id = req.params.cartId;
+  const result = await cartServices.excludeAoRder(id, user);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -32,7 +32,7 @@ const excludeAoRder = catchAsync(async (req, res) => {
 
 const getOrders = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;
-  const result = await orderServices.getOrders(user, req.query);
+  const result = await cartServices.getOrders(user, req.query);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -45,7 +45,7 @@ const getOrders = catchAsync(async (req, res) => {
 
 const updateOrderStatus = catchAsync(async (req, res) => {
   const id = req.params.orderId;
-  const result = await orderServices.updateOrderStatus(id, req.body);
+  const result = await cartServices.updateOrderStatus(id, req.body);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -57,7 +57,7 @@ const updateOrderStatus = catchAsync(async (req, res) => {
 
 const removeOrder = catchAsync(async (req, res) => {
   const id = req.params.orderId;
-  const result = await orderServices.removeOrder(id);
+  const result = await cartServices.removeOrder(id);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -67,8 +67,8 @@ const removeOrder = catchAsync(async (req, res) => {
   });
 });
 
-export const orderControllers = {
-  orderMeal,
+export const cartControllers = {
+  addToCartMeal,
   getOrders,
   updateOrderStatus,
   removeOrder,

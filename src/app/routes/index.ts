@@ -9,10 +9,11 @@ import { selfResRoutes } from "../modules/SelfResponsibility/selfResponsibility.
 import { hygienceCourseRoutes } from "../modules/HygieneCourses/course.route";
 import { verifyCookIdRoutes } from "../modules/VerifyCookId/verifyCook.route";
 import { mealRoutes } from "../modules/Meal/meal.route";
-import { orderRoutes } from "../modules/Order/order.route";
 import { categoryRoutes } from "../modules/Category/category.route";
 import { offerRoutes } from "../modules/Offer/offer.route";
 import { paymentRoutes } from "../modules/Payment/payment.route";
+import { cartRoutes } from "../modules/Order/order.route";
+import { orderRoutes } from "../modules/Orders/orders.route";
 
 const router = Router();
 
@@ -58,8 +59,8 @@ const moduleRoutes = [
     route: mealRoutes,
   },
   {
-    path: "/order",
-    route: orderRoutes,
+    path: "/cart",
+    route: cartRoutes,
   },
   {
     path: "/category",
@@ -72,6 +73,10 @@ const moduleRoutes = [
   {
     path: "/payment",
     route: paymentRoutes,
+  },
+  {
+    path: "/order",
+    route: orderRoutes,
   },
 ];
 

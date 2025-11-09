@@ -1,8 +1,8 @@
 import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
 import { JwtPayload } from "../../interface/global";
-import { IOrder } from "./order.interface";
-import { OrderModel } from "./order.model";
+import { ICart } from "./order.interface";
+import { CartModel } from "./order.model";
 import { CookProfileModel } from "../Cook/cook.model";
 import { MealModel } from "../Meal/meal.model";
 import { UserModel } from "../User/user.model";
@@ -13,16 +13,15 @@ import { generateOrderId } from "./order.utils";
 export const orderSearchTerms: string[] = [
   "quantity",
   "totalPrice",
-  "status",
-  "paymentStatus",
-  "paymentMethod",
-  "pickUpDate",
-  "pickUpTime",
-  "specialInstructions",
-  "orderNotes",
+  "status", // Added status to search terms
+  "orderId", // Added orderId to search terms
 ];
 
-const orderMeal = async (mealId: string, payload: IOrder, user: JwtPayload) => {
+const addToCartMeal = async (
+  mealId: string,
+  payload: ICart,
+  user: JwtPayload,
+) => {
   const userId = new Types.ObjectId(user.user);
 
   // 🧩 1️⃣ Validate user
@@ -44,7 +43,7 @@ const orderMeal = async (mealId: string, payload: IOrder, user: JwtPayload) => {
   }
 
   // 🧩 4️⃣ Check if this user already has an active order for the same meal
-  const existingOrder = await OrderModel.findOne({
+  const existingOrder = await CartModel.findOne({
     userId: isUserExist._id,
     mealId: meal._id,
     cookId: cook._id,
@@ -61,28 +60,20 @@ const orderMeal = async (mealId: string, payload: IOrder, user: JwtPayload) => {
 
   // 🆕 Otherwise, create a new order
   const orderId = await generateOrderId();
-  const newOrder = await OrderModel.create({
+  const newOrder = await CartModel.create({
     orderId,
     userId: isUserExist._id,
     cookId: cook._id,
     mealId: meal._id,
     quantity: payload.quantity || 1,
     totalPrice: meal.price * (payload.quantity || 1),
-    pickUpDate: payload.pickUpDate || "Today",
-    pickUpTime: payload.pickUpTime || meal.pickUpTime || "",
-    specialInstructions: payload.specialInstructions || "",
-    statusHistory: [
-      {
-        status: "new",
-        changedAt: new Date(),
-      },
-    ],
+    status: "pending", // Add default status
   });
 
   return newOrder;
 };
 
-const excludeAoRder = async (mealId: string, user: JwtPayload) => {
+const excludeAoRder = async (cartId: string, user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
 
   // 1️⃣ Validate user
@@ -91,23 +82,21 @@ const excludeAoRder = async (mealId: string, user: JwtPayload) => {
     throw new AppError(HttpStatus.NOT_FOUND, "User not found");
   }
 
-  // 2️⃣ Validate meal
-  const meal = await MealModel.findById(mealId);
-  if (!meal) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Meal not found");
+  // 3️⃣ Validate cook
+  const cart = await CartModel.findById(cartId);
+  if (!cart) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Cart not found for this meal");
   }
 
-  // 3️⃣ Validate cook
-  const cook = await CookProfileModel.findById(meal.cookId);
-  if (!cook) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Cook not found for this meal");
+  const meal = await MealModel.findById(cart.mealId);
+  if (!meal) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Meal not found for this meal");
   }
 
   // 4️⃣ Find existing active order
-  const existingOrder = await OrderModel.findOne({
+  const existingOrder = await CartModel.findOne({
+    _id: cart._id,
     userId: userExist._id,
-    mealId: meal._id,
-    cookId: cook._id,
     isDeleted: false,
   });
 
@@ -146,9 +135,9 @@ const getOrders = async (user: JwtPayload, query: Record<string, unknown>) => {
     if (!isCookExist) {
       throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
     }
-    orderQuery = OrderModel.find({ cookId: isCookExist._id, isDeleted: false });
+    orderQuery = CartModel.find({ cookId: isCookExist._id, isDeleted: false });
   } else if (isUserExist.role === "user") {
-    orderQuery = OrderModel.find({ userId: isUserExist._id, isDeleted: false });
+    orderQuery = CartModel.find({ userId: isUserExist._id, isDeleted: false });
   } else {
     throw new AppError(HttpStatus.FORBIDDEN, "Invalid user role");
   }
@@ -173,40 +162,36 @@ const getOrders = async (user: JwtPayload, query: Record<string, unknown>) => {
 const updateOrderStatus = async (
   orderId: string,
   payload: {
-    newStatus:
-      | "in_preparation"
-      | "ready_for_pickup"
-      | "completed"
-      | "cancelled";
+    newStatus: "completed" | "cancelled";
   },
 ) => {
-  const order = await OrderModel.findById(orderId);
+  const order = await CartModel.findById(orderId);
   if (!order) {
     throw new AppError(HttpStatus.NOT_FOUND, "Order not found");
   }
 
+  // Actually update the status
   order.status = payload.newStatus;
-  order.statusHistory = order.statusHistory || [];
-  order.statusHistory.push({
-    status: payload.newStatus,
-    changedAt: new Date(),
-  });
-
   const updatedOrder = await order.save();
+
   return updatedOrder;
 };
 
 const removeOrder = async (orderId: string) => {
-  const order = new Types.ObjectId(orderId);
-  const result = await OrderModel.findByIdAndDelete(order);
-  if (!result) {
-    throw new AppError(HttpStatus.BAD_REQUEST, "Delete failed");
+  const order = await CartModel.findById(orderId);
+  if (!order) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Order not found");
   }
-  return { message: "deleted successfully" };
+
+  // Soft delete instead of hard delete
+  order.isDeleted = true;
+  await order.save();
+
+  return { message: "Order removed successfully" };
 };
 
-export const orderServices = {
-  orderMeal,
+export const cartServices = {
+  addToCartMeal,
   getOrders,
   updateOrderStatus,
   removeOrder,

@@ -60,19 +60,11 @@ export const stripeWebhookHandler = catchAsync(async (req, res) => {
       // 🟢 PaymentIntent succeeded
       case "payment_intent.succeeded":
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log(
-          "✅ PaymentIntent succeeded:",
-          JSON.stringify(paymentIntent, null, 2),
-        );
         break;
 
       // 🟢 Payment method attached
       case "payment_method.attached":
         const paymentMethod = event.data.object as Stripe.PaymentMethod;
-        console.log(
-          "💳 Payment method attached:",
-          JSON.stringify(paymentMethod, null, 2),
-        );
         break;
 
       // 🔘 Default
