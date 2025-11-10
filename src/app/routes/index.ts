@@ -12,8 +12,9 @@ import { mealRoutes } from "../modules/Meal/meal.route";
 import { categoryRoutes } from "../modules/Category/category.route";
 import { offerRoutes } from "../modules/Offer/offer.route";
 import { paymentRoutes } from "../modules/Payment/payment.route";
-import { cartRoutes } from "../modules/Order/order.route";
+import { cartRoutes } from "../modules/Order/cart.route";
 import { orderRoutes } from "../modules/Orders/orders.route";
+import { messageRoutes } from "../modules/Message/message.route";
 
 const router = Router();
 
@@ -77,6 +78,10 @@ const moduleRoutes = [
   {
     path: "/order",
     route: orderRoutes,
+  },
+  {
+    path: "/message",
+    route: messageRoutes,
   },
 ];
 

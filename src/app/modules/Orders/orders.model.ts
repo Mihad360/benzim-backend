@@ -8,6 +8,11 @@ const PaymentSchema = new Schema<IOrders>(
       ref: "User",
       required: true,
     },
+    cookId: {
+      type: Schema.Types.ObjectId,
+      ref: "Cook",
+      required: true,
+    },
     cartIds: [
       {
         type: Schema.Types.ObjectId,
@@ -26,6 +31,12 @@ const PaymentSchema = new Schema<IOrders>(
     },
     orderNo: {
       type: String,
+    },
+    promoCode: {
+      type: String,
+    },
+    maxCompleted: {
+      type: Number,
     },
     status: {
       type: String,

@@ -18,10 +18,8 @@ const offerSchema = new Schema<IOffer>({
     default: "percentage",
   },
   discountValue: { type: Number, required: true },
-
   applicableMealIds: [{ type: Schema.Types.ObjectId, ref: "Meal" }],
-  applicableCategory: [{ type: String }],
-
+  max: { type: Number },
   startDate: { type: Date },
   endDate: { type: Date },
   isActive: { type: Boolean, default: true },

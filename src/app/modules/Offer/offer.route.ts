@@ -11,9 +11,9 @@ router.get(
   offerControllers.getOffers,
 );
 router.post(
-  "/confirm-offer",
+  "/confirm-offer/:orderId",
   auth("user", "cook", "admin"),
-  offerControllers.applyPromoCodeToMultipleOrders,
+  offerControllers.applyPromoCodeToOrder,
 );
 router.post(
   "/create-offer",

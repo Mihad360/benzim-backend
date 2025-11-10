@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 
 export interface IOrders {
   userId: Types.ObjectId;
+  cookId: Types.ObjectId;
   cartIds: Types.ObjectId[]; // references Meal documents
   totalAmount: number;
   tip?: number;
@@ -16,6 +17,8 @@ export interface IOrders {
     status: string;
     changedAt: Date;
   }[];
+  promoCode: string;
+  maxCompleted: number;
   pickUpDate: Date; // "Today" | "Tomorrow" or actual date
   pickUpTime: string; // e.g. "4PM–5PM"
   specialInstructions?: string; // optional note from user

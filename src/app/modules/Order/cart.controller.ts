@@ -2,7 +2,7 @@ import HttpStatus from "http-status";
 import { JwtPayload } from "../../interface/global";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { cartServices } from "./order.service";
+import { cartServices } from "./cart.service";
 
 const addToCartMeal = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;

@@ -1,12 +1,13 @@
 import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
 import { JwtPayload } from "../../interface/global";
-import { ICart } from "../Order/order.interface";
-import { generateOrderNo } from "../Order/order.utils";
+import { generateOrderNo } from "../Order/cart.utils";
 import { IOrders } from "./orders.interface";
 import { OrderModel } from "./orders.model";
 import { Types } from "mongoose";
-import { CartModel } from "../Order/order.model";
+import { CartModel } from "../Order/cart.model";
+import { CookProfileModel } from "../Cook/cook.model";
+import { ConversationModel } from "../Conversation/conversation.model";
 
 const createOrder = async (payload: IOrders, user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
@@ -20,7 +21,7 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
     _id: { $in: payload.cartIds },
     userId,
     isDeleted: false,
-  });
+  }).populate({ path: "cookId", select: "cookName" });
 
   if (!carts || carts.length === 0) {
     throw new AppError(HttpStatus.NOT_FOUND, "No valid carts found");
@@ -51,6 +52,36 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
 
   // Save order
   const newOrder = await OrderModel.create(orderData);
+
+  const firstMealCookId = carts[0]?.cookId;
+  if (firstMealCookId) {
+    // Get cook’s userId from cook profile
+    const cookProfile = await CookProfileModel.findById(firstMealCookId);
+
+    if (cookProfile) {
+      // Check if conversation already exists between this user and cook
+      const existingConversation = await ConversationModel.findOne({
+        cookId: cookProfile.userId,
+        userId: userId,
+        isDeleted: false,
+      });
+
+      if (!existingConversation) {
+        // Create new conversation if not exist
+        const conversation = await ConversationModel.create({
+          cookId: cookProfile.userId,
+          userId: userId,
+        });
+
+        if (!conversation) {
+          throw new AppError(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            "Failed to create conversation",
+          );
+        }
+      }
+    }
+  }
 
   return newOrder;
 };

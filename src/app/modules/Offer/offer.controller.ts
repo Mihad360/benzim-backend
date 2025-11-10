@@ -28,8 +28,9 @@ const getOffers = catchAsync(async (req, res) => {
   });
 });
 
-const applyPromoCodeToMultipleOrders = catchAsync(async (req, res) => {
-  const result = await offerServices.applyPromoCodeToMultipleOrders(req.body);
+const applyPromoCodeToOrder = catchAsync(async (req, res) => {
+  const id = req.params.orderId;
+  const result = await offerServices.applyPromoCodeToOrder(id, req.body);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -42,5 +43,5 @@ const applyPromoCodeToMultipleOrders = catchAsync(async (req, res) => {
 export const offerControllers = {
   createAnOffer,
   getOffers,
-  applyPromoCodeToMultipleOrders,
+  applyPromoCodeToOrder,
 };

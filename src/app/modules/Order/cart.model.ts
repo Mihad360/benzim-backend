@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { ICart } from "./order.interface";
+import { ICart } from "./cart.interface";
 
 const orderSchema = new Schema<ICart>(
   {

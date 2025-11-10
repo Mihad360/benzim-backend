@@ -9,10 +9,8 @@ export interface IOffer {
   offerScope: "meal" | "category" | "delivery" | "global";
   discountType: "percentage" | "flat";
   discountValue: number;
-
-  applicableMealIds?: string[]; // for meal-specific offers
-  applicableCategory?: string[]; // for category offers
-
+  applicableMealIds?: string[];
+  max: number;
   startDate?: Date;
   endDate?: Date;
   isActive: boolean;

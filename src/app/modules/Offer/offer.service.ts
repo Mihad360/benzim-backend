@@ -7,9 +7,12 @@ import { CookProfileModel } from "../Cook/cook.model";
 import { JwtPayload } from "../../interface/global";
 import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
 import QueryBuilder from "../../builder/QueryBuilder";
-import { CartModel } from "../Order/order.model";
-import { MealModel } from "../Meal/meal.model";
+import { CartModel } from "../Order/cart.model";
+import { OrderModel } from "../Orders/orders.model";
 
+/**
+ * ✅ Create a new offer
+ */
 export const createAnOffer = async (
   payload: IOffer,
   user: JwtPayload,
@@ -21,29 +24,25 @@ export const createAnOffer = async (
     throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
   }
 
-  const { code, applicableCategory, applicableMealIds } = payload;
+  const { code, applicableMealIds } = payload;
   const now = new Date();
 
-  // 2️⃣ Validate existing active offer (same code / category / meal)
-  const query: any = { isActive: true, endDate: { $gte: now } };
-  const orConditions: any[] = [{ code }];
-
-  if (applicableCategory?.length) {
-    orConditions.push({ applicableCategory: { $in: applicableCategory } });
-  }
+  // 2️⃣ Validate existing active offer (same code or meal)
+  const query: any = {
+    isActive: true,
+    endDate: { $gte: now },
+    $or: [{ code }],
+  };
 
   if (applicableMealIds?.length) {
-    orConditions.push({ applicableMealIds: { $in: applicableMealIds } });
+    query.$or.push({ applicableMealIds: { $in: applicableMealIds } });
   }
 
-  if (orConditions.length > 0) query.$or = orConditions;
-
   const existingOffer = await OfferModel.findOne(query);
-
   if (existingOffer) {
     throw new AppError(
       HttpStatus.BAD_REQUEST,
-      "An active offer already exists for this code, category, or meal",
+      "An active offer already exists with this code or meal",
     );
   }
 
@@ -67,13 +66,20 @@ export const createAnOffer = async (
   return newOffer;
 };
 
+/**
+ * ✅ Get active offers
+ */
 export const getOffers = async (query: Record<string, unknown>) => {
-  // Only get active offers
-  const offerQuery = OfferModel.find({ isActive: true, isDeleted: false });
+  const now = new Date();
+  const offerQuery = OfferModel.find({
+    isActive: true,
+    isDeleted: false,
+    startDate: { $lte: now },
+    endDate: { $gte: now },
+  });
 
-  // Use your QueryBuilder utilities
   const offers = new QueryBuilder(offerQuery, query)
-    .search(["title", "code", "applicableCategory"])
+    .search(["title", "code"])
     .filter()
     .fields()
     .paginate()
@@ -89,89 +95,181 @@ export const getOffers = async (query: Record<string, unknown>) => {
   return { meta, result };
 };
 
-const applyPromoCodeToMultipleOrders = async (payload: {
-  orderIds: string[];
-  promoCode: string;
-}) => {
-  // 1️⃣ Find the active offer
+/**
+ * ✅ Apply promo code to multiple orders
+ */
+export const applyPromoCodeToOrder = async (
+  orderId: string,
+  payload: { promoCode: string },
+) => {
   const now = new Date();
+
+  // 1️⃣ Find the active offer
   const offer = await OfferModel.findOne({
     code: payload.promoCode,
     isActive: true,
+    isDeleted: false,
     startDate: { $lte: now },
     endDate: { $gte: now },
   });
 
-  if (!offer)
+  if (!offer) {
     throw new AppError(HttpStatus.NOT_FOUND, "Promo code not found or expired");
-  // 2️⃣ Find all orders
-  const orders = await CartModel.find({
-    _id: { $in: payload.orderIds },
-    isDeleted: false,
-  });
-  if (!orders.length)
-    throw new AppError(HttpStatus.NOT_FOUND, "No valid orders found");
-
-  let totalDiscount = 0;
-  const updatedOrders = [];
-
-  // 3️⃣ Loop through each order and apply discount if eligible
-  for (const order of orders) {
-    const meal = await MealModel.findById(order.mealId);
-    if (!meal) continue;
-
-    const isEligible =
-      (offer.applicableMealIds &&
-        offer.applicableMealIds.some(
-          (id) => id.toString() === meal._id.toString(),
-        )) ||
-      (offer.applicableCategory &&
-        offer.applicableCategory.includes(meal.category));
-
-    if (!isEligible) continue; // skip if not applicable
-
-    // 4️⃣ Calculate discounted price
-    let discountedPrice = meal.price;
-    if (offer.discountType === "percentage") {
-      console.log(meal.price);
-      discountedPrice = meal.price - (meal.price * offer.discountValue) / 100;
-    } else if (offer.discountType === "flat") {
-        discountedPrice = meal.price - offer.discountValue;
-    }
-    
-    if (discountedPrice < 0) discountedPrice = 0;
-    
-    discountedPrice = Number(discountedPrice.toFixed(2));
-    
-    // 5️⃣ Update order total
-    const totalDiscountedPrice = Number(
-        (discountedPrice * order.quantity).toFixed(2),
-    );
-    order.totalPrice = totalDiscountedPrice;
-    await order.save();
-    
-    const discountAmount = Number(
-        (meal.price * order.quantity - totalDiscountedPrice).toFixed(2),
-    );
-    totalDiscount += discountAmount;
-    updatedOrders.push(order);
-    console.log(discountedPrice);
   }
 
-  if (!updatedOrders.length)
+  // 2️⃣ Check max usage limit for the offer
+  if (offer.max) {
+    // Count how many orders have already used this promo code
+    const usedCount = await OrderModel.countDocuments({
+      promoCode: payload.promoCode,
+      status: { $ne: "cancelled" }, // Don't count cancelled orders
+    });
+
+    if (usedCount >= offer.max) {
+      throw new AppError(
+        HttpStatus.BAD_REQUEST,
+        "Promo code usage limit reached",
+      );
+    }
+  }
+
+  // 3️⃣ Find the target order
+  const order = await OrderModel.findById(orderId);
+  if (!order) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Order not found");
+  }
+
+  // 4️⃣ Check if order has already reached maxCompleted limit
+  if (order.maxCompleted && typeof order.maxCompleted === "number") {
+    // If maxCompleted is a number, check if it's reached the limit
+    // You might want to adjust this logic based on your business rules
+    if (order.maxCompleted >= (offer.max || 0)) {
+      throw new AppError(
+        HttpStatus.BAD_REQUEST,
+        "Order has reached maximum discount usage",
+      );
+    }
+  }
+
+  // 5️⃣ Fetch all related cart items with meal details
+  const carts = await CartModel.find({
+    _id: { $in: order.cartIds },
+    isDeleted: false,
+  }).populate("mealId");
+
+  if (!carts.length) {
+    throw new AppError(HttpStatus.NOT_FOUND, "No valid carts found for order");
+  }
+
+  let newOrderTotal = 0;
+  let totalDiscount = 0;
+  let applicableMeals = 0;
+
+  // 6️⃣ Calculate new order total with discounts applied only to eligible meals
+  for (const cart of carts) {
+    const meal = cart.mealId as any;
+    if (!meal) continue;
+
+    const quantity = cart.quantity ?? 1;
+    const mealPrice = meal.price;
+
+    // Check if this meal is eligible for discount
+    let isEligible = false;
+
+    if (offer.offerScope === "meal") {
+      // Only apply discount if meal ID exists in applicableMealIds
+      isEligible = !!offer.applicableMealIds?.some(
+        (id) => id.toString() === meal._id.toString(),
+      );
+    } else if (
+      offer.offerScope === "global" ||
+      offer.offerScope === "delivery"
+    ) {
+      // Apply to all meals for global/delivery offers
+      isEligible = true;
+    }
+
+    if (isEligible) {
+      applicableMeals++;
+
+      // Calculate discounted price per meal unit
+      let discountedPricePerUnit = mealPrice;
+
+      if (offer.discountType === "percentage") {
+        const discountAmount = (mealPrice * offer.discountValue) / 100;
+        discountedPricePerUnit = Math.max(mealPrice - discountAmount, 0);
+      } else if (offer.discountType === "flat") {
+        discountedPricePerUnit = Math.max(mealPrice - offer.discountValue, 0);
+      }
+
+      // Calculate total for this cart item (discounted price × quantity)
+      const cartItemTotal = discountedPricePerUnit * quantity;
+      newOrderTotal += cartItemTotal;
+
+      // Calculate discount amount for this cart item
+      const originalCartItemTotal = mealPrice * quantity;
+      const cartItemDiscount = originalCartItemTotal - cartItemTotal;
+      totalDiscount += cartItemDiscount;
+
+      console.log(
+        `Eligible Meal: ${meal.name}, Quantity: ${quantity}, Original: $${mealPrice}, Discounted: $${discountedPricePerUnit}, Cart Total: $${cartItemTotal}, Discount: $${cartItemDiscount}`,
+      );
+    } else {
+      // Meal not eligible - add original price
+      const cartItemTotal = mealPrice * quantity;
+      newOrderTotal += cartItemTotal;
+
+      console.log(
+        `Non-Eligible Meal: ${meal.name}, Quantity: ${quantity}, Price: $${mealPrice}, Cart Total: $${cartItemTotal}`,
+      );
+    }
+  }
+
+  // 7️⃣ If no meals were eligible, stop here
+  if (applicableMeals === 0) {
     throw new AppError(
       HttpStatus.BAD_REQUEST,
-      "Promo code not applicable to any meals",
+      "Promo code not applicable to any meals in this order",
     );
+  }
+
+  // 8️⃣ Update the order total and track usage
+  const originalOrderTotal = order.totalAmount;
+  order.totalAmount = Number(newOrderTotal.toFixed(2));
+  //   order.discountAmount = Number(totalDiscount.toFixed(2));
+  order.promoCode = payload.promoCode;
+
+  // Update maxCompleted - increment by 1 each time promo is successfully applied
+  if (typeof order.maxCompleted === "number") {
+    order.maxCompleted += 1;
+  } else {
+    // If it's string or undefined, initialize as number
+    order.maxCompleted = 1;
+  }
+
+  await order.save();
+
+  // 9️⃣ Optional: You might want to track offer usage in a separate collection
+  // for better analytics and reporting
+  //   await trackOfferUsage(offer._id, order._id, totalDiscount);
 
   return {
-    totalDiscount,
-    updatedOrders,
+    orderId: order._id,
+    promoCode: offer.code,
+    originalTotalAmount: Number(originalOrderTotal.toFixed(2)),
+    totalDiscount: Number(totalDiscount.toFixed(2)),
+    newTotalAmount: order.totalAmount,
+    applicableMealsCount: applicableMeals,
+    maxCompleted: order.maxCompleted,
+    // remainingUsage: offer.max
+    //   ? offer.max - (await getOfferUsageCount(offer._id))
+    //   : "Unlimited",
+    message: `Discount applied to ${applicableMeals} meal(s)`,
   };
 };
 
 export const offerServices = {
   createAnOffer,
   getOffers,
-  applyPromoCodeToMultipleOrders,
+  applyPromoCodeToOrder,
 };

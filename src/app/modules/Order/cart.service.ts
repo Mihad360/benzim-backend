@@ -1,14 +1,14 @@
 import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
 import { JwtPayload } from "../../interface/global";
-import { ICart } from "./order.interface";
-import { CartModel } from "./order.model";
+import { ICart } from "./cart.interface";
+import { CartModel } from "./cart.model";
 import { CookProfileModel } from "../Cook/cook.model";
 import { MealModel } from "../Meal/meal.model";
 import { UserModel } from "../User/user.model";
 import { Types } from "mongoose";
 import QueryBuilder from "../../builder/QueryBuilder";
-import { generateOrderId } from "./order.utils";
+import { generateOrderId } from "./cart.utils";
 
 export const orderSearchTerms: string[] = [
   "quantity",

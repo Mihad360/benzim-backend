@@ -1,5 +1,5 @@
 import { OrderModel } from "../Orders/orders.model";
-import { CartModel } from "./order.model";
+import { CartModel } from "./cart.model";
 
 export const generateOrderId = async (): Promise<string> => {
   // Find the last added order, sorted by orderId descending
