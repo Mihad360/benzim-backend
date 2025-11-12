@@ -16,7 +16,7 @@ const PaymentSchema = new Schema<IOrders>(
     cartIds: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Meal",
+        ref: "Cart",
       },
     ],
     totalAmount: {

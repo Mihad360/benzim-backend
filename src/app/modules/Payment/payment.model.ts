@@ -6,14 +6,9 @@ const PaymentSchema = new Schema<IPayment>({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  orderIds: {
-    type: [Schema.Types.ObjectId],
+  orderId: {
+    type: Schema.Types.ObjectId,
     ref: "Order",
-    default: [],
-  },
-  tip: {
-    type: Number,
-    default: 0, // optional field
   },
   totalAmount: {
     type: Number,

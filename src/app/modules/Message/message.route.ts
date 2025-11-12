@@ -4,8 +4,13 @@ import { messageControllers } from "./message.controller";
 
 const router = express.Router();
 
+router.get(
+  "/:conversationId",
+  auth("cook", "admin", "user"),
+  messageControllers.getAllMessage,
+);
 router.post(
-  "/send",
+  "/send/:conversationId",
   auth("cook", "admin", "user"),
   messageControllers.sendMessage,
 );

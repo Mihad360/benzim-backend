@@ -11,6 +11,7 @@ import mongoose, { Types } from "mongoose";
 import { IAuth } from "./auth.interface";
 import { checkOtp, generateOtp, verificationEmailTemplate } from "./auth.utils";
 import { sendEmail } from "../../utils/sendEmail";
+import { sendOtp } from "../../utils/twilio";
 
 const createAccount = async (payload: IUser) => {
   const isUserExist = await UserModel.findOne({
@@ -132,67 +133,72 @@ const loginUser = async (payload: IAuth) => {
   };
 };
 
-const forgetPassword = async (contact: string) => {
-  // Check if the contact is an email or phone number
-  if (typeof contact !== "string") {
+const forgetPassword = async (payload: {contact: string}) => {
+  // ✅ Validate input type
+  console.log(payload.contact);
+  if (typeof payload.contact !== "string") {
     throw new AppError(
       HttpStatus.BAD_REQUEST,
       "The contact must be a valid string (email or phone number).",
     );
   }
-  const isEmail = contact.includes("@");
 
-  // Query for user based on email or phone number
+  const isEmail = payload.contact.includes("@");
+
+  // ✅ Find user by email or phone
   const user = await UserModel.findOne({
-    [isEmail ? "email" : "phoneNumber"]: contact,
+    [isEmail ? "email" : "phoneNumber"]: payload.contact,
   });
 
   if (!user) {
-    throw new AppError(HttpStatus.NOT_FOUND, "This User does not exist");
+    throw new AppError(HttpStatus.NOT_FOUND, "This user does not exist");
   }
 
-  if (user?.isDeleted) {
-    throw new AppError(HttpStatus.FORBIDDEN, "This User is deleted");
+  if (user.isDeleted) {
+    throw new AppError(HttpStatus.FORBIDDEN, "This user is deleted");
   }
 
-  const userId = user?._id;
+  const userId = user._id;
   if (!userId) {
-    throw new AppError(HttpStatus.NOT_FOUND, "The user id is missing");
+    throw new AppError(HttpStatus.NOT_FOUND, "User ID is missing");
   }
 
-  // Generate OTP
+  // ✅ Generate OTP and expiration
   const otp = generateOtp();
-  const expireAt = new Date(Date.now() + 5 * 60 * 1000); // OTP expiration time (5 minutes)
+  const expireAt = new Date(Date.now() + 5 * 60 * 1000); // 5 min expiry
 
-  // Update user with OTP and expiration time
-  const updatedUser = await UserModel.findOneAndUpdate(
-    { _id: userId },
-    {
-      otp: otp,
-      expiresAt: expireAt,
-      isVerified: false,
-    },
+  // ✅ Update user with OTP
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    userId,
+    { otp, expiresAt: expireAt, isVerified: false },
     { new: true },
   );
 
-  if (updatedUser) {
-    const subject = "Verification Code";
-    const otp = updatedUser.otp;
+  if (!updatedUser) {
+    throw new AppError(HttpStatus.BAD_REQUEST, "Something went wrong!");
+  }
 
-    // Send email with the OTP
+  // ✅ Send OTP via email or phone
+  if (isEmail) {
+    const subject = "Password Reset Verification Code";
     const mail = await sendEmail(
       updatedUser.email as string,
       subject,
-      verificationEmailTemplate(updatedUser.email as string, otp as string),
+      verificationEmailTemplate(updatedUser.email as string, otp),
     );
 
     if (!mail.success) {
-      throw new AppError(HttpStatus.BAD_REQUEST, "Something went wrong!");
+      throw new AppError(HttpStatus.BAD_REQUEST, "Failed to send OTP email");
     }
 
-    return mail;
+    console.log("✅ OTP sent via email to:", updatedUser.email);
+    return { success: true, method: "email" };
   } else {
-    throw new AppError(HttpStatus.BAD_REQUEST, "Something went wrong!");
+    // ✅ Send via Twilio SMS
+    const sms = await sendOtp(payload.contact, otp);
+    console.log("✅ OTP sent via SMS:", sms);
+
+    return { success: true, method: "sms" };
   }
 };
 

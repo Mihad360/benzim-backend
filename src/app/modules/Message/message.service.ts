@@ -4,7 +4,7 @@ import AppError from "../../erros/AppError";
 import { JwtPayload } from "../../interface/global";
 import { ConversationModel } from "../Conversation/conversation.model";
 import { IMessage } from "./message.interface";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { MessageModel } from "./message.model";
 
 const sendMessage = async (
@@ -72,6 +72,50 @@ const sendMessage = async (
   }
 };
 
+const getAllMessage = async (conversationId: string, user: JwtPayload) => {
+  // 1️⃣ Check if the conversation exists for this user
+  const conversation = await ConversationModel.findOne({
+    _id: new Types.ObjectId(conversationId),
+    $or: [{ userId: user.user }, { cookId: user.user }], // adjust to your conversation model fields
+  })
+    .populate({
+      path: "userId",
+      select: "name profileImage updatedAt isActive role",
+    })
+    .populate({
+      path: "cookId",
+      select: "name profileImage updatedAt isActive role",
+    })
+    .lean();
+
+  if (!conversation) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Conversation not found");
+  }
+
+  // 2️⃣ Find all messages in this conversation
+  const messages = await MessageModel.find({
+    conversation_id: conversation._id,
+    isDeleted: false,
+  })
+    .populate({
+      path: "sender_id",
+      select: "name profileImage role",
+    })
+    .sort({ createdAt: 1 }) // oldest first
+    .lean();
+
+  if (!messages || messages.length === 0) {
+    throw new AppError(HttpStatus.NOT_FOUND, "No messages found");
+  }
+
+  // 3️⃣ Return both conversation and messages
+  return {
+    conversation,
+    messages,
+  };
+};
+
 export const messageServices = {
   sendMessage,
+  getAllMessage,
 };

@@ -15,6 +15,8 @@ import { paymentRoutes } from "../modules/Payment/payment.route";
 import { cartRoutes } from "../modules/Order/cart.route";
 import { orderRoutes } from "../modules/Orders/orders.route";
 import { messageRoutes } from "../modules/Message/message.route";
+import { reviewRoutes } from "../modules/Review/review.route";
+import { cardRoutes } from "../modules/Card/card.route";
 
 const router = Router();
 
@@ -82,6 +84,14 @@ const moduleRoutes = [
   {
     path: "/message",
     route: messageRoutes,
+  },
+  {
+    path: "/review",
+    route: reviewRoutes,
+  },
+  {
+    path: "/card",
+    route: cardRoutes,
   },
 ];
 

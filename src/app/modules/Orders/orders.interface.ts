@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { IMeal } from "../Meal/meal.interface";
 
 export interface IOrders {
   userId: Types.ObjectId;
@@ -24,4 +25,13 @@ export interface IOrders {
   specialInstructions?: string; // optional note from user
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface ExtendOrderMealId extends Omit<IOrders, "cartIds"> {
+  cartIds: (
+    | Types.ObjectId
+    | {
+        mealId: IMeal | Types.ObjectId;
+      }
+  )[];
 }

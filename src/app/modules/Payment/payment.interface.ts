@@ -2,8 +2,7 @@ import { Types } from "mongoose";
 
 export interface IPayment {
   userId: Types.ObjectId;
-  orderIds: string[] | Types.ObjectId[] | undefined;
-  tip?: number | string; // optional
+  orderId: string | Types.ObjectId; // single orderId
   totalAmount: number;
   paymentStatus?: "pending" | "completed" | "failed";
   isDeleted: boolean;
@@ -11,9 +10,7 @@ export interface IPayment {
 
 export interface IPaymentMetadata {
   userId: string; // must be string for Stripe metadata
-  orderIds?: string[] | Types.ObjectId[] | undefined;
-  //   orderNo: string;
+  orderId: string | Types.ObjectId;
   totalAmount: number;
-  tip?: number | string;
   email?: string;
 }
