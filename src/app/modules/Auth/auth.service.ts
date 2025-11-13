@@ -133,7 +133,7 @@ const loginUser = async (payload: IAuth) => {
   };
 };
 
-const forgetPassword = async (payload: {contact: string}) => {
+const forgetPassword = async (payload: { contact: string }) => {
   // ✅ Validate input type
   console.log(payload.contact);
   if (typeof payload.contact !== "string") {

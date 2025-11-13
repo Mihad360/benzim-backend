@@ -4,6 +4,11 @@ import { orderControllers } from "./orders.controller";
 
 const router = express.Router();
 
+router.get(
+  "/current-orders",
+  auth("cook", "admin", "user"),
+  orderControllers.myCurrentOrders,
+);
 router.patch(
   "/tip/:orderId",
   auth("cook", "admin", "user"),

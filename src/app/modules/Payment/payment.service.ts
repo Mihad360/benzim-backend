@@ -27,12 +27,12 @@ export const createPayment = async (
       totalAmount: payload.totalAmount,
       orderId: payload.orderId, // single orderId
       email: user.email as string,
-    //   cardNumber: "4242424242424242",
-    //   name: payload.name,
-    //   brand: payload.brand,
-    //   cvc: payload.cvc,
-    //   exp_month: payload.exp_month,
-    //   exp_year: payload.exp_year,
+      //   cardNumber: "4242424242424242",
+      //   name: payload.name,
+      //   brand: payload.brand,
+      //   cvc: payload.cvc,
+      //   exp_month: payload.exp_month,
+      //   exp_year: payload.exp_year,
     };
 
     console.log("🧾 Final metadata:", metaData);
@@ -60,6 +60,7 @@ export const payAmount = async (payload: IPaymentMetadata) => {
       result._id,
       {
         paymentStatus: "completed",
+        created_At: new Date(),
       },
       { new: true },
     );

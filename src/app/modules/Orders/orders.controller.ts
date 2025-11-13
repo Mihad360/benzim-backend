@@ -28,7 +28,21 @@ const addTip = catchAsync(async (req, res) => {
   });
 });
 
+const myCurrentOrders = catchAsync(async (req, res) => {
+  const user = req.user as JwtPayload;
+  const result = await orderServices.myCurrentOrders(user, req.query);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 export const orderControllers = {
   createOrder,
   addTip,
+  myCurrentOrders,
 };

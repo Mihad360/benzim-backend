@@ -8,6 +8,7 @@ import { Types } from "mongoose";
 import { CartModel } from "../Order/cart.model";
 import { CookProfileModel } from "../Cook/cook.model";
 import { ConversationModel } from "../Conversation/conversation.model";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 const createOrder = async (payload: IOrders, user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
@@ -127,7 +128,72 @@ export const addTip = async (
   };
 };
 
+const myCurrentOrders = async (
+  user: JwtPayload,
+  query: Record<string, unknown>,
+) => {
+  try {
+    const userObjectId = new Types.ObjectId(user.user);
+
+    // 🔍 Build query with QueryBuilder (no duplicate find)
+    const orderQuery = new QueryBuilder(
+      OrderModel.find({
+        userId: userObjectId,
+        status: { $nin: ["completed", "cancelled"] },
+      })
+        .populate({
+          path: "cartIds",
+          select: "mealId quantity totalPrice",
+          populate: {
+            path: "mealId",
+            select: "mealName imageUrls pricePerPortion price description",
+          },
+        })
+        .sort({ createdAt: -1 }),
+      query,
+    )
+      .search(["orderNo", "status"]) // optional: add searchable fields
+      .filter()
+      .paginate()
+      .sort();
+
+    const orders = await orderQuery.modelQuery;
+    const meta = await orderQuery.countTotal();
+    // 🎨 Format the data cleanly for frontend
+    const formattedOrders = orders.map((order) => ({
+      orderId: order._id,
+      orderNo: order.orderNo,
+      totalAmount: order.totalAmount,
+      tip: order.tip || 0,
+      promoCode: order.promoCode || null,
+      status: order.status,
+      createdAt: order.createdAt,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      carts: order.cartIds.map((cart: any) => ({
+        quantity: cart.quantity,
+        totalPrice: cart.totalPrice,
+        meal: {
+          name: cart.mealId?.mealName,
+          image: cart.mealId?.imageUrls?.[0] || null,
+          description: cart.mealId?.description || "",
+          price: cart.mealId?.price,
+          pricePerPortion: cart.mealId?.pricePerPortion,
+        },
+      })),
+    }));
+
+    // 📦 Return with meta (pagination info)
+    return {
+      meta,
+      data: formattedOrders,
+    };
+  } catch (error) {
+    throw new AppError(HttpStatus.BAD_REQUEST, `Something went wrong ${error}`);
+  }
+};
+
 export const orderServices = {
   createOrder,
   addTip,
+  myCurrentOrders,
 };

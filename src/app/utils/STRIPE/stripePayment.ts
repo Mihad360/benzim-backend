@@ -3,38 +3,22 @@ import { stripe } from "./stripe.config";
 import { IPaymentMetadata } from "../../modules/Payment/payment.interface";
 import { OrderModel } from "../../modules/Orders/orders.model";
 import AppError from "../../erros/AppError";
-import { ExtendOrderMealId } from "../../modules/Orders/orders.interface";
 
 export const Payment = async (metadata: IPaymentMetadata) => {
   try {
-    const { email, totalAmount, userId, orderId } = metadata;
+    const { email, userId, orderId } = metadata;
 
-    // ✅ Stripe metadata must be string | number | null only
-    const stripeMetadata: Record<string, string> = {
-      userId: userId.toString(),
-      orderId: orderId.toString(),
-      totalAmount: totalAmount.toString(),
-    };
-
-    const isOrderExist = (await OrderModel.findOne({
-      _id: orderId,
-    }).populate({
-      path: "cartIds",
-      select: "mealId",
-      populate: { path: "mealId", select: "imageUrls" },
-    })) as Partial<ExtendOrderMealId>;
-    if (!isOrderExist) {
+    const order = await OrderModel.findById(orderId);
+    if (!order) {
       throw new AppError(HttpStatus.NOT_FOUND, "Order not found");
     }
-    // ✅ Extract image URLs from all meals
-    const imageUrls = isOrderExist.cartIds
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ?.flatMap((cart: any) => cart.mealId?.imageUrls || [])
-      .slice(0, 8); // Stripe supports up to 8 image
 
-    console.log("🖼️ Image URLs for Stripe:", imageUrls);
+    const totalAmount = order.totalAmount; // assuming totalAmount is stored on order directly
+    if (!totalAmount || totalAmount <= 0) {
+      throw new AppError(HttpStatus.BAD_REQUEST, "Invalid total amount");
+    }
 
-    const unitAmount = Math.round(Number(totalAmount) * 100);
+    console.log("Order No:", order.orderNo);
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -43,10 +27,9 @@ export const Payment = async (metadata: IPaymentMetadata) => {
         {
           price_data: {
             currency: "usd",
-            unit_amount: unitAmount, // cents
+            unit_amount: Math.round(totalAmount * 100), // Stripe expects cents
             product_data: {
-              name: `Payment for order #${orderId}`,
-              images: imageUrls?.length ? imageUrls : undefined,
+              name: `Order #${order.orderNo}`,
             },
           },
           quantity: 1,
@@ -54,8 +37,12 @@ export const Payment = async (metadata: IPaymentMetadata) => {
       ],
       customer_email: email,
       success_url: "http://localhost:5173/stripe/success",
-      cancel_url: `http://localhost:5000/stripe/cancel`,
-      metadata: stripeMetadata,
+      cancel_url: "http://localhost:5000/stripe/cancel",
+      metadata: {
+        userId: userId.toString(),
+        orderId: orderId.toString(),
+        totalAmount: totalAmount.toString(),
+      },
     });
 
     return session.url;

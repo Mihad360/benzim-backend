@@ -5,6 +5,7 @@ export interface IPayment {
   orderId: string | Types.ObjectId; // single orderId
   totalAmount: number;
   paymentStatus?: "pending" | "completed" | "failed";
+  created_At: Date;
   isDeleted: boolean;
 }
 
