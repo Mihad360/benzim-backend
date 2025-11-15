@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { Course, FileMetadata, Option, Quiz } from "./course.interface";
+import { Course, Option, Quiz } from "./course.interface";
 
 const OptionSchema = new Schema<Option>({
   optionText: { type: String, required: true },
@@ -15,12 +15,6 @@ const QuizSchema = new Schema<Quiz>({
   },
   options: { type: [OptionSchema], required: true },
   correctAnswer: { type: Schema.Types.Mixed, required: true }, // Can store both single or array of correct answers
-});
-
-const FileMetadataSchema = new Schema<FileMetadata>({
-  fileUrl: { type: String, required: true },
-  filename: { type: String, required: true },
-  mimetype: { type: String, required: true },
 });
 
 const CourseSchema = new Schema<Course>(

@@ -5,6 +5,28 @@ export interface IMeal {
   cookId: Types.ObjectId;
   mealName: string;
   description: string;
+  cuisineName:
+    | "American"
+    | "Italian"
+    | "Mexican"
+    | "Indian"
+    | "Japanese"
+    | "Chinese"
+    | "Thai"
+    | "Mediterranean"
+    | "French"
+    | "Korean"
+    | "Vietnamese"
+    | "Turkish"
+    | "Spanish"
+    | "Greek"
+    | "Middle Eastern"
+    | "BBQ"
+    | "Seafood"
+    | "Vegan"
+    | "Vegetarian"
+    | "Fast Food"
+    | "Dessert";
   imageUrls?: string[];
   availablePortion: number;
   dietaryCategories: "Vegan" | "Halal" | "Gluten Free" | "Vegetarian";

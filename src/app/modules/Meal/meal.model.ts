@@ -6,6 +6,31 @@ const mealSchema = new mongoose.Schema<IMeal>(
     cookId: { type: Schema.Types.ObjectId, ref: "Cook" },
     mealName: { type: String, required: true },
     description: { type: String, required: true },
+    cuisineName: {
+      type: String,
+      enum: [
+        "italian",
+        "chinese",
+        "indian",
+        "thai",
+        "japanese",
+        "mexican",
+        "french",
+        "american",
+        "mediterranean",
+        "greek",
+        "spanish",
+        "korean",
+        "vietnamese",
+        "turkish",
+        "middle eastern",
+        "caribbean",
+        "african",
+        "british",
+        "german",
+        "brazilian",
+      ],
+    },
     availablePortion: { type: Number, required: true },
     dietaryCategories: {
       type: String,
@@ -49,29 +74,27 @@ const mealSchema = new mongoose.Schema<IMeal>(
 
 export const MealModel = model<IMeal>("Meal", mealSchema);
 
-
-
 // dietaryCategories: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Category",
-    //   },
-    // ],
-    // category: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Category",
-    //   },
-    // ],
-    // fitnessFlow: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Category",
-    //   },
-    // ],
-    // cheatFlow: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "Category",
-    //   },
-    // ],
+//   {
+//     type: Schema.Types.ObjectId,
+//     ref: "Category",
+//   },
+// ],
+// category: [
+//   {
+//     type: Schema.Types.ObjectId,
+//     ref: "Category",
+//   },
+// ],
+// fitnessFlow: [
+//   {
+//     type: Schema.Types.ObjectId,
+//     ref: "Category",
+//   },
+// ],
+// cheatFlow: [
+//   {
+//     type: Schema.Types.ObjectId,
+//     ref: "Category",
+//   },
+// ],

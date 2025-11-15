@@ -5,7 +5,6 @@ import { IPayment, IPaymentMetadata } from "./payment.interface";
 import { PaymentModel } from "./payment.model";
 import AppError from "../../erros/AppError";
 import { Payment } from "../../utils/STRIPE/stripePayment";
-import { ICard } from "../Card/card.interface";
 
 export const createPayment = async (
   user: JwtPayload,

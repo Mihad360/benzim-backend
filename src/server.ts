@@ -2,8 +2,9 @@
 import app from "./app";
 import config from "./app/config";
 import mongoose from "mongoose";
-import { Server } from "http";
+import { createServer, Server } from "http";
 import seedSuperAdmin from "./app/DB";
+import { initSocketIO } from "./app/utils/socket";
 
 let server: Server;
 
@@ -21,6 +22,9 @@ async function main() {
     server = app.listen(config.port, () => {
       console.log(`app listening on port ${config.port}`);
     });
+
+    server = createServer(app);
+    await initSocketIO(server);
   } catch (error) {
     console.error("Database connection failed:", error);
     process.exit(1);

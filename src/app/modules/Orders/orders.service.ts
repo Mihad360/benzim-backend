@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
 import { JwtPayload } from "../../interface/global";
@@ -9,6 +10,7 @@ import { CartModel } from "../Order/cart.model";
 import { CookProfileModel } from "../Cook/cook.model";
 import { ConversationModel } from "../Conversation/conversation.model";
 import QueryBuilder from "../../builder/QueryBuilder";
+import { UserModel } from "../User/user.model";
 
 const createOrder = async (payload: IOrders, user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
@@ -134,10 +136,38 @@ const myCurrentOrders = async (
 ) => {
   try {
     const userObjectId = new Types.ObjectId(user.user);
+    const cook = await CookProfileModel.findOne({ userId: userObjectId });
 
-    // 🔍 Build query with QueryBuilder (no duplicate find)
-    const orderQuery = new QueryBuilder(
-      OrderModel.find({
+    let baseQuery;
+
+    // 🧠 Cook Request
+    if (user.role === "cook") {
+      if (!cook) {
+        throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
+      }
+
+      baseQuery = OrderModel.find({
+        cookId: cook._id,
+        status: { $nin: ["completed", "cancelled"] },
+      })
+        .populate({
+          path: "cartIds",
+          select: "mealId quantity totalPrice",
+          populate: {
+            path: "mealId",
+            select: "mealName imageUrls pricePerPortion price description",
+          },
+        })
+        .populate({
+          path: "userId",
+          select: "name email profileImage",
+        })
+        .sort({ createdAt: -1 });
+    }
+
+    // 🧠 Normal User Request
+    else if (user.role === "user") {
+      baseQuery = OrderModel.find({
         userId: userObjectId,
         status: { $nin: ["completed", "cancelled"] },
       })
@@ -149,26 +179,67 @@ const myCurrentOrders = async (
             select: "mealName imageUrls pricePerPortion price description",
           },
         })
-        .sort({ createdAt: -1 }),
-      query,
-    )
-      .search(["orderNo", "status"]) // optional: add searchable fields
+        .populate({
+          path: "cookId",
+          select: "name bio userImage",
+        })
+        .sort({ createdAt: -1 });
+    }
+
+    // ❌ Invalid role
+    else {
+      throw new AppError(
+        HttpStatus.UNAUTHORIZED,
+        "You are not allowed to view these orders",
+      );
+    }
+
+    // ✨ QueryBuilder
+    const orderQuery = new QueryBuilder(baseQuery, query)
+      .search(["orderNo", "status"])
       .filter()
       .paginate()
       .sort();
 
     const orders = await orderQuery.modelQuery;
     const meta = await orderQuery.countTotal();
-    // 🎨 Format the data cleanly for frontend
-    const formattedOrders = orders.map((order) => ({
+
+    if (!orders || orders.length === 0) {
+      throw new AppError(HttpStatus.NOT_FOUND, "Orders not found");
+    }
+
+    // 🎨 Unified Formatting for BOTH User & Cook
+    const formattedOrders = orders.map((order: any) => ({
       orderId: order._id,
       orderNo: order.orderNo,
       totalAmount: order.totalAmount,
       tip: order.tip || 0,
       promoCode: order.promoCode || null,
       status: order.status,
+      statusHistory: order.statusHistory,
       createdAt: order.createdAt,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+      // 🧑‍🍳 Cook order includes user info
+      user:
+        user.role === "cook"
+          ? {
+              name: order.userId?.name,
+              email: order.userId?.email,
+              profileImage: order.userId?.profileImage || null,
+            }
+          : undefined,
+
+      // 🧑‍🦱 User order includes cook info
+      cook:
+        user.role === "user"
+          ? {
+              name: order.cookId?.name,
+              bio: order.cookId?.bio,
+              image: order.cookId?.userImage || null,
+            }
+          : undefined,
+
+      // 🍽 Cart Items (Common for both)
       carts: order.cartIds.map((cart: any) => ({
         quantity: cart.quantity,
         totalPrice: cart.totalPrice,
@@ -178,22 +249,86 @@ const myCurrentOrders = async (
           description: cart.mealId?.description || "",
           price: cart.mealId?.price,
           pricePerPortion: cart.mealId?.pricePerPortion,
+          statusHistory: cart.mealId?.statusHistory,
         },
       })),
     }));
 
-    // 📦 Return with meta (pagination info)
     return {
       meta,
       data: formattedOrders,
     };
-  } catch (error) {
-    throw new AppError(HttpStatus.BAD_REQUEST, `Something went wrong ${error}`);
+  } catch (error: any) {
+    throw new AppError(
+      HttpStatus.BAD_REQUEST,
+      `Something went wrong: ${error.message || error}`,
+    );
   }
+};
+
+const getEachOrder = async (orderId: string, user: JwtPayload) => {
+  const userId = new Types.ObjectId(user.user);
+
+  // 🔍 Validate user exists
+  const isUserExist = await UserModel.findById(userId);
+  if (!isUserExist) {
+    throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+  }
+
+  // 🔍 Fetch order with population
+  const order = await OrderModel.findOne({ _id: orderId, userId })
+    .populate({
+      path: "cartIds",
+      select: "mealId quantity totalPrice",
+      populate: {
+        path: "mealId",
+        select: "mealName imageUrls pricePerPortion price description",
+      },
+    })
+    .populate({
+      path: "cookId",
+      select: "cookName profileImage",
+    });
+
+  if (!order) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Order not found");
+  }
+
+  const cook: any = order.cookId;
+
+  const formattedOrder = {
+    orderId: order._id,
+    orderNo: order.orderNo,
+    totalAmount: order.totalAmount,
+    tip: order.tip || 0,
+    promoCode: order.promoCode || null,
+    status: order.status,
+    createdAt: order.createdAt,
+
+    cook: {
+      cookName: cook?.cookName,
+      image: cook?.profileImage || null,
+    },
+
+    carts: order.cartIds.map((cart: any) => ({
+      quantity: cart.quantity,
+      totalPrice: cart.totalPrice,
+      meal: {
+        name: cart.mealId?.mealName,
+        image: cart.mealId?.imageUrls?.[0] || null,
+        description: cart.mealId?.description || "",
+        price: cart.mealId?.price,
+        pricePerPortion: cart.mealId?.pricePerPortion,
+      },
+    })),
+  };
+
+  return formattedOrder;
 };
 
 export const orderServices = {
   createOrder,
   addTip,
   myCurrentOrders,
+  getEachOrder,
 };

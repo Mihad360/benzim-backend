@@ -9,6 +9,11 @@ router.get(
   auth("cook", "admin", "user"),
   orderControllers.myCurrentOrders,
 );
+router.get(
+  "/:orderId",
+  auth("cook", "admin", "user"),
+  orderControllers.getEachOrder,
+);
 router.patch(
   "/tip/:orderId",
   auth("cook", "admin", "user"),
