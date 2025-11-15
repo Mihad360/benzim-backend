@@ -348,8 +348,6 @@ export const emitNotification = async ({
   //   });
 };
 
-// Teacher requests location of a specific user
-// Emits a location request for a specific user (teacher requesting student's location)
 export const emitMessage = (conversationId: string, messageData: any) => {
   // Ensure Socket.IO is initialized
   if (!io) {
@@ -360,109 +358,5 @@ export const emitMessage = (conversationId: string, messageData: any) => {
     io.emit(`new_message-${conversationId}`, { conversationId, messageData }); // Emit the request to the student
   } else {
     console.log(`User ${conversationId} is not connected.`);
-  }
-};
-
-export const emitLocationRequest = async (payload: {
-  userId: string;
-  name?: string;
-}) => {
-  // Ensure Socket.IO is initialized
-  if (!io) {
-    throw new Error("Socket.IO is not initialized");
-  }
-  if (io) {
-    io.emit(`locationRequest-${payload.userId}`, {
-      userId: payload.userId,
-      name: payload.name,
-    });
-  } else {
-    console.log(`User ${payload.userId} is not connected.`);
-  }
-};
-
-// Listens for the student's location update and broadcasts it to the teacher or other connected clients
-export const emitLocationUpdated = async () => {
-  if (!io) {
-    throw new Error("Socket.IO is not initialized");
-  }
-
-  io.on("connection", (socket) => {
-    console.log("A user connected:", socket.id);
-
-    // Listen for 'sendLocation' event from the student (this is where the student sends their location)
-    socket.on("sendLocation", (data) => {
-      const { latitude, longitude, userId } = data;
-
-      console.log(
-        `Received location from student ${userId}:`,
-        latitude,
-        longitude,
-      );
-
-      // Optionally, you can broadcast to the teacher or store this location
-      io.emit("locationData", { userId, latitude, longitude }); // Broadcast to everyone or specific user
-    });
-  });
-};
-
-export const emitEmergency = async (
-  userId: string,
-  latitude: number,
-  longitude: number,
-) => {
-  // Ensure Socket.IO is initialized
-  if (!io) {
-    throw new Error("Socket.IO is not initialized");
-  }
-  console.log(userId);
-  if (io) {
-    io.emit(`emergency-${userId?.toString()}`, { userId, latitude, longitude }); // Emit the request to the student
-  } else {
-    console.log(`User ${userId} is not connected.`);
-  }
-};
-
-export const emitEmergencyFromTeacher = async (
-  userId: string,
-  status: boolean,
-  latitude?: number,
-  longitude?: number,
-) => {
-  // Ensure Socket.IO is initialized
-  if (!io) {
-    throw new Error("Socket.IO is not initialized");
-  }
-  console.log(userId);
-  if (io) {
-    io.emit(`teacher_emergency-${userId?.toString()}`, {
-      userId,
-      status,
-      latitude,
-      longitude,
-    }); // Emit the request to the student
-  } else {
-    console.log(`User ${userId} is not connected.`);
-  }
-};
-
-export const emitLocationLatLong = async (data: any) => {
-  try {
-    const userSocket = connectedUsers.get(data.userId?.toString());
-    // console.log(userSocket);
-    if (userSocket) {
-      io.to(userSocket.socketId).emit("locationUpdated", {
-        userId: data.userId,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        isTrackingEnabled: data.isTrackingEnabled,
-        time: data.time,
-      });
-      console.log("doneee");
-    } else {
-      console.log(`User ${data.userId} is not connected.`);
-    }
-  } catch (error) {
-    console.error("Error in location update:", error);
   }
 };
