@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 export interface ICookProfile {
+  _id?: Types.ObjectId;
   userId: Types.ObjectId; // Referencing the User model (ObjectId)
   cookName: string; // Name of the cook
   businessNumber: string; // Business phone number

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import HttpStatus from "http-status";
 import express, { Application } from "express";
@@ -9,6 +10,7 @@ import config from "../config";
 import { UserModel } from "../modules/User/user.model";
 import { Types } from "mongoose";
 import { logger } from "./logger";
+import { ICookProfile } from "../modules/Cook/cook.interface";
 
 const app: Application = express();
 
@@ -75,7 +77,7 @@ export const initSocketIO = async (server: HttpServer): Promise<void> => {
     const token =
       (socket.handshake.auth.token as string) ||
       (socket.handshake.headers.token as string);
-
+    console.log(token);
     if (!token) {
       return next(
         new AppError(
@@ -141,27 +143,12 @@ export const initSocketIO = async (server: HttpServer): Promise<void> => {
 
     // Listen for location updates (from student)
     socket.on("sendLocation", (data) => {
-      const { latitude, longitude, name, userId } = data;
-      console.log(
-        "Received location from student:",
-        userId,
-        name,
-        latitude,
-        longitude,
-      );
+      const { latitude, longitude, cook } = data;
+      console.log("Received location from student:", latitude, longitude, cook);
 
       // Optionally, send this data to the teacher or store it
-      io.emit("locationData", { userId, name, latitude, longitude });
+      io.emit("locationData", { latitude, longitude, cook });
     });
-
-    // socket.on("stop-emergency", (data) => {
-    //   const { userId, status } = data;
-    //   console.log(data);
-    //   console.log("Received location from student:", userId, status);
-
-    //   // Optionally, send this data to the teacher or store it
-    //   io.emit("stop-emergency-loc", { userId, status });
-    // });
 
     function connectedUserInfoWithId(to: string) {
       try {
@@ -359,4 +346,17 @@ export const emitMessage = (conversationId: string, messageData: any) => {
   } else {
     console.log(`User ${conversationId} is not connected.`);
   }
+};
+
+export const emitCookLocationUpdate = (cook: ICookProfile) => {
+  if (!io) {
+    throw new Error("Socket.IO is not initialized");
+  }
+  if (!cook || !cook.userId) return;
+  console.log(cook);
+  io.emit(`cook_location-${cook.userId?.toString()}`, {
+    cookId: cook._id,
+    userId: cook.userId,
+    cook: cook,
+  });
 };

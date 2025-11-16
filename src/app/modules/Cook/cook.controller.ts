@@ -46,8 +46,21 @@ const getCookProfile = catchAsync(async (req, res) => {
   });
 });
 
+const cooksLocation = catchAsync(async (req, res) => {
+  const result = await cookServices.cooksLocation(req.body, req.query);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "OTP verified successfully",
+    meta: result.meta,
+    data: result.result,
+  });
+});
+
 export const cookControllers = {
   becomeACook,
   setAvailability,
   getCookProfile,
+  cooksLocation,
 };

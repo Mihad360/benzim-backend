@@ -7,6 +7,8 @@ import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
 import mongoose, { Types } from "mongoose";
 import { UserModel } from "../User/user.model";
 import { CookAvailabilityModel, CookProfileModel } from "./cook.model";
+import QueryBuilder from "../../builder/QueryBuilder";
+import { emitCookLocationUpdate } from "../../utils/socket";
 
 const becomeACook = async (
   cook: ICookProfile, // Cook profile data
@@ -83,6 +85,7 @@ const becomeACook = async (
     await UserModel.findByIdAndUpdate(
       isUserExist._id,
       {
+        cookId: savedCookProfile[0]._id,
         profileImage: savedCookProfile[0].profileImage,
       },
       { new: true, session },
@@ -193,8 +196,37 @@ const getCookProfile = async (user: JwtPayload) => {
   };
 };
 
+const cooksLocation = async (
+  payload: { cookIds: string[] },
+  query: Record<string, unknown>,
+) => {
+  const cookQuery = new QueryBuilder(
+    CookProfileModel.find({ _id: { $in: payload.cookIds } }),
+    query,
+  ).filter();
+
+  const meta = await cookQuery.countTotal();
+  const result = await cookQuery.modelQuery;
+
+  if (!result || result.length === 0) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Cooks not found");
+  }
+
+  // 🔥 Emit socket event for each cook’s userId
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  result.forEach((cook: any) => {
+    // console.log(cook);
+    if (cook) {
+      emitCookLocationUpdate(cook);
+    }
+  });
+
+  return { meta, result };
+};
+
 export const cookServices = {
   becomeACook,
   setAvailability,
   getCookProfile,
+  cooksLocation,
 };

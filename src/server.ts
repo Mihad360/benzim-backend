@@ -19,12 +19,14 @@ async function main() {
       console.error("Super admin seeding error:", err),
     );
 
-    server = app.listen(config.port, () => {
-      console.log(`app listening on port ${config.port}`);
-    });
-
+    // ✅ CORRECT - Create ONE HTTP server
     server = createServer(app);
     await initSocketIO(server);
+
+    // Start the server
+    server.listen(config.port, () => {
+      console.log(`App listening on port ${config.port}`);
+    });
   } catch (error) {
     console.error("Database connection failed:", error);
     process.exit(1);
