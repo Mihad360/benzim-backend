@@ -10,6 +10,11 @@ router.get(
   orderControllers.myCurrentOrders,
 );
 router.get(
+  "/recent-orders",
+  auth("cook", "admin", "user"),
+  orderControllers.recentOrders,
+);
+router.get(
   "/:orderId",
   auth("cook", "admin", "user"),
   orderControllers.getEachOrder,

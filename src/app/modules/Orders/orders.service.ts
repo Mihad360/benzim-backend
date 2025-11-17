@@ -326,9 +326,91 @@ const getEachOrder = async (orderId: string, user: JwtPayload) => {
   return formattedOrder;
 };
 
+const recentOrders = async (user: JwtPayload) => {
+  const loggedUserId = new Types.ObjectId(user.user);
+
+  let orders;
+
+  // 👤 USER → find orders where this user placed them
+  if (user.role === "user") {
+    orders = await OrderModel.find({ userId: loggedUserId })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "cookId",
+        select: "cookName profileImage",
+      })
+      .populate({
+        path: "cartIds",
+        select: "quantity",
+      });
+  }
+
+  // 🧑‍🍳 COOK → find orders where cookId = this cook
+  else if (user.role === "cook") {
+    orders = await OrderModel.find({ cookId: loggedUserId })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "userId",
+        select: "name profileImage", // user info for cook
+      })
+      .populate({
+        path: "cartIds",
+        select: "quantity",
+      });
+  }
+
+  // ❌ invalid roles
+  else {
+    throw new AppError(HttpStatus.FORBIDDEN, "Invalid role");
+  }
+
+  if (!orders || orders.length === 0) {
+    throw new AppError(HttpStatus.NOT_FOUND, "No recent orders found");
+  }
+
+  // Formatting output for both roles
+  const formatted = orders.map((order: any) => {
+    const lastStatus =
+      order.statusHistory?.[order.statusHistory.length - 1] || null;
+
+    const totalQuantity = order.cartIds.reduce(
+      (sum: number, cart: any) => sum + (cart.quantity ?? 0),
+      0,
+    );
+
+    let profileName = null;
+    let profileImage = null;
+
+    // 🎯 USER sees COOK data
+    if (user.role === "user") {
+      profileName = order.cookId?.cookName || null;
+      profileImage = order.cookId?.profileImage || null;
+    }
+
+    // 🎯 COOK sees USER data
+    if (user.role === "cook") {
+      profileName = order.userId?.name || null;
+      profileImage = order.userId?.profileImage || null;
+    }
+
+    return {
+      profileName,
+      profileImage,
+      createdAt: order.createdAt,
+      status: order.status,
+      lastStatusUpdate: lastStatus,
+      totalQuantity,
+      price: order.totalAmount,
+    };
+  });
+
+  return formatted;
+};
+
 export const orderServices = {
   createOrder,
   addTip,
   myCurrentOrders,
   getEachOrder,
+  recentOrders,
 };
