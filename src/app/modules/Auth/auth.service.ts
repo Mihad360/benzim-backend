@@ -18,43 +18,55 @@ const createAccount = async (payload: IUser) => {
     email: payload.email,
     phoneNumber: payload.phoneNumber,
   });
+
   if (isUserExist) {
-    throw new AppError(HttpStatus.BAD_REQUEST, "Same user is already exist");
+    throw new AppError(HttpStatus.BAD_REQUEST, "Same user already exists");
   }
+
   const result = await UserModel.create(payload);
-  if (result) {
-    const jwtPayload: JwtPayload = {
-      user: result._id as Types.ObjectId,
-      name: result.name,
-      email: result?.email,
-      phoneNumber: result.phoneNumber,
-      role: result?.role,
-    };
 
-    const accessToken = createToken(
-      jwtPayload,
-      config.jwt_access_secret as string,
-      config.jwt_access_expires_in as string,
-    );
-
-    const refreshToken = createToken(
-      jwtPayload,
-      config.jwt_refresh_secret as string,
-      config.jwt_refresh_expires_in as string,
-    );
-
-    if (accessToken && refreshToken && !result.isVerified) {
-      await UserModel.findByIdAndUpdate(result._id, {
-        isVerified: true,
-      });
-    }
-
-    return {
-      role: result.role,
-      accessToken,
-      refreshToken,
-    };
+  if (!result) {
+    throw new AppError(HttpStatus.BAD_REQUEST, "User creation failed");
   }
+
+  const otp = generateOtp();
+  const expireAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    result._id,
+    {
+      otp: otp,
+      expiresAt: expireAt,
+    },
+    { new: true },
+  ).select("-password -otp -passwordChangedAt");
+
+  if (!updatedUser) {
+    throw new AppError(
+      HttpStatus.BAD_REQUEST,
+      "Failed to update user with OTP",
+    );
+  }
+
+  const subject = "Verification Code";
+  const mail = await sendEmail(
+    result.email as string,
+    subject,
+    verificationEmailTemplate(result.email as string, otp as string),
+  );
+
+  if (!mail) {
+    throw new AppError(
+      HttpStatus.BAD_REQUEST,
+      "Something went wrong while sending OTP",
+    );
+  }
+
+  return {
+    message: "OTP sent to your email for verification",
+    role: result.role,
+    data: updatedUser,
+  };
 };
 
 const loginUser = async (payload: IAuth) => {
@@ -232,20 +244,26 @@ const verifyOtp = async (payload: { email: string; otp: string }) => {
   const check = await checkOtp(payload.email, payload.otp);
   if (check) {
     const jwtPayload: JwtPayload = {
-      user: user._id,
-      name: user.name,
-      email: user?.email,
-      role: user?.role,
-      phoneNumber: user.phoneNumber,
-      profileImage: user?.profileImage,
+      user: check._id,
+      name: check.name,
+      email: check?.email,
+      role: check?.role,
+      phoneNumber: check.phoneNumber,
+      profileImage: check?.profileImage,
     };
 
     const accessToken = createToken(
       jwtPayload,
       config.jwt_access_secret as string,
-      "5m",
+      config.jwt_access_expires_in as string,
     );
-    return { accessToken };
+
+    const refreshToken = createToken(
+      jwtPayload,
+      config.jwt_refresh_secret as string,
+      config.jwt_refresh_expires_in as string,
+    );
+    return { role: check.role, accessToken, refreshToken };
   }
 };
 
@@ -287,11 +305,11 @@ const resetPassword = async (
   );
   if (updateUser) {
     const jwtPayload: JwtPayload = {
-      user: user._id,
-      name: user.name,
-      email: user?.email,
-      role: user?.role,
-      profileImage: user?.profileImage,
+      user: updateUser._id,
+      name: updateUser.name,
+      email: updateUser?.email,
+      role: updateUser?.role,
+      profileImage: updateUser?.profileImage,
     };
 
     const accessToken = createToken(
@@ -299,7 +317,13 @@ const resetPassword = async (
       config.jwt_access_secret as string,
       config.jwt_access_expires_in as string,
     );
-    return { accessToken };
+
+    const refreshToken = createToken(
+      jwtPayload,
+      config.jwt_refresh_secret as string,
+      config.jwt_refresh_expires_in as string,
+    );
+    return { accessToken, refreshToken };
   }
 };
 
@@ -390,6 +414,63 @@ const changePassword = async (
   }
 };
 
+const resendOtp = async (email: string) => {
+  const user = await UserModel.findOne({ email });
+
+  if (!user) {
+    throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (user.isDeleted) {
+    throw new AppError(HttpStatus.FORBIDDEN, "This user is deleted");
+  }
+
+  // Check if OTP exists and is still valid (not expired)
+  if (user.expiresAt && new Date(user.expiresAt) > new Date()) {
+    // OTP is still valid, throw an error because you cannot resend it yet
+    throw new AppError(
+      HttpStatus.BAD_REQUEST,
+      "OTP is still valid. Please try again after it expires.",
+    );
+  } else {
+    // OTP has expired or has not been set, generate a new OTP
+    const otp = generateOtp(); // Generate new OTP
+    const expiresAt = new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + 1); // Set OTP expiration to 1 minute from now
+    // Save the new OTP and expiration time to the user's record
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { email },
+      { otp, expiresAt },
+      { new: true },
+    ).select("-password -passwordChangedAt -otp");
+
+    // Send email with the new OTP
+    const subject = "New Verification Code";
+    const mail = await sendEmail(
+      user.email as string,
+      subject,
+      verificationEmailTemplate(updatedUser?.email as string, otp),
+    );
+    if (!mail) {
+      throw new AppError(
+        HttpStatus.BAD_REQUEST,
+        "Something went wrong while sending the email!",
+      );
+    }
+    return { message: "New otp sent to your email", data: updatedUser };
+  }
+};
+
+const getUsers = async () => {
+  const result = await UserModel.find();
+  return result;
+};
+
+const deleteUser = async (email: string) => {
+  const result = await UserModel.findOneAndDelete({ email: email });
+  return result;
+};
+
 export const authServices = {
   createAccount,
   loginUser,
@@ -397,4 +478,7 @@ export const authServices = {
   resetPassword,
   changePassword,
   verifyOtp,
+  resendOtp,
+  deleteUser,
+  getUsers,
 };

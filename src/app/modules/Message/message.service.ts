@@ -73,10 +73,10 @@ const sendMessage = async (
 };
 
 const getAllMessage = async (conversationId: string, user: JwtPayload) => {
-  // 1️⃣ Check if the conversation exists for this user
+  // 1️⃣ Get the full conversation first
   const conversation = await ConversationModel.findOne({
     _id: new Types.ObjectId(conversationId),
-    $or: [{ userId: user.user }, { cookId: user.user }], // adjust to your conversation model fields
+    $or: [{ userId: user.user }, { cookId: user.user }],
   })
     .populate({
       path: "userId",
@@ -92,7 +92,17 @@ const getAllMessage = async (conversationId: string, user: JwtPayload) => {
     throw new AppError(HttpStatus.NOT_FOUND, "Conversation not found");
   }
 
-  // 2️⃣ Find all messages in this conversation
+  // 2️⃣ Determine opponent user
+  const opponentUser =
+    conversation.userId?._id.toString() === user.user
+      ? conversation.cookId
+      : conversation.userId;
+
+  if (!opponentUser) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Opponent user not found");
+  }
+
+  // 3️⃣ Fetch all messages
   const messages = await MessageModel.find({
     conversation_id: conversation._id,
     isDeleted: false,
@@ -101,16 +111,16 @@ const getAllMessage = async (conversationId: string, user: JwtPayload) => {
       path: "sender_id",
       select: "name profileImage role",
     })
-    .sort({ createdAt: 1 }) // oldest first
+    .sort({ createdAt: 1 })
     .lean();
 
   if (!messages || messages.length === 0) {
     throw new AppError(HttpStatus.NOT_FOUND, "No messages found");
   }
 
-  // 3️⃣ Return both conversation and messages
+  // 4️⃣ Return only opponentUser + messages
   return {
-    conversation,
+    opponentUser,
     messages,
   };
 };

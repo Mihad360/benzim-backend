@@ -236,9 +236,8 @@ export const applyPromoCodeToOrder = async (
   // 8️⃣ Update the order total and track usage
   const originalOrderTotal = order.totalAmount;
   order.totalAmount = Number(newOrderTotal.toFixed(2));
-  //   order.discountAmount = Number(totalDiscount.toFixed(2));
+  order.discountedAmount = Number(totalDiscount.toFixed(2));
   order.promoCode = payload.promoCode;
-
   // Update maxCompleted - increment by 1 each time promo is successfully applied
   if (typeof order.maxCompleted === "number") {
     order.maxCompleted += 1;

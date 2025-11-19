@@ -93,6 +93,41 @@ const changePassword = catchAsync(async (req, res) => {
   });
 });
 
+const resendOtp = catchAsync(async (req, res) => {
+  const email = req.params.email;
+  const result = await authServices.resendOtp(email);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset email sent successfully",
+    data: result,
+  });
+});
+
+const getUsers = catchAsync(async (req, res) => {
+  const result = await authServices.getUsers();
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset email sent successfully",
+    data: result,
+  });
+});
+
+const deleteUser = catchAsync(async (req, res) => {
+  const email = req.params.email;
+  const result = await authServices.deleteUser(email);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset email sent successfully",
+    data: result,
+  });
+});
+
 export const authControllers = {
   createAccount,
   loginUser,
@@ -100,4 +135,7 @@ export const authControllers = {
   resetPassword,
   changePassword,
   verifyOtp,
+  resendOtp,
+  deleteUser,
+  getUsers,
 };

@@ -15,6 +15,7 @@ export interface IUser {
   isVerified: boolean;
   isDeleted: boolean;
   passwordChangedAt: Date;
+  isCookOtpVerified: boolean;
   isKlzhRegistered?: boolean;
   klzhNumber?: string;
   klzhNumberExpiry?: Date;

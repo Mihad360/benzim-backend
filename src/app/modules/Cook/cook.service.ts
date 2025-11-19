@@ -191,8 +191,8 @@ const getCookProfile = async (user: JwtPayload) => {
   }
 
   return {
-    cookProfile,
-    cookAvailability,
+    data: cookProfile,
+    availability: cookAvailability,
   };
 };
 

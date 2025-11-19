@@ -21,6 +21,7 @@ const userSchema = new Schema<IUser, UserInterface>(
     isVerified: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
     passwordChangedAt: { type: Date, default: null },
+    isCookOtpVerified: { type: Boolean, default: false },
     isKlzhRegistered: { type: Boolean, default: false },
     klzhNumber: { type: String },
     klzhNumberExpiry: { type: Date, default: null },

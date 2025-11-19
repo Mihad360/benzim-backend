@@ -43,7 +43,7 @@ const registerKlzh = async (payload: KLZHFormData, user: JwtPayload) => {
     const userUpdate = await UserModel.findByIdAndUpdate(
       userId,
       {
-        isKlzhRegistered: true,
+        // isKlzhRegistered: true,
         klzhNumber: businessNumber,
         klzhNumberExpiry: expirationDate,
       },
@@ -79,6 +79,7 @@ const registerKlzh = async (payload: KLZHFormData, user: JwtPayload) => {
 
 const verifyBusinessNumber = async (
   klzhId: string,
+  user: JwtPayload,
   payload: { businessNumber: string },
 ) => {
   const isKlzhExist = await KLZHModel.findOne({
@@ -92,6 +93,16 @@ const verifyBusinessNumber = async (
       HttpStatus.BAD_REQUEST,
       "The business number is invalid",
     );
+  }
+  const userUpdate = await UserModel.findByIdAndUpdate(
+    user.user,
+    {
+      isKlzhRegistered: true,
+    },
+    { new: true },
+  );
+  if (!userUpdate) {
+    throw new AppError(HttpStatus.BAD_REQUEST, "user update failed");
   }
   return isKlzhExist;
 };

@@ -10,11 +10,6 @@ router.delete(
   auth("cook", "admin", "user"),
   cartControllers.removeOrder,
 );
-router.patch(
-  "/status/:orderId",
-  auth("cook", "admin"),
-  cartControllers.updateOrderStatus,
-);
 router.post(
   "/exclude-order/:cartId",
   auth("cook", "admin", "user"),

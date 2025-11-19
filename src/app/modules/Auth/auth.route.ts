@@ -4,6 +4,8 @@ import auth from "../../middlewares/auth";
 
 const router = express.Router();
 
+router.get("/", authControllers.getUsers);
+router.post("/resend-otp/:email", authControllers.resendOtp);
 router.post("/create-account", authControllers.createAccount);
 router.post("/login", authControllers.loginUser);
 router.post("/forget-password", authControllers.forgetPassword);
@@ -18,5 +20,6 @@ router.post(
   auth("admin", "user", "cook"),
   authControllers.changePassword,
 );
+router.delete("/:email", authControllers.deleteUser);
 
 export const authRoutes = router;

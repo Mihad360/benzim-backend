@@ -43,18 +43,6 @@ const getOrders = catchAsync(async (req, res) => {
   });
 });
 
-const updateOrderStatus = catchAsync(async (req, res) => {
-  const id = req.params.orderId;
-  const result = await cartServices.updateOrderStatus(id, req.body);
-
-  sendResponse(res, {
-    statusCode: HttpStatus.OK,
-    success: true,
-    message: "Password reset successfully",
-    data: result,
-  });
-});
-
 const removeOrder = catchAsync(async (req, res) => {
   const id = req.params.orderId;
   const result = await cartServices.removeOrder(id);
@@ -70,7 +58,6 @@ const removeOrder = catchAsync(async (req, res) => {
 export const cartControllers = {
   addToCartMeal,
   getOrders,
-  updateOrderStatus,
   removeOrder,
   excludeAoRder,
 };

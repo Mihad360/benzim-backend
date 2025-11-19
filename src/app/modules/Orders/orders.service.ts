@@ -5,7 +5,7 @@ import { JwtPayload } from "../../interface/global";
 import { generateOrderNo } from "../Order/cart.utils";
 import { IOrders } from "./orders.interface";
 import { OrderModel } from "./orders.model";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { CartModel } from "../Order/cart.model";
 import { CookProfileModel } from "../Cook/cook.model";
 import { ConversationModel } from "../Conversation/conversation.model";
@@ -407,10 +407,87 @@ const recentOrders = async (user: JwtPayload) => {
   return formatted;
 };
 
+const updateOrderStatus = async (
+  orderId: string,
+  payload: {
+    newStatus:
+      | "new"
+      | "in_preparation"
+      | "ready_for_pickup"
+      | "completed"
+      | "cancelled";
+  },
+) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const { newStatus } = payload;
+
+    // 1. Fetch order inside transaction
+    const order = await OrderModel.findById(orderId).session(session).lean();
+
+    if (!order) {
+      throw new AppError(HttpStatus.NOT_FOUND, "Order not found");
+    }
+
+    // 2. Prepare statusHistory update → NO DUPLICATE ALLOWED
+    const lastHistory = order.statusHistory?.[order.statusHistory.length - 1];
+    let pushHistory = false;
+
+    if (!lastHistory || lastHistory.status !== newStatus) {
+      pushHistory = true;
+    }
+
+    // 3. Build update object dynamically
+    const updateData: any = {
+      status: newStatus,
+    };
+
+    if (pushHistory) {
+      updateData.$push = {
+        statusHistory: {
+          status: newStatus,
+          changedAt: new Date(),
+        },
+      };
+    }
+
+    // 4. Update the order document atomically
+    const newOrder = await OrderModel.findOneAndUpdate(
+      { _id: orderId },
+      updateData,
+      {
+        new: true,
+        session,
+      },
+    );
+
+    // 5. If completed or cancelled → update all carts
+    if (newStatus === "completed" || newStatus === "cancelled") {
+      await CartModel.updateMany(
+        { _id: { $in: order.cartIds } },
+        { $set: { status: newStatus } },
+        { session },
+      );
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return newOrder;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
+};
+
 export const orderServices = {
   createOrder,
   addTip,
   myCurrentOrders,
   getEachOrder,
   recentOrders,
+  updateOrderStatus,
 };

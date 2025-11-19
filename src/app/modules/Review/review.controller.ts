@@ -16,6 +16,19 @@ const giveReview = catchAsync(async (req, res) => {
   });
 });
 
+const getMyReviews = catchAsync(async (req, res) => {
+  const user = req.user as JwtPayload;
+  const result = await reviewServices.getMyReviews(user);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    data: result,
+  });
+});
+
 export const reviewControllers = {
   giveReview,
+  getMyReviews,
 };

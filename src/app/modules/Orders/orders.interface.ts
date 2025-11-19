@@ -7,6 +7,7 @@ export interface IOrders {
   cartIds: Types.ObjectId[]; // references Meal documents
   totalAmount: number;
   tip?: number;
+  discountedAmount: number;
   orderNo: string;
   status:
     | "new"

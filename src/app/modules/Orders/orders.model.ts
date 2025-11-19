@@ -29,6 +29,10 @@ const PaymentSchema = new Schema<IOrders>(
       default: 0,
       min: 0,
     },
+    discountedAmount: {
+      type: Number,
+      default: 0,
+    },
     orderNo: {
       type: String,
     },

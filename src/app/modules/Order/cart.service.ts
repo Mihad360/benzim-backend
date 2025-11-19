@@ -159,24 +159,6 @@ const getOrders = async (user: JwtPayload, query: Record<string, unknown>) => {
   return { meta, result };
 };
 
-const updateOrderStatus = async (
-  orderId: string,
-  payload: {
-    newStatus: "completed" | "cancelled";
-  },
-) => {
-  const order = await CartModel.findById(orderId);
-  if (!order) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Order not found");
-  }
-
-  // Actually update the status
-  order.status = payload.newStatus;
-  const updatedOrder = await order.save();
-
-  return updatedOrder;
-};
-
 const removeOrder = async (orderId: string) => {
   const order = await CartModel.findById(orderId);
   if (!order) {
@@ -193,7 +175,6 @@ const removeOrder = async (orderId: string) => {
 export const cartServices = {
   addToCartMeal,
   getOrders,
-  updateOrderStatus,
   removeOrder,
   excludeAoRder,
 };

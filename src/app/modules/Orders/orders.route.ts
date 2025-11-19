@@ -24,6 +24,11 @@ router.patch(
   auth("cook", "admin", "user"),
   orderControllers.addTip,
 );
+router.patch(
+  "/status/:orderId",
+  auth("cook", "admin"),
+  orderControllers.updateOrderStatus,
+);
 router.post(
   "/create",
   auth("cook", "admin", "user"),

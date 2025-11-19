@@ -29,6 +29,7 @@ export const checkOtp = async (email: string, otp: string) => {
       otp: null,
       expiresAt: null,
       isVerified: true,
+      isCookOtpVerified: otpUser?.role === "cook" ? true : false,
     },
     { new: true },
   );
