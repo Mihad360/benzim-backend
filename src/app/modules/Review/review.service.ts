@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
 import { JwtPayload } from "../../interface/global";

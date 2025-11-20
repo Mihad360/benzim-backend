@@ -54,8 +54,8 @@ const CookProfileSchema = new Schema<ICookProfile>(
       default: "0",
     },
     rating: {
-      type: String,
-      default: "0",
+      type: Number,
+      default: 0,
     },
     stars: {
       type: String,

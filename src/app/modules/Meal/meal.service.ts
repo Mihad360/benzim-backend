@@ -12,7 +12,6 @@ import QueryBuilder from "../../builder/QueryBuilder";
 export const MEAL_SEARCHABLE_FIELDS = [
   "mealName",
   "description",
-  "availablePortion",
   "dietaryCategories",
   "category",
   "fitnessFlow",
@@ -22,11 +21,7 @@ export const MEAL_SEARCHABLE_FIELDS = [
   "servedWarm",
   "ingredients",
   "allergyInformation",
-  "pricePerPortion",
-  "price",
   "location",
-  "pickUpTime",
-  "offer",
 ];
 
 const addMeal = async (
@@ -102,6 +97,9 @@ const getMyMeals = async (user: JwtPayload, query: Record<string, unknown>) => {
 
   let mealQuery;
 
+  // ============================
+  // 1️⃣ FETCH MEALS: ORIGINAL LOGIC
+  // ============================
   if (isUserExist.role === "cook") {
     const isCookExist = await CookProfileModel.findOne({
       userId: isUserExist._id,
@@ -109,31 +107,79 @@ const getMyMeals = async (user: JwtPayload, query: Record<string, unknown>) => {
     if (!isCookExist) {
       throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
     }
-
-    // Cook → only their meals
     mealQuery = MealModel.find({ cookId: isCookExist._id });
   } else if (isUserExist.role === "user") {
-    // User → all meals
     mealQuery = MealModel.find();
   } else {
     throw new AppError(HttpStatus.FORBIDDEN, "Invalid user role");
   }
 
-  const meals = new QueryBuilder(mealQuery, query)
+  const mealsBuilder = new QueryBuilder(mealQuery, query)
     .search(MEAL_SEARCHABLE_FIELDS)
     .filter()
     .fields()
     .paginate()
     .sort();
 
-  const meta = await meals.countTotal();
-  const result = await meals.modelQuery;
+  const meta = await mealsBuilder.countTotal();
+  const meals = await mealsBuilder.modelQuery;
 
-  if (!result || result.length === 0) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Meals not found");
-  }
+  // ============================
+  // 2️⃣ GET TOP RATED COOKS
+  // ============================
+  const topRatedCooks = await CookProfileModel.find()
+    .sort({ rating: -1 })
+    .limit(10) // you can adjust if needed
+    .select("cookName rating profileImage businessNumber");
 
-  return { meta, result };
+  // ============================
+  // 3️⃣ GET POPULAR MEALS (Rating-based)
+  // ============================
+  const popularMeals = await MealModel.aggregate([
+    {
+      $lookup: {
+        from: "cooks",
+        localField: "cookId",
+        foreignField: "_id",
+        as: "cook",
+      },
+    },
+    { $unwind: "$cook" },
+
+    // Sort by converted rating
+    { $sort: { "cook.rating": -1 } },
+
+    { $limit: 10 },
+
+    // Return full meal + selected cook fields
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        description: 1,
+        price: 1,
+        imageUrls: 1,
+        mealType: 1,
+        cookId: 1,
+        cook: {
+          _id: 1,
+          cookName: 1,
+          rating: 1,
+          profileImage: 1,
+        },
+      },
+    },
+  ]);
+
+  // ============================
+  // Final Return
+  // ============================
+  return {
+    meta,
+    meals,
+    topRatedCooks,
+    popularMeals,
+  };
 };
 
 export const mealServices = {

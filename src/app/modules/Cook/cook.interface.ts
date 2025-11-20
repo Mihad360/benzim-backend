@@ -15,7 +15,7 @@ export interface ICookProfile {
   totalOrders: string; // Total orders handled
   completedOrders: string; // Total orders completed
   rejectedOrders: string; // Total orders rejected
-  rating: string; // Rating based on feedback
+  rating: number; // Rating based on feedback
   stars: string; // Star rating value
   totalReviews: string; // Total number of reviews
   isKlzhRegistered: boolean;

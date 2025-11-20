@@ -26,7 +26,7 @@ const getMyMeals = catchAsync(async (req, res) => {
     success: true,
     message: "Password reset successfully",
     meta: result.meta,
-    data: result.result,
+    data: result,
   });
 });
 

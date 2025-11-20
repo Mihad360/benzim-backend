@@ -224,6 +224,19 @@ const cooksLocation = async (
   return { meta, result };
 };
 
+// const getCooksByRate = async (query: Record<string, unknown>) => {
+//   const cookQuery = new QueryBuilder(CookProfileModel.find(), query).filter();
+
+//   const meta = await cookQuery.countTotal();
+//   const result = await cookQuery.modelQuery;
+
+//   if (!result || result.length === 0) {
+//     throw new AppError(HttpStatus.NOT_FOUND, "Cooks not found");
+//   }
+
+//   return { meta, result };
+// };
+
 export const cookServices = {
   becomeACook,
   setAvailability,

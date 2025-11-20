@@ -177,7 +177,7 @@ const forgetPassword = async (payload: { contact: string }) => {
 
   // ✅ Generate OTP and expiration
   const otp = generateOtp();
-  const expireAt = new Date(Date.now() + 5 * 60 * 1000); // 5 min expiry
+  const expireAt = new Date(Date.now() + 5 * 60 * 1000);
 
   // ✅ Update user with OTP
   const updatedUser = await UserModel.findByIdAndUpdate(
