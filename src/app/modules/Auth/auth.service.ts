@@ -87,7 +87,7 @@ const loginUser = async (payload: IAuth) => {
   if (payload.email) query.email = payload.email;
 
   // Find the user based on the provided query (either phoneNumber or email)
-  const user = await UserModel.findOne(query);
+  const user = await UserModel.findOne(query).select("-otp -passwordChangedAt");
 
   if (!user) {
     throw new AppError(HttpStatus.NOT_FOUND, "The user is not found");
@@ -142,6 +142,7 @@ const loginUser = async (payload: IAuth) => {
     role: user.role,
     accessToken,
     refreshToken,
+    user: user,
   };
 };
 
@@ -302,7 +303,7 @@ const resetPassword = async (
       passwordChangedAt: new Date(),
     },
     { new: true },
-  );
+  ).select("-password -otp -passwordChangedAt");
   if (updateUser) {
     const jwtPayload: JwtPayload = {
       user: updateUser._id,
@@ -323,7 +324,7 @@ const resetPassword = async (
       config.jwt_refresh_secret as string,
       config.jwt_refresh_expires_in as string,
     );
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, user: updateUser };
   }
 };
 

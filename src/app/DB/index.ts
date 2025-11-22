@@ -7,7 +7,7 @@ const admin = {
   password: "123456",
   phoneNumber: "01979053892",
   profileImage:
-    "https://i.ibb.co/MHpMRvT/c9c023a7-7a94-4101-b73e-c4b5bea09c38-enhanced.png",
+    "https://res.cloudinary.com/dmzmx97wn/image/upload/v1754835427/IMG-20250331-WA0261.jpg",
   isVerified: true,
 };
 

@@ -18,7 +18,7 @@ const createAccount = catchAsync(async (req, res) => {
 
 const loginUser = catchAsync(async (req, res) => {
   const result = await authServices.loginUser(req.body);
-  const { accessToken, refreshToken, role } = result;
+  const { accessToken, refreshToken, role, user } = result;
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
@@ -42,6 +42,7 @@ const loginUser = catchAsync(async (req, res) => {
       role,
       accessToken,
       refreshToken,
+      user,
     },
   });
 });

@@ -11,6 +11,7 @@ const favoriteSchema = new Schema<IFavorite>(
       enum: ["cook", "meal"],
       required: true,
     },
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true },
 );
