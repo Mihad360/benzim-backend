@@ -13,6 +13,7 @@ router.post(
   upload.fields([
     { name: "profileImage", maxCount: 1 }, // Single file for profile image
     { name: "kitchenImages", maxCount: 5 }, // Multiple files for kitchen images (e.g., up to 5)
+    { name: "certificates", maxCount: 3 }, // Multiple files for kitchen images (e.g., up to 5)
   ]),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.cook) {

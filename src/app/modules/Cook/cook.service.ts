@@ -16,7 +16,7 @@ const becomeACook = async (
   files: IFileFields, // Files (profile image, kitchen images)
 ) => {
   const userId = new Types.ObjectId(user.user);
-  const { profileImage, kitchenImages } = files;
+  const { profileImage, kitchenImages, certificates } = files;
 
   // Check if the required images are provided
   if (!profileImage || !kitchenImages) {
@@ -65,6 +65,18 @@ const becomeACook = async (
       kitchenImageUrls.push(result.secure_url);
     }
 
+    // Upload kitchen images to Cloudinary
+    const certificatesUrls = [];
+    // eslint-disable-next-line prefer-const
+    for (let cer of certificates) {
+      const result = await sendFileToCloudinary(
+        cer.buffer,
+        cer.originalname,
+        cer.mimetype,
+      );
+      certificatesUrls.push(result.secure_url);
+    }
+
     // Prepare the cook profile payload (excluding availability)
     const cookProfilePayload: ICookProfile = {
       ...cook,
@@ -73,6 +85,7 @@ const becomeACook = async (
       businessNumber: isUserExist.klzhNumber as string,
       profileImage: profileImageUrl.secure_url,
       kitchenImages: kitchenImageUrls,
+      certificates: certificatesUrls,
     };
 
     // Save the cook profile in the database with the session

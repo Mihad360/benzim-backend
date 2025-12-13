@@ -10,6 +10,7 @@ export interface ICookProfile {
   location: string; // Location of the cook
   profileImage: string; // URL to the cook's profile image
   kitchenImages: string[]; // Array of URLs to the kitchen images
+  certificates: string[]; // Array of URLs to the kitchen images
   approvedAt: Date | null; // Date when the cook was approved (null if not approved)
   rejectionReason: string | null; // Reason for rejection (null if not rejected)
   totalOrders: string; // Total orders handled

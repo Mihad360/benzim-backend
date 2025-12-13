@@ -8,6 +8,7 @@ import { JwtPayload } from "../../interface/global";
 export interface IFileFields {
   profileImage: Express.Multer.File[]; // Single file
   kitchenImages: Express.Multer.File[]; // Multiple files
+  certificates: Express.Multer.File[]; // Multiple files
 }
 
 const becomeACook = catchAsync(async (req, res) => {

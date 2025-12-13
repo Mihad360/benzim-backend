@@ -33,6 +33,9 @@ const CookProfileSchema = new Schema<ICookProfile>(
     kitchenImages: {
       type: [String],
     },
+    certificates: {
+      type: [String],
+    },
     approvedAt: {
       type: Date,
       default: null,

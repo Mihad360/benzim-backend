@@ -11,86 +11,149 @@ import { CookProfileModel } from "../Cook/cook.model";
 import { ConversationModel } from "../Conversation/conversation.model";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { UserModel } from "../User/user.model";
+import { MealModel } from "../Meal/meal.model";
 
 export const roundToCent = (value: number) => {
   return Math.round(value * 100) / 100; // safest method
 };
 
 const createOrder = async (payload: IOrders, user: JwtPayload) => {
-  const userId = new Types.ObjectId(user.user);
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  if (!payload.cartIds || payload.cartIds.length === 0) {
-    throw new AppError(HttpStatus.BAD_REQUEST, "No cartIds provided");
-  }
+  try {
+    const userId = new Types.ObjectId(user.user);
 
-  // Fetch all carts by IDs, ensure they belong to this user and are not deleted
-  const carts = await CartModel.find({
-    _id: { $in: payload.cartIds },
-    userId,
-    isDeleted: false,
-  }).populate({ path: "cookId", select: "cookName" });
+    if (!payload.cartIds || payload.cartIds.length === 0) {
+      throw new AppError(HttpStatus.BAD_REQUEST, "No cartIds provided");
+    }
 
-  if (!carts || carts.length === 0) {
-    throw new AppError(HttpStatus.NOT_FOUND, "No valid carts found");
-  }
-
-  // Sum totalPrice from all carts
-  const totalAmount = carts.reduce((acc, cart) => acc + cart.totalPrice, 0);
-
-  // Use provided tip or default to 0
-  const tip = payload.tip ?? 0;
-
-  // Create orderNo (you can replace this with your own logic)
-  const orderNo = await generateOrderNo();
-
-  // Prepare statusHistory with initial "new" status
-  const statusHistory = [{ status: "new", changedAt: new Date() }];
-
-  // Create order document
-  const orderData: IOrders = {
-    ...payload,
-    userId,
-    totalAmount: roundToCent(totalAmount + tip),
-    tip: Number(tip),
-    orderNo: orderNo,
-    status: "new",
-    statusHistory,
-  };
-
-  // Save order
-  const newOrder = await OrderModel.create(orderData);
-
-  const firstMealCookId = carts[0]?.cookId;
-  if (firstMealCookId) {
-    // Get cook’s userId from cook profile
-    const cookProfile = await CookProfileModel.findById(firstMealCookId);
-
-    if (cookProfile) {
-      // Check if conversation already exists between this user and cook
-      const existingConversation = await ConversationModel.findOne({
-        cookId: cookProfile.userId,
-        userId: userId,
+    // Fetch carts (must belong to user)
+    const carts = await CartModel.find(
+      {
+        _id: { $in: payload.cartIds },
+        userId,
         isDeleted: false,
-      });
+      },
+      null,
+      { session },
+    )
+      .populate({ path: "cookId", select: "cookName" })
+      .populate({ path: "mealId", select: "availablePortion" });
 
-      if (!existingConversation) {
-        // Create new conversation if not exist
-        const conversation = await ConversationModel.create({
-          cookId: cookProfile.userId,
-          userId: userId,
-        });
+    if (!carts || carts.length === 0) {
+      throw new AppError(HttpStatus.NOT_FOUND, "No valid carts found");
+    }
 
-        if (!conversation) {
-          throw new AppError(
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            "Failed to create conversation",
+    // Calculate total amount
+    const totalAmount = carts.reduce((acc, cart) => acc + cart.totalPrice, 0);
+
+    const tip = payload.tip ?? 0;
+    const orderNo = await generateOrderNo();
+
+    const statusHistory = [{ status: "new", changedAt: new Date() }];
+
+    const orderData: IOrders = {
+      ...payload,
+      userId,
+      totalAmount: roundToCent(totalAmount + tip),
+      tip: Number(tip),
+      orderNo,
+      status: "new",
+      statusHistory,
+    };
+
+    // Create order
+    const newOrder = await OrderModel.create([orderData], { session });
+
+    const insufficientMeals: string[] = [];
+
+    for (const cart of carts) {
+      const meal: any = cart.mealId;
+      const orderedQty = cart.quantity || 1;
+
+      if (!meal) {
+        insufficientMeals.push("Unknown meal");
+        continue;
+      }
+
+      if (meal.availablePortion < orderedQty) {
+        insufficientMeals.push(
+          `${meal.name || "This meal"} (available: ${meal.availablePortion}, requested: ${orderedQty})`,
+        );
+      }
+    }
+
+    // 🚫 If any meal is insufficient, block order
+    if (insufficientMeals.length > 0) {
+      throw new AppError(
+        HttpStatus.BAD_REQUEST,
+        `Some meals are not available in the requested quantity: ${insufficientMeals.join(
+          ", ",
+        )}`,
+      );
+    }
+    // ===============================
+    // 🔥 Step 2: Update Meal availablePortion
+    // ===============================
+    for (const cart of carts) {
+      const orderedQty = cart.quantity || 1;
+
+      await MealModel.findByIdAndUpdate(
+        (cart.mealId as any)._id,
+        { $inc: { availablePortion: -orderedQty } },
+        { session },
+      );
+    }
+
+    // ===============================
+    // 💬 Conversation creation
+    // ===============================
+    const firstMealCookId = carts[0]?.cookId;
+
+    if (firstMealCookId) {
+      const cookProfile = await CookProfileModel.findById(
+        firstMealCookId,
+        null,
+        { session },
+      );
+
+      if (cookProfile) {
+        const existingConversation = await ConversationModel.findOne(
+          {
+            cookId: cookProfile.userId,
+            userId,
+            isDeleted: false,
+          },
+          null,
+          { session },
+        );
+
+        if (!existingConversation) {
+          await ConversationModel.create(
+            [
+              {
+                cookId: cookProfile.userId,
+                userId,
+              },
+            ],
+            { session },
           );
         }
       }
     }
-  }
 
-  return newOrder;
+    // ✅ Commit transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    return newOrder[0];
+  } catch (error) {
+    // ❌ Rollback everything
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
 };
 
 export const addTip = async (
