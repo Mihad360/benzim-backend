@@ -1,0 +1,20 @@
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 2019 ms","size":"1547","timestamp":"30-11-2025 10:29:48"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 500 🔥 /api/v1/auth/stripe-dashboard/6928361babc89e1d42f49adc ⏱️ Response Time: 707 ms","size":"3232","timestamp":"30-11-2025 10:38:30"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/auth/stripe-dashboard/6928361babc89e1d42f49adc ⏱️ Response Time: 1732 ms","size":"197","timestamp":"30-11-2025 10:39:30"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/auth/stripe-dashboard/6928361babc89e1d42f49adc ⏱️ Response Time: 1082 ms","size":"197","timestamp":"30-11-2025 11:00:22"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 278 ms","size":"1480","timestamp":"30-11-2025 11:26:46"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 4120 ms","size":"1505","timestamp":"30-11-2025 11:28:02"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 3290 ms","size":"1505","timestamp":"30-11-2025 12:00:49"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 3127 ms","size":"1505","timestamp":"30-11-2025 12:18:18"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 3893 ms","size":"1505","timestamp":"30-11-2025 12:22:05"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 3314 ms","size":"1505","timestamp":"30-11-2025 12:45:06"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 3033 ms","size":"1505","timestamp":"30-11-2025 14:42:35"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 3353 ms","size":"1505","timestamp":"30-11-2025 14:56:28"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 3053 ms","size":"1505","timestamp":"30-11-2025 15:12:26"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/auth/stripe-dashboard/6928361babc89e1d42f49adc ⏱️ Response Time: 1703 ms","size":"197","timestamp":"30-11-2025 15:15:42"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/auth/stripe-dashboard/6928361babc89e1d42f49adc ⏱️ Response Time: 1696 ms","size":"197","timestamp":"30-11-2025 15:27:45"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 404 ⚠️ /api/v1/auth/stripe-dashboard/692834fdabc89e1d42f49aca ⏱️ Response Time: 93 ms","size":"155","timestamp":"30-11-2025 15:45:46"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/auth/stripe-dashboard/692834fdabc89e1d42f49aca ⏱️ Response Time: 703 ms","size":"197","timestamp":"30-11-2025 15:46:07"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/auth/stripe-dashboard/692834fdabc89e1d42f49aca ⏱️ Response Time: 1016 ms","size":"197","timestamp":"30-11-2025 17:35:49"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/payment/create-payment ⏱️ Response Time: 1985 ms","size":"501","timestamp":"30-11-2025 17:38:17"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/auth/stripe-dashboard/692834fdabc89e1d42f49aca ⏱️ Response Time: 1668 ms","size":"197","timestamp":"30-11-2025 17:39:37"}

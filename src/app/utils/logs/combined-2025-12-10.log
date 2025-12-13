@@ -1,0 +1,55 @@
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 2112 ms","size":"3413","timestamp":"10-12-2025 11:00:50"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 757 ms","size":"3413","timestamp":"10-12-2025 11:09:27"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 1745 ms","size":"3413","timestamp":"10-12-2025 11:12:45"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 263 ms","size":"1438","timestamp":"10-12-2025 11:13:17"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 253 ms","size":"1551","timestamp":"10-12-2025 11:13:32"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 253 ms","size":"1280","timestamp":"10-12-2025 11:13:42"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 92 ms","size":"558","timestamp":"10-12-2025 11:15:45"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 262 ms","size":"756","timestamp":"10-12-2025 11:16:50"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 261 ms","size":"744","timestamp":"10-12-2025 11:17:11"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 253 ms","size":"744","timestamp":"10-12-2025 11:17:12"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 258 ms","size":"760","timestamp":"10-12-2025 11:19:10"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 246 ms","size":"760","timestamp":"10-12-2025 11:19:16"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 284 ms","size":"756","timestamp":"10-12-2025 11:19:36"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 262 ms","size":"756","timestamp":"10-12-2025 11:19:37"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 404 ⚠️ /api/v1/auth/login ⏱️ Response Time: 54 ms","size":"169","timestamp":"10-12-2025 11:20:07"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 403 ⚠️ /api/v1/auth/login ⏱️ Response Time: 256 ms","size":"171","timestamp":"10-12-2025 11:20:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 403 ⚠️ /api/v1/auth/login ⏱️ Response Time: 249 ms","size":"171","timestamp":"10-12-2025 11:20:45"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 255 ms","size":"756","timestamp":"10-12-2025 11:21:10"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 257 ms","size":"760","timestamp":"10-12-2025 11:21:38"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 532 ms","size":"756","timestamp":"10-12-2025 11:23:21"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 533 ms","size":"1474","timestamp":"10-12-2025 11:24:29"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 52 ms","size":"175","timestamp":"10-12-2025 11:24:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 44 ms","size":"175","timestamp":"10-12-2025 11:25:08"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 44 ms","size":"175","timestamp":"10-12-2025 11:25:11"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/create-account ⏱️ Response Time: 3811 ms","size":"608","timestamp":"10-12-2025 11:35:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/verify-otp ⏱️ Response Time: 168 ms","size":"718","timestamp":"10-12-2025 11:36:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 48 ms","size":"175","timestamp":"10-12-2025 11:38:29"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 47 ms","size":"175","timestamp":"10-12-2025 11:38:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 45 ms","size":"175","timestamp":"10-12-2025 11:39:00"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 263 ms","size":"1280","timestamp":"10-12-2025 11:39:32"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 260 ms","size":"1262","timestamp":"10-12-2025 11:39:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/create-account ⏱️ Response Time: 3276 ms","size":"609","timestamp":"10-12-2025 11:42:14"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/create-account ⏱️ Response Time: 3137 ms","size":"609","timestamp":"10-12-2025 12:10:27"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/verify-otp ⏱️ Response Time: 154 ms","size":"720","timestamp":"10-12-2025 12:11:06"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 318 ms","size":"1551","timestamp":"10-12-2025 14:48:05"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 258 ms","size":"1262","timestamp":"10-12-2025 14:52:50"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/create-account ⏱️ Response Time: 2973 ms","size":"605","timestamp":"10-12-2025 15:24:26"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/verify-otp ⏱️ Response Time: 258 ms","size":"710","timestamp":"10-12-2025 15:24:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/create-account ⏱️ Response Time: 2831 ms","size":"604","timestamp":"10-12-2025 15:30:15"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/verify-otp ⏱️ Response Time: 255 ms","size":"706","timestamp":"10-12-2025 15:30:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance/ ⏱️ Response Time: 176 ms","size":"64","timestamp":"10-12-2025 15:31:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 401 ⚠️ /api/v1/freelance/add-freelance ⏱️ Response Time: 16 ms","size":"151","timestamp":"10-12-2025 15:32:19"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 287 ms","size":"1370","timestamp":"10-12-2025 15:32:37"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/freelance/add-freelance ⏱️ Response Time: 261 ms","size":"371","timestamp":"10-12-2025 15:32:43"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance/ ⏱️ Response Time: 166 ms","size":"373","timestamp":"10-12-2025 15:32:48"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance/ ⏱️ Response Time: 161 ms","size":"371","timestamp":"10-12-2025 15:34:12"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance/ ⏱️ Response Time: 159 ms","size":"371","timestamp":"10-12-2025 15:34:17"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance/ ⏱️ Response Time: 162 ms","size":"371","timestamp":"10-12-2025 15:37:35"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance ⏱️ Response Time: 170 ms","size":"371","timestamp":"10-12-2025 15:51:23"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance ⏱️ Response Time: 163 ms","size":"371","timestamp":"10-12-2025 15:51:25"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance ⏱️ Response Time: 168 ms","size":"371","timestamp":"10-12-2025 16:04:22"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance ⏱️ Response Time: 164 ms","size":"371","timestamp":"10-12-2025 16:06:29"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance ⏱️ Response Time: 166 ms","size":"371","timestamp":"10-12-2025 16:11:59"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance ⏱️ Response Time: 168 ms","size":"371","timestamp":"10-12-2025 16:12:24"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance ⏱️ Response Time: 167 ms","size":"371","timestamp":"10-12-2025 16:12:54"}
