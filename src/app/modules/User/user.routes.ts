@@ -7,6 +7,11 @@ const router = express.Router();
 
 router.get("/me", auth("user", "cook", "admin"), userControllers.getMe);
 router.patch(
+  "/track-me",
+  auth("user", "cook", "admin"),
+  userControllers.trackPagesUpdate,
+);
+router.patch(
   "/edit-profile",
   auth("user", "cook", "admin"),
   upload.single("image"),

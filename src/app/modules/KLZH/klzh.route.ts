@@ -5,10 +5,6 @@ import auth from "../../middlewares/auth";
 const router = express.Router();
 
 router.post("/register-klzh", auth("cook"), klzhControllers.registerKlzh);
-router.post(
-  "/verify-klzh/:klzhId",
-  auth("cook"),
-  klzhControllers.verifyBusinessNumber,
-);
+router.post("/verify-klzh", auth("cook"), klzhControllers.verifyBusinessNumber);
 
 export const klzhRoutes = router;

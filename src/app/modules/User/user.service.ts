@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
-import { IUser } from "./user.interface";
+import { ITrackPayload, IUser } from "./user.interface";
 import { UserModel } from "./user.model";
 import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
 import { JwtPayload } from "../../interface/global";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 const getMe = async (user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
@@ -76,7 +77,68 @@ const editUserProfile = async (
   return updatedUser;
 };
 
+// const TOTAL_STEPS = 12;
+
+export const trackPagesUpdate = async (
+  user: JwtPayload,
+  payload: ITrackPayload,
+) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const userId = new Types.ObjectId(user.user);
+
+    const existingUser = await UserModel.findById(userId).session(session);
+    if (!existingUser) {
+      throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+    }
+
+    const trackStep = Number(existingUser.trackStep);
+
+    const updateData: Record<string, any> = {
+      $inc: { trackStep: 1 },
+    };
+
+    // 🔴 Hygiene validation
+    if (payload.type === "hygiene") {
+      if (existingUser.isHygiened && trackStep === 3) {
+        throw new AppError(HttpStatus.BAD_REQUEST, "Hygiene already completed");
+      }
+
+      updateData.$set = { isHygiened: true };
+    }
+
+    // 🔴 Self-res contract validation
+    if (payload.type === "selfres") {
+      if (existingUser.isSelfResContract) {
+        throw new AppError(
+          HttpStatus.BAD_REQUEST,
+          "Self-res contract already completed",
+        );
+      }
+
+      updateData.$set = { isSelfResContract: true };
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      session,
+    });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return updatedUser;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
+};
+
 export const userServices = {
   editUserProfile,
   getMe,
+  trackPagesUpdate,
 };

@@ -42,6 +42,7 @@ const registerKlzh = async (payload: KLZHFormData, user: JwtPayload) => {
       userId,
       {
         klzhNumberExpiry: expirationDate,
+        pdfSent: true,
       },
       { session },
     );
@@ -83,30 +84,32 @@ const registerKlzh = async (payload: KLZHFormData, user: JwtPayload) => {
 };
 
 const verifyBusinessNumber = async (
-  klzhId: string,
+  // klzhId: string,
   user: JwtPayload,
   payload: { businessNumber: string },
 ) => {
-  const isKlzhExist = await KLZHModel.findOne({
-    _id: klzhId,
-  });
-  if (!isKlzhExist) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Klzh not found");
-  }
-  isKlzhExist.betriebsnummer = payload.businessNumber;
-  isKlzhExist.save();
+  const userId = new Types.ObjectId(user.user);
+  // const isKlzhExist = await KLZHModel.findOne({
+  //   _id: klzhId,
+  // });
+  // if (!isKlzhExist) {
+  //   throw new AppError(HttpStatus.NOT_FOUND, "Klzh not found");
+  // }
+  // isKlzhExist.betriebsnummer = payload.businessNumber;
+  // isKlzhExist.save();
   const userUpdate = await UserModel.findByIdAndUpdate(
-    user.user,
+    userId,
     {
       klzhNumber: payload.businessNumber,
       isKlzhRegistered: true,
+      $inc: { trackStep: 1 },
     },
     { new: true },
   );
   if (!userUpdate) {
     throw new AppError(HttpStatus.BAD_REQUEST, "user update failed");
   }
-  return isKlzhExist;
+  return { user: userUpdate };
 };
 
 export const klzhServices = {

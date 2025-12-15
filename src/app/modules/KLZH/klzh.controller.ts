@@ -19,7 +19,7 @@ const registerKlzh = catchAsync(async (req, res) => {
 const verifyBusinessNumber = catchAsync(async (req, res) => {
   const id = req.params.klzhId;
   const user = req.user as JwtPayload;
-  const result = await klzhServices.verifyBusinessNumber(id, user, req.body);
+  const result = await klzhServices.verifyBusinessNumber(user, req.body);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,

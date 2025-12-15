@@ -15,8 +15,10 @@ export interface IUser {
   isVerified: boolean;
   isDeleted: boolean;
   passwordChangedAt: Date;
+  trackStep?: number; // 0 → 12
   isCookOtpVerified: boolean;
   isKlzhRegistered?: boolean;
+  pdfSent?: boolean;
   klzhNumber?: string;
   klzhNumberExpiry?: Date;
   isSelfResContract: boolean;
@@ -24,6 +26,12 @@ export interface IUser {
   isCookIdVerified: boolean;
   stripeAccountId: string;
   isOnboarded: boolean;
+}
+
+type TrackType = "klzh" | "hygiene" | "selfres";
+
+export interface ITrackPayload {
+  type?: TrackType;
 }
 
 export interface UserInterface extends Model<IUser> {

@@ -24,7 +24,7 @@ const getHygieneCompliances = catchAsync(async (req, res) => {
     statusCode: HttpStatus.OK,
     success: true,
     message: "Password reset successfully",
-    data: result,
+    data: result[0],
   });
 });
 
