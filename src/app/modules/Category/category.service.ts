@@ -42,7 +42,9 @@ const getCategories = async (
     throw new AppError(HttpStatus.NOT_FOUND, "User not found");
   }
   const categories = new QueryBuilder(
-    CategoryModel.find({ isDeleted: false }).select("name type"),
+    CategoryModel.find({ cookId: isUserExist.cookId, isDeleted: false }).select(
+      "name type",
+    ),
     query,
   ).filter();
 

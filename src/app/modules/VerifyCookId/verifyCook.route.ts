@@ -5,6 +5,7 @@ import { upload } from "../../utils/sendImageToCloudinary";
 
 const router = express.Router();
 
+router.get("/", auth("admin"), verifyCookIdControllers.getVerificationCooks);
 router.post(
   "/verify-cook-id",
   auth("cook"),

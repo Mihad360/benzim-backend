@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
 import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
-import { Course } from "./course.interface";
+import { Course, QuizSubmitPayload } from "./course.interface";
 import CourseModel from "./course.model";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { UserModel } from "../User/user.model";
@@ -99,8 +100,87 @@ const addQuizes = async (courseData: Course) => {
   }
 };
 
+const submitQuiz = async (
+  user: JwtPayload,
+  quizId: string,
+  payload: QuizSubmitPayload,
+) => {
+  const userId = new Types.ObjectId(user.user);
+  const quizzes = await CourseModel.findById(quizId);
+  if (!quizzes) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Quiz not found");
+  }
+  const quiz = quizzes.quizzes;
+  if (payload.answers.length !== quiz?.length) {
+    throw new Error("All questions must be answered");
+  }
+
+  let score = 0;
+  const results: {
+    questionId?: string;
+    question: string;
+    selectedAnswer: string;
+    correctAnswer: string;
+    isCorrect: boolean;
+  }[] = [];
+  for (const answer of payload.answers) {
+    const quize = quiz.find(
+      (q: any) => q._id?.toString() === answer.questionId,
+    );
+    if (!quize) {
+      throw new Error(`Invalid question ID: ${answer.questionId}`);
+    }
+
+    const selectedOption = quize.options.find(
+      (opt) => opt.optionText === answer.selectedAnswer,
+    );
+
+    if (!selectedOption) {
+      throw new Error(
+        `Invalid answer "${answer.selectedAnswer}" for question "${quize.question}"`,
+      );
+    }
+
+    const correctOption = quize.options.find((opt) => opt.isCorrect);
+
+    const isCorrect = correctOption?.optionText === answer.selectedAnswer;
+
+    if (isCorrect) score++;
+
+    results.push({
+      // questionId: quize._id,
+      question: quize.question,
+      selectedAnswer: answer.selectedAnswer,
+      correctAnswer: correctOption?.optionText || "",
+      isCorrect,
+    });
+  }
+  let updateUser;
+  if (results.length) {
+    updateUser = await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        isCookQuiz: true,
+      },
+      { new: true },
+    );
+    if (!updateUser) {
+      throw new AppError(HttpStatus.BAD_REQUEST, "User update failed");
+    }
+  }
+
+  return {
+    totalQuestions: quiz.length,
+    correctAnswers: score,
+    wrongAnswers: quiz.length - score,
+    results,
+    user: updateUser,
+  };
+};
+
 export const courseServices = {
   addCourse,
   getCourses,
   addQuizes,
+  submitQuiz,
 };

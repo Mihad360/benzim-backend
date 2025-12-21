@@ -33,6 +33,19 @@ const addSelfResRules = catchAsync(async (req, res) => {
   });
 });
 
+const getVerificationCooks = catchAsync(async (req, res) => {
+  const result = await verifyCookIdServices.getVerificationCooks(req.query);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    meta: result.meta,
+    data: result.result,
+  });
+});
+
 export const verifyCookIdControllers = {
   addSelfResRules,
+  getVerificationCooks,
 };

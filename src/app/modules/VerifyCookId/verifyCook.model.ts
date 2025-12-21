@@ -4,7 +4,7 @@ import { IVerifyCookId } from "./verifyCook.interface";
 const verifyCookIdSchema = new Schema<IVerifyCookId>(
   {
     cookId: { type: Schema.Types.ObjectId, ref: "Cook" },
-    ownerName: { type: String, required: true },
+    ownerName: { type: String },
     businessNumber: { type: String, required: true },
     validIdType: {
       type: String,
@@ -15,15 +15,18 @@ const verifyCookIdSchema = new Schema<IVerifyCookId>(
     selfIdType: {
       type: String,
       enum: ["selfie", "video"],
-      required: true,
     },
-    selfIdUrl: { type: String, required: true },
+    selfIdUrl: { type: String },
+    // status: { type: String, enum: ["pending", "approved", "rejected"] },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }, // Adds createdAt and updatedAt fields
 );
 
 // Create the Mongoose model
-const VerifyCookIdModel = model<IVerifyCookId>("VerifyCookId", verifyCookIdSchema);
+const VerifyCookIdModel = model<IVerifyCookId>(
+  "VerifyCookId",
+  verifyCookIdSchema,
+);
 
 export default VerifyCookIdModel;

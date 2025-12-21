@@ -27,3 +27,30 @@ export interface Option {
   optionText: string; // Option text
   isCorrect: boolean; // Whether this option is the correct answer
 }
+
+// ----------------------------------------------
+type QuizOption = {
+  _id: string;
+  optionText: string;
+  isCorrect: boolean;
+};
+
+export type QuizQuestion = {
+  _id: string;
+  question: string;
+  questionType: "multiple-choice" | "true-false";
+  options: QuizOption[];
+  correctAnswer: string;
+};
+
+export type QuizSubmitAnswer = {
+  questionId: string;
+  selectedAnswer: string;
+};
+
+export type QuizSubmitPayload = {
+  answers: {
+    questionId: string;
+    selectedAnswer: string;
+  }[];
+};

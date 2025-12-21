@@ -172,9 +172,10 @@ const loginUser = async (payload: IAuth) => {
 
   // if (!user.stripeAccountId && !user.isOnboarded && user.role === "cook") {
   //   // 1. Create connected account
+  //   console.log('hello');
   //   const account = await stripe.accounts.create({
   //     type: "express", // or "standard" if you want
-  //     country: "CH",
+  //     // country: "CH",
   //     email: user.email,
   //   });
   //   console.log(account);

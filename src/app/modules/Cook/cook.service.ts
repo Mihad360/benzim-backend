@@ -93,23 +93,29 @@ const becomeACook = async (
       [cookProfilePayload],
       { session },
     );
-
+    if (!savedCookProfile.length) {
+      throw new AppError(HttpStatus.BAD_REQUEST, "Cook create failed");
+    }
     // Update the User's profile image in the database with the session
-    await UserModel.findByIdAndUpdate(
+    const updateUser = await UserModel.findByIdAndUpdate(
       isUserExist._id,
       {
         cookId: savedCookProfile[0]._id,
         profileImage: savedCookProfile[0].profileImage,
+        isBecomeCook: true,
+        $inc: { trackStep: 1 },
       },
       { new: true, session },
     );
-
+    if (!updateUser) {
+      throw new AppError(HttpStatus.BAD_REQUEST, "User update failed");
+    }
     // Commit the transaction if all operations are successful
     await session.commitTransaction();
     session.endSession();
 
     // Return the saved cook profile
-    return savedCookProfile[0];
+    return { cook: savedCookProfile[0], user: updateUser };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // Abort the transaction if any operation fails

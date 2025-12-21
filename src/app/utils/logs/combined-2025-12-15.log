@@ -90,3 +90,8 @@
 {"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 297 ms","size":"1319","timestamp":"15-12-2025 16:29:54"}
 {"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 296 ms","size":"1319","timestamp":"15-12-2025 16:54:42"}
 {"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 294 ms","size":"1319","timestamp":"15-12-2025 17:33:40"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/cook/become-a-cook ⏱️ Response Time: 14874 ms","size":"2218","timestamp":"15-12-2025 17:51:03"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/users/me ⏱️ Response Time: 87 ms","size":"171","timestamp":"15-12-2025 17:53:35"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 333 ms","size":"1516","timestamp":"15-12-2025 17:53:46"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 294 ms","size":"1516","timestamp":"15-12-2025 17:55:28"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 290 ms","size":"1516","timestamp":"15-12-2025 17:56:21"}

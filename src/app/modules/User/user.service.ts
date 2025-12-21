@@ -6,6 +6,7 @@ import { UserModel } from "./user.model";
 import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
 import { JwtPayload } from "../../interface/global";
 import mongoose, { Types } from "mongoose";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 const getMe = async (user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
@@ -121,6 +122,39 @@ export const trackPagesUpdate = async (
       updateData.$set = { isSelfResContract: true };
     }
 
+    if (payload.type === "course-video") {
+      if (existingUser.isCookVideo) {
+        throw new AppError(
+          HttpStatus.BAD_REQUEST,
+          "Self-res contract already completed",
+        );
+      }
+
+      updateData.$set = { isCookVideo: true };
+    }
+
+    if (payload.type === "course-pdf") {
+      if (existingUser.isCookPdf) {
+        throw new AppError(
+          HttpStatus.BAD_REQUEST,
+          "Self-res contract already completed",
+        );
+      }
+
+      updateData.$set = { isCookPdf: true };
+    }
+
+    if (payload.type === "course-quiz") {
+      if (existingUser.isCookQuiz) {
+        throw new AppError(
+          HttpStatus.BAD_REQUEST,
+          "Self-res contract already completed",
+        );
+      }
+
+      updateData.$set = { isCookQuiz: true, isCookfullyVerified: true };
+    }
+
     const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, {
       new: true,
       session,
@@ -137,8 +171,35 @@ export const trackPagesUpdate = async (
   }
 };
 
+export const userSearch = ["name", "email", "phoneNumber", "klzhNumber"];
+
+const getAllUsers = async (
+  user: JwtPayload,
+  query: Record<string, unknown>,
+) => {
+  const userId = new Types.ObjectId(user.user);
+  const isUserExist = await UserModel.findById(userId);
+  if (!isUserExist) {
+    throw new AppError(HttpStatus.NOT_FOUND, "The user is not exist");
+  }
+  const usersQuery = new QueryBuilder(
+    UserModel.find({ isDeleted: false }).sort({ createdAt: -1 }),
+    query,
+  )
+    .search(userSearch)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const meta = await usersQuery.countTotal();
+  const result = await usersQuery.modelQuery;
+  return { meta, result };
+};
+
 export const userServices = {
   editUserProfile,
   getMe,
   trackPagesUpdate,
+  getAllUsers,
 };

@@ -6,6 +6,11 @@ import { courseControllers } from "./course.controller";
 const router = express.Router();
 
 router.get("/", auth("admin", "cook"), courseControllers.getCourses);
+router.post(
+  "/submit-quiz/:quizId",
+  auth("admin", "cook"),
+  courseControllers.submitQuiz,
+);
 router.post("/add-quiz", auth("admin"), courseControllers.addQuizes);
 router.post(
   "/add-hygiene-course",

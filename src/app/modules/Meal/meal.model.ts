@@ -34,21 +34,21 @@ const mealSchema = new mongoose.Schema<IMeal>(
     availablePortion: { type: Number, required: true },
     dietaryCategories: {
       type: String,
-      enum: ["Vegan", "Halal", "Gluten Free", "Vegetarian"],
+      // enum: ["Vegan", "Halal", "Gluten Free", "Vegetarian"],
     },
     category: {
       type: String,
-      enum: ["Main", "Dessert", "Snacks", "Drinks"],
+      // enum: ["Main", "Dessert", "Snacks", "Drinks"],
       required: true,
     },
     fitnessFlow: {
       type: String,
-      enum: ["Protein", "Low Carb", "Smoothies"],
+      // enum: ["Protein", "Low Carb", "Smoothies"],
       default: "Protein",
     },
     cheatFlow: {
       type: String,
-      enum: ["Comfort", "Sweet", "Street Food"],
+      // enum: ["Comfort", "Sweet", "Street Food"],
       default: "Comfort",
     },
 

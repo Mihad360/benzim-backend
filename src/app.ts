@@ -15,12 +15,11 @@ app.post(
   "/stripe/webhook",
   express.raw({ type: "application/json" }),
   (req, res, next) => {
-    console.log("Raw body:", req.body.toString());  // should be raw JSON string
+    console.log("Raw body:", req.body.toString()); // should be raw JSON string
     next();
   },
   stripeWebhookHandler,
 );
-
 
 // 🔴 Now add other middleware AFTER the webhook route
 app.use(logHttpRequests);
@@ -30,7 +29,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "*",
+    origin: true,
     credentials: true,
   }),
 );

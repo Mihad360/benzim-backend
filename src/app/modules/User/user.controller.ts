@@ -16,6 +16,19 @@ const getMe = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const user = req.user as JwtPayload;
+  const result = await userServices.getAllUsers(user, req.query);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "User profile retrieved successfully",
+    meta: result.meta,
+    data: result.result,
+  });
+});
+
 const trackPagesUpdate = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;
   const result = await userServices.trackPagesUpdate(user, req.body);
@@ -46,4 +59,5 @@ export const userControllers = {
   editUserProfile,
   getMe,
   trackPagesUpdate,
+  getAllUsers,
 };

@@ -40,8 +40,25 @@ const addQuizes = catchAsync(async (req, res) => {
   });
 });
 
+const submitQuiz = catchAsync(async (req, res) => {
+  const quizId = req.params.quizId;
+  const result = await courseServices.submitQuiz(
+    req.user as JwtPayload,
+    quizId,
+    req.body,
+  );
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    data: result,
+  });
+});
+
 export const courseControllers = {
   addCourse,
   getCourses,
   addQuizes,
+  submitQuiz,
 };

@@ -37,7 +37,7 @@ const uploadHygieneFile = async (
     }
 
     // Save the metadata to the database
-    const hygieneCompliance = new HygieneComplianceModel({
+    const hygieneCompliance = await HygieneComplianceModel.create({
       userId: user.user, // User reference
       documentTitle: fileName,
       documentUrl: documentUrl,
@@ -46,9 +46,9 @@ const uploadHygieneFile = async (
       acknowledgmentDate: null, // Set acknowledgment date to null initially
     });
 
-    // Save the record to the database
-    const savedDocument = await hygieneCompliance.save();
-    uploadedFiles.push(savedDocument); // Add saved document to the list
+    // // Save the record to the database
+    // const savedDocument = await hygieneCompliance.save();
+    uploadedFiles.push(hygieneCompliance); // Add saved document to the list
   }
 
   // Return the list of saved documents

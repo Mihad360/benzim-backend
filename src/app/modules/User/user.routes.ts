@@ -5,6 +5,7 @@ import { userControllers } from "./user.controller";
 
 const router = express.Router();
 
+router.get("/", auth("user", "cook", "admin"), userControllers.getAllUsers);
 router.get("/me", auth("user", "cook", "admin"), userControllers.getMe);
 router.patch(
   "/track-me",

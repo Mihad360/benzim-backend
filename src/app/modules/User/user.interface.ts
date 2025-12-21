@@ -16,6 +16,7 @@ export interface IUser {
   isDeleted: boolean;
   passwordChangedAt: Date;
   trackStep?: number; // 0 → 12
+  isBecomeCook?: boolean;
   isCookOtpVerified: boolean;
   isKlzhRegistered?: boolean;
   pdfSent?: boolean;
@@ -24,11 +25,21 @@ export interface IUser {
   isSelfResContract: boolean;
   isHygiened?: boolean;
   isCookIdVerified: boolean;
+  isCookfullyVerified: boolean;
+  isCookVideo: boolean;
+  isCookPdf: boolean;
+  isCookQuiz: boolean;
   stripeAccountId: string;
   isOnboarded: boolean;
 }
 
-type TrackType = "klzh" | "hygiene" | "selfres";
+type TrackType =
+  | "klzh"
+  | "hygiene"
+  | "selfres"
+  | "course-video"
+  | "course-pdf"
+  | "course-quiz";
 
 export interface ITrackPayload {
   type?: TrackType;
