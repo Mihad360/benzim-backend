@@ -8,6 +8,7 @@ import { CookProfileModel } from "../Cook/cook.model";
 import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
 import VerifyCookIdModel from "./verifyCook.model";
 import QueryBuilder from "../../builder/QueryBuilder";
+import { QuizCookResultModel } from "../QuizResult/quizresult.model";
 
 const verifyIdentity = async (
   user: JwtPayload,
@@ -132,7 +133,39 @@ const getVerificationCooks = async (query: Record<string, unknown>) => {
   return { meta, result };
 };
 
+const approveCook = async (cookId: string) => {
+  const isCookExist = await CookProfileModel.findById(cookId);
+  if (!isCookExist) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
+  }
+  const isUserExist = await UserModel.findByIdAndUpdate(
+    isCookExist.userId,
+    {
+      isCookfullyVerified: true,
+    },
+    { new: true },
+  ).select("-password");
+  if (!isUserExist) {
+    throw new AppError(HttpStatus.BAD_REQUEST, "Cook approve failed");
+  }
+  return isUserExist;
+};
+
+const cookApprovals = async (query: Record<string, unknown>) => {
+  const cookQuery = new QueryBuilder(QuizCookResultModel.find(), query)
+    .filter()
+    .paginate()
+    .fields()
+    .sort();
+
+  const meta = await cookQuery.countTotal();
+  const result = await cookQuery.modelQuery;
+  return { meta, result };
+};
+
 export const verifyCookIdServices = {
   verifyIdentity,
   getVerificationCooks,
+  approveCook,
+  cookApprovals,
 };

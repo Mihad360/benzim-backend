@@ -236,3 +236,13 @@
 {"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/category/ ⏱️ Response Time: 331 ms","size":"652","timestamp":"21-12-2025 17:52:25"}
 {"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 300 ms","size":"1597","timestamp":"21-12-2025 17:52:31"}
 {"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/courses/ ⏱️ Response Time: 316 ms","size":"2172","timestamp":"21-12-2025 17:52:31"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/category/ ⏱️ Response Time: 421 ms","size":"652","timestamp":"21-12-2025 17:55:43"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 299 ms","size":"1597","timestamp":"21-12-2025 17:55:48"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/courses/ ⏱️ Response Time: 318 ms","size":"2172","timestamp":"21-12-2025 17:55:48"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 / ⏱️ Response Time: 1 ms","size":"2","timestamp":"21-12-2025 17:58:28"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/category/ ⏱️ Response Time: 310 ms","size":"652","timestamp":"21-12-2025 18:01:05"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 288 ms","size":"1597","timestamp":"21-12-2025 18:01:15"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/courses/ ⏱️ Response Time: 310 ms","size":"2172","timestamp":"21-12-2025 18:01:15"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/category/ ⏱️ Response Time: 321 ms","size":"652","timestamp":"21-12-2025 18:15:36"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 288 ms","size":"1597","timestamp":"21-12-2025 18:15:41"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/courses/ ⏱️ Response Time: 323 ms","size":"2172","timestamp":"21-12-2025 18:15:42"}

@@ -276,50 +276,52 @@ const myCurrentOrders = async (
     }
 
     // 🎨 Unified Formatting for BOTH User & Cook
-    const formattedOrders = orders.map((order: any) => ({
-      orderId: order._id,
-      orderNo: order.orderNo,
-      totalAmount: order.totalAmount,
-      tip: order.tip || 0,
-      promoCode: order.promoCode || null,
-      status: order.status,
-      statusHistory: order.statusHistory,
-      createdAt: order.createdAt,
+    const formattedOrders = orders.flatMap((order: any) =>
+      order.cartIds.map((cart: any) => ({
+        // 🧾 Order Info
+        orderId: order._id,
+        orderNo: order.orderNo,
+        status: order.status,
+        statusHistory: order.statusHistory,
+        createdAt: order.createdAt,
+        totalAmount: order.totalAmount,
+        tip: order.tip || 0,
+        promoCode: order.promoCode || null,
 
-      // 🧑‍🍳 Cook order includes user info
-      user:
-        user.role === "cook"
-          ? {
-              name: order.userId?.name,
-              email: order.userId?.email,
-              profileImage: order.userId?.profileImage || null,
-            }
-          : undefined,
+        // 🧑‍🍳 Cook → User Info
+        user:
+          user.role === "cook"
+            ? {
+                name: order.userId?.name,
+                email: order.userId?.email,
+                profileImage: order.userId?.profileImage || null,
+              }
+            : undefined,
 
-      // 🧑‍🦱 User order includes cook info
-      cook:
-        user.role === "user"
-          ? {
-              name: order.cookId?.name,
-              bio: order.cookId?.bio,
-              image: order.cookId?.userImage || null,
-            }
-          : undefined,
+        // 🧑‍🦱 User → Cook Info
+        cook:
+          user.role === "user"
+            ? {
+                name: order.cookId?.name,
+                bio: order.cookId?.bio,
+                image: order.cookId?.userImage || null,
+              }
+            : undefined,
 
-      // 🍽 Cart Items (Common for both)
-      carts: order.cartIds.map((cart: any) => ({
+        // 🍽 Cart Info (Flattened)
+        cartId: cart._id,
         quantity: cart.quantity,
         totalPrice: cart.totalPrice,
+
         meal: {
           name: cart.mealId?.mealName,
           image: cart.mealId?.imageUrls?.[0] || null,
           description: cart.mealId?.description || "",
           price: cart.mealId?.price,
           pricePerPortion: cart.mealId?.pricePerPortion,
-          statusHistory: cart.mealId?.statusHistory,
         },
       })),
-    }));
+    );
 
     return {
       meta,
@@ -395,7 +397,6 @@ const getEachOrder = async (orderId: string, user: JwtPayload) => {
 
 const recentOrders = async (user: JwtPayload) => {
   const loggedUserId = new Types.ObjectId(user.user);
-
   let orders;
 
   // 👤 USER → find orders where this user placed them
@@ -414,7 +415,11 @@ const recentOrders = async (user: JwtPayload) => {
 
   // 🧑‍🍳 COOK → find orders where cookId = this cook
   else if (user.role === "cook") {
-    orders = await OrderModel.find({ cookId: loggedUserId })
+    const cookId = await UserModel.findById(loggedUserId);
+    if (!cookId) {
+      throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
+    }
+    orders = await OrderModel.find({ cookId: cookId.cookId })
       .sort({ createdAt: -1 })
       .populate({
         path: "userId",

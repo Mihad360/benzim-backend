@@ -6,6 +6,11 @@ import { upload } from "../../utils/sendImageToCloudinary";
 const router = express.Router();
 
 router.get("/", auth("admin"), verifyCookIdControllers.getVerificationCooks);
+router.get(
+  "/cook-approvals",
+  auth("admin"),
+  verifyCookIdControllers.cookApprovals,
+);
 router.post(
   "/verify-cook-id",
   auth("cook"),
@@ -20,6 +25,11 @@ router.post(
     next();
   },
   verifyCookIdControllers.addSelfResRules,
+);
+router.patch(
+  "/approve-cook/:cookId",
+  auth("admin"),
+  verifyCookIdControllers.approveCook,
 );
 
 export const verifyCookIdRoutes = router;

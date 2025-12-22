@@ -45,7 +45,33 @@ const getVerificationCooks = catchAsync(async (req, res) => {
   });
 });
 
+const approveCook = catchAsync(async (req, res) => {
+  const id = req.params.cookId;
+  const result = await verifyCookIdServices.approveCook(id);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    data: result,
+  });
+});
+
+const cookApprovals = catchAsync(async (req, res) => {
+  const result = await verifyCookIdServices.cookApprovals(req.query);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    meta: result.meta,
+    data: result.result,
+  });
+});
+
 export const verifyCookIdControllers = {
   addSelfResRules,
   getVerificationCooks,
+  approveCook,
+  cookApprovals,
 };

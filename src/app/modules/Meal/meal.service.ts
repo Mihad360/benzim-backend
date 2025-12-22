@@ -44,7 +44,7 @@ const addMeal = async (
   }
 
   // ⛔ Check cook approval and limit
-  if (isCookExist.isCookApproved === false) {
+  if (isUserExist.isCookfullyVerified === false) {
     const mealCount = await MealModel.countDocuments({
       cookId: isCookExist._id,
     });

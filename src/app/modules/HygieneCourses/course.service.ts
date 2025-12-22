@@ -8,6 +8,8 @@ import QueryBuilder from "../../builder/QueryBuilder";
 import { UserModel } from "../User/user.model";
 import { JwtPayload } from "../../interface/global";
 import { Types } from "mongoose";
+import VerifyCookIdModel from "../VerifyCookId/verifyCook.model";
+import { QuizCookResultModel } from "../QuizResult/quizresult.model";
 
 const addCourse = async (files: Express.Multer.File[], payload: Course) => {
   try {
@@ -169,12 +171,54 @@ const submitQuiz = async (
     }
   }
 
+  if (updateUser && !updateUser.cookId) {
+    throw new AppError(
+      HttpStatus.BAD_REQUEST,
+      "Cook profile not found for this user",
+    );
+  }
+
+  // 4️⃣ Find verification data by cookId
+  const verifyCook = await VerifyCookIdModel.findOne({
+    cookId: updateUser?.cookId,
+    isDeleted: false,
+  });
+
+  if (!verifyCook) {
+    throw new AppError(
+      HttpStatus.NOT_FOUND,
+      "Cook verification data not found",
+    );
+  }
+
+  const quizResult = await QuizCookResultModel.create({
+    cookId: updateUser?.cookId,
+    quizId,
+
+    totalQuestions: quiz.length,
+    correctAnswers: score,
+    wrongAnswers: quiz.length - score,
+    results,
+
+    verifyCookInfo: {
+      ownerName: verifyCook.ownerName,
+      businessNumber: verifyCook.businessNumber,
+      validIdType: verifyCook.validIdType,
+      validIdUrl: verifyCook.validIdUrl,
+      selfIdType: verifyCook.selfIdType,
+      selfIdUrl: verifyCook.selfIdUrl,
+      isDeleted: verifyCook.isDeleted,
+    },
+  });
+
+  // 6️⃣ Final response
   return {
     totalQuestions: quiz.length,
     correctAnswers: score,
     wrongAnswers: quiz.length - score,
     results,
     user: updateUser,
+    quizResultId: quizResult._id,
   };
 };
 
