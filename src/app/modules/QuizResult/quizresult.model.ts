@@ -26,6 +26,7 @@ const verifyCookInfoSchema = new Schema(
       enum: ["selfie", "video"],
     },
     selfIdUrl: { type: String },
+    status: { type: String },
     isDeleted: { type: Boolean, default: false },
   },
   { _id: false },

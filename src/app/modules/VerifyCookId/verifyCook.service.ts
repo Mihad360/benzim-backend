@@ -134,21 +134,63 @@ const getVerificationCooks = async (query: Record<string, unknown>) => {
 };
 
 const approveCook = async (cookId: string) => {
-  const isCookExist = await CookProfileModel.findById(cookId);
-  if (!isCookExist) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // 1️⃣ Check cook existence
+    const isCookExist =
+      await CookProfileModel.findById(cookId).session(session);
+
+    if (!isCookExist) {
+      throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
+    }
+
+    // 2️⃣ Update user verification status
+    const isUserExist = await UserModel.findByIdAndUpdate(
+      isCookExist.userId,
+      {
+        isCookfullyVerified: true,
+      },
+      {
+        new: true,
+        session,
+      },
+    ).select("-password");
+
+    if (!isUserExist) {
+      throw new AppError(HttpStatus.BAD_REQUEST, "Cook approve failed");
+    }
+
+    // 3️⃣ Update quiz verification status
+    const updateVerifyStatus = await QuizCookResultModel.findOneAndUpdate(
+      { cookId: isUserExist.cookId },
+      {
+        $set: {
+          "verifyCookInfo.status": "approved",
+        },
+      },
+      {
+        new: true,
+        session,
+      },
+    );
+
+    if (!updateVerifyStatus) {
+      throw new AppError(HttpStatus.BAD_REQUEST, "Verify approve failed");
+    }
+
+    // 4️⃣ Commit transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    return isUserExist;
+  } catch (error) {
+    // ❌ Rollback everything if any step fails
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
   }
-  const isUserExist = await UserModel.findByIdAndUpdate(
-    isCookExist.userId,
-    {
-      isCookfullyVerified: true,
-    },
-    { new: true },
-  ).select("-password");
-  if (!isUserExist) {
-    throw new AppError(HttpStatus.BAD_REQUEST, "Cook approve failed");
-  }
-  return isUserExist;
 };
 
 const cookApprovals = async (query: Record<string, unknown>) => {

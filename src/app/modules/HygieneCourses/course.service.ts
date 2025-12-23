@@ -207,6 +207,7 @@ const submitQuiz = async (
       validIdUrl: verifyCook.validIdUrl,
       selfIdType: verifyCook.selfIdType,
       selfIdUrl: verifyCook.selfIdUrl,
+      status: "pending",
       isDeleted: verifyCook.isDeleted,
     },
   });

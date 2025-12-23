@@ -17,6 +17,7 @@ export interface IVerifyCookInfo {
   validIdUrl: string;
   selfIdType?: "selfie" | "video";
   selfIdUrl?: string;
+  status?: string;
   isDeleted?: boolean;
 }
 
