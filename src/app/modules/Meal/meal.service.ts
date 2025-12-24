@@ -107,9 +107,15 @@ const getMyMeals = async (user: JwtPayload, query: Record<string, unknown>) => {
     if (!isCookExist) {
       throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
     }
-    mealQuery = MealModel.find({ cookId: isCookExist._id });
+    mealQuery = MealModel.find({ cookId: isCookExist._id }).populate({
+      path: "cookId",
+      select: "rating cookName profileImage",
+    });
   } else if (isUserExist.role === "user") {
-    mealQuery = MealModel.find();
+    mealQuery = MealModel.find().populate({
+      path: "cookId",
+      select: "rating cookName profileImage",
+    });
   } else {
     throw new AppError(HttpStatus.FORBIDDEN, "Invalid user role");
   }
@@ -155,9 +161,11 @@ const getMyMeals = async (user: JwtPayload, query: Record<string, unknown>) => {
     {
       $project: {
         _id: 1,
-        title: 1,
+        mealName: 1,
         description: 1,
         price: 1,
+        availablePortion: 1,
+        kcalories: 1,
         imageUrls: 1,
         mealType: 1,
         cookId: 1,
@@ -181,6 +189,8 @@ const getMyMeals = async (user: JwtPayload, query: Record<string, unknown>) => {
     popularMeals,
   };
 };
+
+
 
 export const mealServices = {
   addMeal,

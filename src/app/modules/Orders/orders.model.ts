@@ -19,6 +19,11 @@ const PaymentSchema = new Schema<IOrders>(
         ref: "Cart",
       },
     ],
+    conversationId: {
+      type: Schema.Types.ObjectId,
+      ref: "Conversaton",
+      required: true,
+    },
     totalAmount: {
       type: Number,
       required: true,

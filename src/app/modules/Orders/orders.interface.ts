@@ -5,6 +5,7 @@ export interface IOrders {
   userId: Types.ObjectId;
   cookId: Types.ObjectId;
   cartIds: Types.ObjectId[]; // references Meal documents
+  conversationId?: Types.ObjectId;
   totalAmount: number;
   tip?: number;
   discountedAmount: number;

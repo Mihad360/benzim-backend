@@ -48,6 +48,7 @@ export interface IMeal {
   location?: string;
   pickUpTime?: string;
   offer?: string;
+  kcalories: string;
   createdAt?: Date;
   updatedAt?: Date;
 }

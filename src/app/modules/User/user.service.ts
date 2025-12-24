@@ -197,9 +197,25 @@ const getAllUsers = async (
   return { meta, result };
 };
 
+const removeUser = async (id: string) => {
+  const isUserExist = await UserModel.findById(id);
+  if (!isUserExist) {
+    throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+  }
+  const result = await UserModel.findByIdAndUpdate(
+    isUserExist._id,
+    {
+      isDeleted: true,
+    },
+    { new: true },
+  );
+  return result;
+};
+
 export const userServices = {
   editUserProfile,
   getMe,
   trackPagesUpdate,
   getAllUsers,
+  removeUser,
 };

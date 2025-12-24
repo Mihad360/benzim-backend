@@ -67,6 +67,7 @@ const mealSchema = new mongoose.Schema<IMeal>(
     location: { type: String, default: "" },
     pickUpTime: { type: String, default: "" },
     offer: { type: String, default: "" },
+    kcalories: { type: String, default: "" },
     imageUrls: { type: [String], default: [] },
   },
   { timestamps: true },

@@ -130,7 +130,7 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
         );
 
         if (!existingConversation) {
-          await ConversationModel.create(
+          const conversationData = await ConversationModel.create(
             [
               {
                 cookId: cookProfile.userId,
@@ -139,6 +139,24 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
             ],
             { session },
           );
+
+          if (conversationData?.length) {
+            const orderUpdate = await OrderModel.findByIdAndUpdate(
+              newOrder[0]._id,
+              {
+                conversationId: conversationData[0]._id,
+              },
+              { new: true },
+            );
+            if (!orderUpdate) {
+              throw new AppError(HttpStatus.BAD_REQUEST, "Order update failed");
+            }
+          } else {
+            throw new AppError(
+              HttpStatus.BAD_REQUEST,
+              "Something went wrong during update the conversation",
+            );
+          }
         }
       }
     }
@@ -345,7 +363,7 @@ const getEachOrder = async (orderId: string, user: JwtPayload) => {
   }
 
   // 🔍 Fetch order with population
-  const order = await OrderModel.findOne({ _id: orderId, userId })
+  const order = await OrderModel.findOne({ _id: orderId })
     .populate({
       path: "cartIds",
       select: "mealId quantity totalPrice",
@@ -356,7 +374,7 @@ const getEachOrder = async (orderId: string, user: JwtPayload) => {
     })
     .populate({
       path: "cookId",
-      select: "cookName profileImage",
+      select: "cookName profileImage rating _id",
     });
 
   if (!order) {
@@ -370,13 +388,16 @@ const getEachOrder = async (orderId: string, user: JwtPayload) => {
     orderNo: order.orderNo,
     totalAmount: order.totalAmount,
     tip: order.tip || 0,
+    conversationId: order.conversationId || null,
     promoCode: order.promoCode || null,
     status: order.status,
     createdAt: order.createdAt,
 
     cook: {
+      cookId: cook?._id,
       cookName: cook?.cookName,
       image: cook?.profileImage || null,
+      rating: cook?.rating,
     },
 
     carts: order.cartIds.map((cart: any) => ({
