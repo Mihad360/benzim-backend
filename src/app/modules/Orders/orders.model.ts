@@ -9,9 +9,8 @@ const PaymentSchema = new Schema<IOrders>(
       required: true,
     },
     cookId: {
-      type: Schema.Types.ObjectId,
+      type: [Schema.Types.ObjectId],
       ref: "Cook",
-      required: true,
     },
     cartIds: [
       {
@@ -20,9 +19,8 @@ const PaymentSchema = new Schema<IOrders>(
       },
     ],
     conversationId: {
-      type: Schema.Types.ObjectId,
+      type: [Schema.Types.ObjectId],
       ref: "Conversaton",
-      required: true,
     },
     totalAmount: {
       type: Number,
@@ -69,6 +67,7 @@ const PaymentSchema = new Schema<IOrders>(
       ],
       default: "new",
     },
+    shipingAddress: { type: String },
 
     statusHistory: [
       {

@@ -7,6 +7,11 @@ const router = express.Router();
 
 router.get("/locations", auth("cook", "user"), cookControllers.cooksLocation);
 router.get("/profile", auth("cook"), cookControllers.getCookProfile);
+router.get(
+  "/:cookId",
+  auth("cook", "user", "admin"),
+  cookControllers.getEachCook,
+);
 router.post(
   "/become-a-cook",
   auth("cook"),
@@ -16,8 +21,8 @@ router.post(
     { name: "certificates", maxCount: 3 }, // Multiple files for kitchen images (e.g., up to 5)
   ]),
   (req: Request, res: Response, next: NextFunction) => {
-    if (req.body.cook) {
-      req.body = JSON.parse(req.body.cook);
+    if (req.body.data) {
+      req.body = JSON.parse(req.body.data);
     }
     next();
   },

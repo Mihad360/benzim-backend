@@ -9,6 +9,10 @@ import { UserModel } from "../User/user.model";
 import { CookAvailabilityModel, CookProfileModel } from "./cook.model";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { emitCookLocationUpdate } from "../../utils/socket";
+import { ReviewModel } from "../Review/review.model";
+import { MealModel } from "../Meal/meal.model";
+import { getAddressFromCoordinates } from "./cook.utils";
+// import { latLngToAddress } from "./cook.utils";
 
 const becomeACook = async (
   cook: ICookProfile, // Cook profile data
@@ -29,7 +33,7 @@ const becomeACook = async (
     throw new AppError(HttpStatus.NOT_FOUND, "User not found");
   }
 
-  // Check if the user already has a cook profile
+  // // Check if the user already has a cook profile
   const isAlreadyCookExist = await CookProfileModel.findOne({
     userId: isUserExist._id,
     isDeleted: false,
@@ -77,17 +81,21 @@ const becomeACook = async (
       certificatesUrls.push(result.secure_url);
     }
 
+    const address = await getAddressFromCoordinates(
+      Number(cook.lat),
+      Number(cook.long),
+    );
     // Prepare the cook profile payload (excluding availability)
     const cookProfilePayload: ICookProfile = {
       ...cook,
       userId: isUserExist._id,
       cookName: isUserExist.name,
       businessNumber: isUserExist.klzhNumber as string,
+      location: address,
       profileImage: profileImageUrl.secure_url,
       kitchenImages: kitchenImageUrls,
       certificates: certificatesUrls,
     };
-
     // Save the cook profile in the database with the session
     const savedCookProfile = await CookProfileModel.create(
       [cookProfilePayload],
@@ -98,12 +106,14 @@ const becomeACook = async (
     }
     // Update the User's profile image in the database with the session
     const updateUser = await UserModel.findByIdAndUpdate(
-      isUserExist._id,
+      isUserExist?._id,
       {
         cookId: savedCookProfile[0]._id,
         profileImage: savedCookProfile[0].profileImage,
         isBecomeCook: true,
         $inc: { trackStep: 1 },
+        lat: savedCookProfile[0].lat,
+        long: savedCookProfile[0].long,
       },
       { new: true, session },
     );
@@ -113,9 +123,9 @@ const becomeACook = async (
     // Commit the transaction if all operations are successful
     await session.commitTransaction();
     session.endSession();
-
+    return cookProfilePayload;
     // Return the saved cook profile
-    return { cook: savedCookProfile[0], user: updateUser };
+    // return { cook: savedCookProfile[0], user: updateUser };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     // Abort the transaction if any operation fails
@@ -215,14 +225,16 @@ const getCookProfile = async (user: JwtPayload) => {
   };
 };
 
+const cookSearch = ["cookName"];
+
 const cooksLocation = async (
-  payload: { cookIds: string[] },
+  // payload: { cookIds: string[] },
   query: Record<string, unknown>,
+  // user: JwtPayload,
 ) => {
-  const cookQuery = new QueryBuilder(
-    CookProfileModel.find({ _id: { $in: payload.cookIds } }),
-    query,
-  ).filter();
+  const cookQuery = new QueryBuilder(CookProfileModel.find(), query)
+    .search(cookSearch)
+    .filter();
 
   const meta = await cookQuery.countTotal();
   const result = await cookQuery.modelQuery;
@@ -230,15 +242,16 @@ const cooksLocation = async (
   if (!result || result.length === 0) {
     throw new AppError(HttpStatus.NOT_FOUND, "Cooks not found");
   }
-
+  console.log(result);
+  emitCookLocationUpdate(result);
   // 🔥 Emit socket event for each cook’s userId
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  result.forEach((cook: any) => {
-    // console.log(cook);
-    if (cook) {
-      emitCookLocationUpdate(cook);
-    }
-  });
+  // result.forEach((cook: any) => {
+  //   // console.log(cook);
+  //   if (cook) {
+  //     emitCookLocationUpdate(cook);
+  //   }
+  // });
 
   return { meta, result };
 };
@@ -256,9 +269,47 @@ const cooksLocation = async (
 //   return { meta, result };
 // };
 
+const getEachCook = async (cookId: string) => {
+  // 1. Find cook
+  const cook = await CookProfileModel.findById(cookId);
+  if (!cook) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
+  }
+
+  // 2. Find meals of this cook
+  const meals = await MealModel.find({ cookId: cook._id })
+    .sort({ createdAt: -1 })
+    .limit(20);
+
+  if (!meals.length) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Meals not found");
+  }
+
+  // 3. Attach cook rating to each meal
+  const mealsWithRating = meals.map((meal) => ({
+    ...meal.toObject(),
+    rating: cook.rating,
+  }));
+
+  // 4. Reviews
+  const reviews = await ReviewModel.find({
+    cookId: cook._id,
+    isDeleted: false,
+  })
+    .populate("userId", "name profileImage")
+    .sort({ createdAt: -1 });
+
+  return {
+    cook,
+    meals: mealsWithRating,
+    reviews,
+  };
+};
+
 export const cookServices = {
   becomeACook,
   setAvailability,
   getCookProfile,
   cooksLocation,
+  getEachCook,
 };

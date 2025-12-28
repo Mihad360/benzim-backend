@@ -24,7 +24,8 @@ const getOffers = catchAsync(async (req, res) => {
     statusCode: HttpStatus.OK,
     success: true,
     message: "Password reset successfully",
-    data: result,
+    meta: result.meta,
+    data: result.result,
   });
 });
 

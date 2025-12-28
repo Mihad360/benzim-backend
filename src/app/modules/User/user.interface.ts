@@ -31,6 +31,8 @@ export interface IUser {
   isCookQuiz: boolean;
   stripeAccountId: string;
   isOnboarded: boolean;
+  lat: number;
+  long: number;
 }
 
 type TrackType =

@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import HttpStatus from "http-status";
-import { Types } from "mongoose";
+import { PipelineStage, Types } from "mongoose";
 import { JwtPayload } from "../../interface/global";
 import { IMeal } from "./meal.interface";
 import { UserModel } from "../User/user.model";
@@ -120,7 +121,9 @@ const getMyMeals = async (user: JwtPayload, query: Record<string, unknown>) => {
     throw new AppError(HttpStatus.FORBIDDEN, "Invalid user role");
   }
 
-  const mealsBuilder = new QueryBuilder(mealQuery, query)
+  const { only, ...queryWithoutOnly } = query;
+
+  const mealsBuilder = new QueryBuilder(mealQuery, queryWithoutOnly)
     .search(MEAL_SEARCHABLE_FIELDS)
     .filter()
     .fields()
@@ -180,19 +183,153 @@ const getMyMeals = async (user: JwtPayload, query: Record<string, unknown>) => {
   ]);
 
   // ============================
+  // Final Return (CONDITIONAL)
+  // ============================
+
+  // const only = query.only as string | undefined;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response: any = { meta, meals };
+
+  if (!only || only !== "meals") {
+    response.topRatedCooks = topRatedCooks;
+    response.popularMeals = popularMeals;
+  }
+
+  return response;
+
+  // ============================
   // Final Return
   // ============================
+  // return {
+  //   meta,
+  //   meals,
+  //   topRatedCooks,
+  //   popularMeals,
+  // };
+};
+
+const topRatedCooks = async (query: Record<string, unknown>) => {
+  const cooks = new QueryBuilder(
+    CookProfileModel.find().select(
+      "cookName rating profileImage businessNumber location",
+    ),
+    query,
+  )
+    .filter()
+    .fields()
+    .paginate()
+    .sort();
+
+  const meta = await cooks.countTotal();
+  const result = await cooks.modelQuery;
+  return { meta, result };
+};
+
+const popularMeals = async (query: Record<string, unknown>) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const match: Record<string, unknown> = {};
+
+  if (query.mealType) {
+    match.mealType = query.mealType;
+  }
+
+  const matchStage: PipelineStage.Match = {
+    $match: match,
+  };
+
+  const pipeline: PipelineStage[] = [
+    {
+      $lookup: {
+        from: "cooks",
+        localField: "cookId",
+        foreignField: "_id",
+        as: "cook",
+      },
+    },
+    { $unwind: "$cook" },
+
+    // 🔍 filtering
+    matchStage,
+
+    // ⭐ sort by cook rating
+    { $sort: { "cook.rating": -1 } },
+
+    // 📄 pagination
+    { $skip: skip },
+    { $limit: limit },
+
+    // 🎯 projection
+    {
+      $project: {
+        mealName: 1,
+        price: 1,
+        imageUrls: 1,
+        mealType: 1,
+        cook: {
+          cookName: 1,
+          rating: 1,
+          profileImage: 1,
+        },
+      },
+    },
+  ];
+
+  const result = await MealModel.aggregate(pipeline);
+
+  // 🔢 total count (for pagination UI)
+  const total = await MealModel.aggregate([
+    {
+      $lookup: {
+        from: "cooks",
+        localField: "cookId",
+        foreignField: "_id",
+        as: "cook",
+      },
+    },
+    { $unwind: "$cook" },
+    matchStage,
+    { $count: "total" },
+  ]);
+
+  const totalItems = total[0]?.total || 0;
+  const totalPages = Math.ceil(totalItems / limit);
+
   return {
-    meta,
-    meals,
-    topRatedCooks,
-    popularMeals,
+    meta: {
+      page,
+      limit,
+      totalItems,
+      totalPages,
+    },
+    result,
   };
 };
 
+const getEachMeal = async (mealId: string) => {
+  const meal = await MealModel.findById(mealId).lean();
 
+  if (!meal) {
+    throw new AppError(HttpStatus.NOT_FOUND, "Meal not found");
+  }
+
+  const cook = await CookProfileModel.findById(meal.cookId)
+    .select("rating")
+    .lean();
+
+  return {
+    ...meal,
+    rating: cook?.rating ?? null,
+  };
+};
 
 export const mealServices = {
   addMeal,
   getMyMeals,
+  topRatedCooks,
+  popularMeals,
+  getEachMeal,
 };

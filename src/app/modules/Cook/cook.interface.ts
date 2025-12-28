@@ -1,5 +1,10 @@
 import { Types } from "mongoose";
 
+export interface ILocation {
+  type: string;
+  coordinates: [number, number]; // [longitude, latitude]
+}
+
 export interface ICookProfile {
   _id?: Types.ObjectId;
   userId: Types.ObjectId; // Referencing the User model (ObjectId)
@@ -7,7 +12,7 @@ export interface ICookProfile {
   businessNumber: string; // Business phone number
   description: string; // Description of the cook profile
   shortDescription: string; // Short description of the cook
-  location: string; // Location of the cook
+  location?: string; // Location of the cook
   profileImage: string; // URL to the cook's profile image
   kitchenImages: string[]; // Array of URLs to the kitchen images
   certificates: string[]; // Array of URLs to the kitchen images
@@ -21,6 +26,8 @@ export interface ICookProfile {
   totalReviews: string; // Total number of reviews
   isKlzhRegistered: boolean;
   isCookApproved: boolean;
+  lat?: number;
+  long?: number;
   isDeleted?: boolean;
 }
 

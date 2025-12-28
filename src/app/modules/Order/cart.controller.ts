@@ -33,12 +33,14 @@ const excludeAoRder = catchAsync(async (req, res) => {
 const getOrders = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;
   const result = await cartServices.getOrders(user, req.query);
-
+  
   sendResponse(res, {
     statusCode: HttpStatus.OK,
     success: true,
-    message: "Password reset successfully",
+    message: "Orders retrieved successfully",
     meta: result.meta,
+    quantities: result.quantities,
+    totalPrice: result.totalPrice,
     data: result.result,
   });
 });

@@ -78,6 +78,18 @@ const updateOrderStatus = catchAsync(async (req, res) => {
   });
 });
 
+const updateAddress = catchAsync(async (req, res) => {
+  const id = req.params.orderId;
+  const result = await orderServices.updateAddress(id, req.body);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    data: result,
+  });
+});
+
 export const orderControllers = {
   createOrder,
   addTip,
@@ -85,4 +97,5 @@ export const orderControllers = {
   getEachOrder,
   recentOrders,
   updateOrderStatus,
+  updateAddress
 };

@@ -14,7 +14,7 @@ export interface IFileFields {
 const becomeACook = catchAsync(async (req, res) => {
   const files = req.files as any;
   const user = req.user as JwtPayload;
-  const result = await cookServices.becomeACook(req.body.cook, user, files);
+  const result = await cookServices.becomeACook(req.body, user, files);
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -48,7 +48,11 @@ const getCookProfile = catchAsync(async (req, res) => {
 });
 
 const cooksLocation = catchAsync(async (req, res) => {
-  const result = await cookServices.cooksLocation(req.body, req.query);
+  const result = await cookServices.cooksLocation(
+    // req.body,
+    req.query,
+    // req.user as JwtPayload,
+  );
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -59,9 +63,22 @@ const cooksLocation = catchAsync(async (req, res) => {
   });
 });
 
+const getEachCook = catchAsync(async (req, res) => {
+  const id = req.params.cookId;
+  const result = await cookServices.getEachCook(id);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "OTP verified successfully",
+    data: result,
+  });
+});
+
 export const cookControllers = {
   becomeACook,
   setAvailability,
   getCookProfile,
   cooksLocation,
+  getEachCook,
 };

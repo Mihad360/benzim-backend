@@ -348,15 +348,29 @@ export const emitMessage = (conversationId: string, messageData: any) => {
   }
 };
 
-export const emitCookLocationUpdate = (cook: ICookProfile) => {
+export const emitCookLocationUpdate = (
+  cooks: ICookProfile | ICookProfile[],
+) => {
   if (!io) {
     throw new Error("Socket.IO is not initialized");
   }
-  if (!cook || !cook.userId) return;
-  console.log(cook);
-  io.emit(`cook_location-${cook.userId?.toString()}`, {
-    cookId: cook._id,
-    userId: cook.userId,
-    cook: cook,
+  const cooksArray = Array.isArray(cooks) ? cooks : [cooks];
+
+  if (cooksArray.length === 0) return;
+
+  console.log(`Emitting location for ${cooksArray.length} cook(s)`);
+
+  io.emit("cooks_location", {
+    cooks: cooksArray.map((cook) => ({
+      cookId: cook._id,
+      userId: cook.userId,
+      lat: cook.lat,
+      long: cook.long,
+      location: cook.location,
+      cookName: cook.cookName,
+      profileImage: cook.profileImage,
+      // Add other fields you need
+    })),
+    timestamp: new Date().toISOString(),
   });
 };

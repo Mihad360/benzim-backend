@@ -75,7 +75,7 @@ const addToCartMeal = async (
 
 const excludeAoRder = async (cartId: string, user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
-
+  console.log(cartId);
   // 1️⃣ Validate user
   const userExist = await UserModel.findById(userId);
   if (!userExist) {
@@ -93,7 +93,6 @@ const excludeAoRder = async (cartId: string, user: JwtPayload) => {
     throw new AppError(HttpStatus.NOT_FOUND, "Meal not found for this meal");
   }
 
-  // 4️⃣ Find existing active order
   const existingOrder = await CartModel.findOne({
     _id: cart._id,
     userId: userExist._id,
@@ -135,9 +134,19 @@ const getOrders = async (user: JwtPayload, query: Record<string, unknown>) => {
     if (!isCookExist) {
       throw new AppError(HttpStatus.NOT_FOUND, "Cook not found");
     }
-    orderQuery = CartModel.find({ cookId: isCookExist._id, isDeleted: false });
+    orderQuery = CartModel.find({
+      cookId: isCookExist._id,
+      isDeleted: false,
+    })
+      .populate({ path: "mealId", select: "imageUrls mealName price" })
+      .populate({ path: "cookId", select: "rating" });
   } else if (isUserExist.role === "user") {
-    orderQuery = CartModel.find({ userId: isUserExist._id, isDeleted: false });
+    orderQuery = CartModel.find({
+      userId: isUserExist._id,
+      isDeleted: false,
+    })
+      .populate({ path: "mealId", select: "imageUrls mealName price" })
+      .populate({ path: "cookId", select: "rating" });
   } else {
     throw new AppError(HttpStatus.FORBIDDEN, "Invalid user role");
   }
@@ -156,7 +165,10 @@ const getOrders = async (user: JwtPayload, query: Record<string, unknown>) => {
     throw new AppError(HttpStatus.NOT_FOUND, "Orders not found");
   }
 
-  return { meta, result };
+  const totalQuantity = result.reduce((sum, res) => sum + res.quantity, 0);
+  const totalPrice = result.reduce((sum, res) => sum + res.totalPrice, 0);
+
+  return { meta, quantities: totalQuantity, totalPrice: totalPrice, result };
 };
 
 const removeOrder = async (orderId: string) => {

@@ -7,6 +7,7 @@ import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
 import { JwtPayload } from "../../interface/global";
 import mongoose, { Types } from "mongoose";
 import QueryBuilder from "../../builder/QueryBuilder";
+import { CookProfileModel } from "../Cook/cook.model";
 
 const getMe = async (user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
@@ -28,57 +29,92 @@ const editUserProfile = async (
   file: Express.Multer.File,
   payload: Partial<IUser>,
 ) => {
-  // Find user
-  const user = await UserModel.findById(id);
-  if (!user) {
-    throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+  // ================================
+  // 1️⃣ Start MongoDB Session
+  // ================================
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // Find user
+    const user = await UserModel.findById(id).session(session);
+    if (!user) {
+      throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+    }
+
+    if (user.isDeleted) {
+      throw new AppError(HttpStatus.FORBIDDEN, "User is blocked");
+    }
+
+    if (payload.email) {
+      throw new AppError(HttpStatus.BAD_REQUEST, "Email cannot be updated");
+    }
+
+    const updateData: Partial<IUser> = {};
+
+    // ================================
+    // 2️⃣ Upload Image if Provided
+    // ================================
+    if (file) {
+      const imageName = payload.name || "profile";
+      const imageInfo = await sendFileToCloudinary(
+        file.buffer,
+        imageName,
+        file.mimetype,
+      );
+      updateData.profileImage = imageInfo.secure_url;
+    }
+
+    // ================================
+    // 3️⃣ Update Editable Fields
+    // ================================
+    if (payload.name) updateData.name = payload.name;
+    if (payload.phoneNumber) updateData.phoneNumber = payload.phoneNumber;
+
+    // ================================
+    // 4️⃣ Update User in MongoDB
+    // ================================
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      { new: true, session }, // ← Add session here
+    ).select("-password -otp -expiresAt -passwordChangedAt");
+
+    if (!updatedUser) {
+      throw new AppError(HttpStatus.BAD_REQUEST, "User update failed");
+    }
+
+    // ================================
+    // 5️⃣ Update Cook Profile if User is a Cook
+    // ================================
+    if (updatedUser.role === "cook" && updatedUser.cookId) {
+      const updateCook = await CookProfileModel.findByIdAndUpdate(
+        updatedUser.cookId,
+        { cookName: updatedUser.name },
+        { new: true, session }, // ← Add session here
+      );
+
+      if (!updateCook) {
+        throw new AppError(HttpStatus.BAD_REQUEST, "Cook update failed");
+      }
+    }
+
+    // ================================
+    // 6️⃣ Commit Transaction
+    // ================================
+    await session.commitTransaction();
+    session.endSession();
+
+    return updatedUser;
+  } catch (error) {
+    // ================================
+    // 7️⃣ Rollback on Error
+    // ================================
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
   }
-
-  if (user.isDeleted) {
-    throw new AppError(HttpStatus.FORBIDDEN, "User is blocked");
-  }
-
-  const updateData: Partial<IUser> = {};
-
-  // ================================
-  // 1️⃣ Upload Image if Provided
-  // ================================
-  if (file) {
-    const imageName = payload.name || "profile";
-    const imageInfo = await sendFileToCloudinary(
-      file.buffer,
-      imageName,
-      file.mimetype,
-    );
-    updateData.profileImage = imageInfo.secure_url;
-  }
-
-  // ================================
-  // 2️⃣ Update Editable Fields
-  // ================================
-  if (payload.name) updateData.name = payload.name;
-  if (payload.phoneNumber) updateData.phoneNumber = payload.phoneNumber;
-
-  // ================================
-  // 3️⃣ Email Update (separate logic)
-  // ================================
-  if (payload.email) {
-    updateData.email = payload.email;
-  }
-
-  // ================================
-  // 4️⃣ Update User in MongoDB
-  // ================================
-  const updatedUser = await UserModel.findByIdAndUpdate(
-    id,
-    { $set: updateData },
-    { new: true },
-  ).select("-password -otp -expiresAt -passwordChangedAt");
-
-  return updatedUser;
 };
-
-// const TOTAL_STEPS = 12;
 
 export const trackPagesUpdate = async (
   user: JwtPayload,

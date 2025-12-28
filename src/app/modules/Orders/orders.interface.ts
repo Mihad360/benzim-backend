@@ -3,9 +3,9 @@ import { IMeal } from "../Meal/meal.interface";
 
 export interface IOrders {
   userId: Types.ObjectId;
-  cookId: Types.ObjectId;
+  cookId: Types.ObjectId[];
   cartIds: Types.ObjectId[]; // references Meal documents
-  conversationId?: Types.ObjectId;
+  conversationId?: Types.ObjectId[];
   totalAmount: number;
   tip?: number;
   discountedAmount: number;
@@ -24,6 +24,7 @@ export interface IOrders {
   }[];
   promoCode: string;
   maxCompleted: number;
+  shipingAddress: string;
   pickUpDate: Date; // "Today" | "Tomorrow" or actual date
   pickUpTime: string; // e.g. "4PM–5PM"
   specialInstructions?: string; // optional note from user

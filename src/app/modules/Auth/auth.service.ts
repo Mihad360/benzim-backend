@@ -458,7 +458,7 @@ const changePassword = async (
       config.jwt_refresh_expires_in as string,
     );
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, user: result };
   } catch (error) {
     await session.abortTransaction();
     throw error;

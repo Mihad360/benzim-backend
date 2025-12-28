@@ -20,13 +20,13 @@ const CookProfileSchema = new Schema<ICookProfile>(
     },
     description: {
       type: String,
+      required: true,
     },
     shortDescription: {
       type: String,
+      required: true,
     },
-    location: {
-      type: String,
-    },
+    location: { type: String },
     profileImage: {
       type: String,
     },
@@ -77,6 +77,12 @@ const CookProfileSchema = new Schema<ICookProfile>(
       type: Boolean,
       default: false, // Default is false (assuming cooks are not registered by default)
     },
+    lat: {
+      type: Number,
+    },
+    long: {
+      type: Number,
+    },
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -84,6 +90,7 @@ const CookProfileSchema = new Schema<ICookProfile>(
   },
 );
 
+CookProfileSchema.index({ "location.coordinates": "2dsphere" });
 export const CookProfileModel = mongoose.model<ICookProfile>(
   "Cook",
   CookProfileSchema,

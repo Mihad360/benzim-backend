@@ -20,7 +20,7 @@ export const roundToCent = (value: number) => {
 const createOrder = async (payload: IOrders, user: JwtPayload) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-
+  console.log(payload.cartIds);
   try {
     const userId = new Types.ObjectId(user.user);
 
@@ -53,9 +53,78 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
 
     const statusHistory = [{ status: "new", changedAt: new Date() }];
 
+    // ================================
+    // Extract unique cook IDs from carts
+    // ================================
+    const uniqueCookIds = [
+      ...new Set(
+        carts
+          .map(
+            (cart) => cart.cookId?._id?.toString() || cart.cookId?.toString(),
+          )
+          .filter(Boolean),
+      ),
+    ].map((id) => new mongoose.Types.ObjectId(id));
+
+    // ===============================
+    // 💬 Create/Find conversations for all unique cooks
+    // ===============================
+    const conversationIds: mongoose.Types.ObjectId[] = [];
+
+    if (uniqueCookIds.length > 0) {
+      for (const cookId of uniqueCookIds) {
+        const cookProfile = await CookProfileModel.findById(cookId, null, {
+          session,
+        });
+
+        if (cookProfile) {
+          // Check if conversation already exists
+          let conversation = await ConversationModel.findOne(
+            {
+              cookId: cookProfile.userId,
+              userId,
+              isDeleted: false,
+            },
+            null,
+            { session },
+          );
+
+          // Create conversation if it doesn't exist
+          if (!conversation) {
+            const conversationData = await ConversationModel.create(
+              [
+                {
+                  cookId: cookProfile.userId,
+                  userId,
+                },
+              ],
+              { session },
+            );
+
+            if (!conversationData?.length) {
+              throw new AppError(
+                HttpStatus.BAD_REQUEST,
+                "Failed to create conversation",
+              );
+            }
+
+            conversation = conversationData[0];
+          }
+
+          // Collect conversation ID
+          conversationIds.push(conversation._id);
+        }
+      }
+    }
+
+    // ================================
+    // Create order with conversation IDs
+    // ================================
     const orderData: IOrders = {
       ...payload,
       userId,
+      cookId: uniqueCookIds, // Array of cook ObjectIds
+      conversationId: conversationIds, // Array of conversation ObjectIds
       totalAmount: roundToCent(totalAmount + tip),
       tip: Number(tip),
       orderNo,
@@ -66,6 +135,9 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
     // Create order
     const newOrder = await OrderModel.create([orderData], { session });
 
+    // ===============================
+    // 🔥 Validate meal availability
+    // ===============================
     const insufficientMeals: string[] = [];
 
     for (const cart of carts) {
@@ -93,8 +165,9 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
         )}`,
       );
     }
+
     // ===============================
-    // 🔥 Step 2: Update Meal availablePortion
+    // 🔥 Update Meal availablePortion
     // ===============================
     for (const cart of carts) {
       const orderedQty = cart.quantity || 1;
@@ -104,61 +177,6 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
         { $inc: { availablePortion: -orderedQty } },
         { session },
       );
-    }
-
-    // ===============================
-    // 💬 Conversation creation
-    // ===============================
-    const firstMealCookId = carts[0]?.cookId;
-
-    if (firstMealCookId) {
-      const cookProfile = await CookProfileModel.findById(
-        firstMealCookId,
-        null,
-        { session },
-      );
-
-      if (cookProfile) {
-        const existingConversation = await ConversationModel.findOne(
-          {
-            cookId: cookProfile.userId,
-            userId,
-            isDeleted: false,
-          },
-          null,
-          { session },
-        );
-
-        if (!existingConversation) {
-          const conversationData = await ConversationModel.create(
-            [
-              {
-                cookId: cookProfile.userId,
-                userId,
-              },
-            ],
-            { session },
-          );
-
-          if (conversationData?.length) {
-            const orderUpdate = await OrderModel.findByIdAndUpdate(
-              newOrder[0]._id,
-              {
-                conversationId: conversationData[0]._id,
-              },
-              { new: true },
-            );
-            if (!orderUpdate) {
-              throw new AppError(HttpStatus.BAD_REQUEST, "Order update failed");
-            }
-          } else {
-            throw new AppError(
-              HttpStatus.BAD_REQUEST,
-              "Something went wrong during update the conversation",
-            );
-          }
-        }
-      }
     }
 
     // ✅ Commit transaction
@@ -373,7 +391,7 @@ const getEachOrder = async (orderId: string, user: JwtPayload) => {
       },
     })
     .populate({
-      path: "cookId",
+      path: "cookId", // This is now an array
       select: "cookName profileImage rating _id",
     });
 
@@ -381,24 +399,28 @@ const getEachOrder = async (orderId: string, user: JwtPayload) => {
     throw new AppError(HttpStatus.NOT_FOUND, "Order not found");
   }
 
-  const cook: any = order.cookId;
+  // Handle cookId as array
+  const cooks: any = order.cookId; // This is an array now
 
   const formattedOrder = {
     orderId: order._id,
     orderNo: order.orderNo,
     totalAmount: order.totalAmount,
     tip: order.tip || 0,
-    conversationId: order.conversationId || null,
+    conversationId: order.conversationId || [], // Array of conversation IDs
     promoCode: order.promoCode || null,
     status: order.status,
+    shipingAddress: order.shipingAddress,
     createdAt: order.createdAt,
 
-    cook: {
-      cookId: cook?._id,
-      cookName: cook?.cookName,
-      image: cook?.profileImage || null,
-      rating: cook?.rating,
-    },
+    // Map all cooks (now supporting multiple cooks)
+    cooks:
+      cooks?.map((cook: any) => ({
+        cookId: cook?._id,
+        cookName: cook?.cookName,
+        image: cook?.profileImage || null,
+        rating: cook?.rating || 0,
+      })) || [],
 
     carts: order.cartIds.map((cart: any) => ({
       quantity: cart.quantity,
@@ -414,6 +436,23 @@ const getEachOrder = async (orderId: string, user: JwtPayload) => {
   };
 
   return formattedOrder;
+};
+
+const updateAddress = async (
+  orderId: string,
+  payload: { shipingAddress: string },
+) => {
+  const order = await OrderModel.findByIdAndUpdate(
+    orderId,
+    {
+      shipingAddress: payload.shipingAddress,
+    },
+    { new: true },
+  );
+  if (!order) {
+    throw new AppError(HttpStatus.BAD_REQUEST, "Address update failed");
+  }
+  return order;
 };
 
 const recentOrders = async (user: JwtPayload) => {
@@ -583,4 +622,5 @@ export const orderServices = {
   getEachOrder,
   recentOrders,
   updateOrderStatus,
+  updateAddress,
 };

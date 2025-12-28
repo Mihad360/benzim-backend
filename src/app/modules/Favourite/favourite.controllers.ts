@@ -24,7 +24,8 @@ const getMyFavourites = catchAsync(async (req, res) => {
     statusCode: HttpStatus.OK,
     success: true,
     message: "OTP verified successfully",
-    data: result,
+    meta: result.meta,
+    data: result.favorites,
   });
 });
 

@@ -25,7 +25,42 @@ const getMyMeals = catchAsync(async (req, res) => {
     statusCode: HttpStatus.OK,
     success: true,
     message: "Password reset successfully",
+    // meta: result.meta,
+    data: result,
+  });
+});
+
+const topRatedCooks = catchAsync(async (req, res) => {
+  const result = await mealServices.topRatedCooks(req.query);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
     meta: result.meta,
+    data: result.result,
+  });
+});
+
+const popularMeals = catchAsync(async (req, res) => {
+  const result = await mealServices.popularMeals(req.query);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
+    data: result,
+  });
+});
+
+const getEachMeal = catchAsync(async (req, res) => {
+  const id = req.params.mealId;
+  const result = await mealServices.getEachMeal(id);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "Password reset successfully",
     data: result,
   });
 });
@@ -33,4 +68,7 @@ const getMyMeals = catchAsync(async (req, res) => {
 export const mealControllers = {
   addMeal,
   getMyMeals,
+  topRatedCooks,
+  popularMeals,
+  getEachMeal,
 };

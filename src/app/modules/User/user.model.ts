@@ -40,6 +40,8 @@ const userSchema = new Schema<IUser, UserInterface>(
     isCookQuiz: { type: Boolean, default: false },
     stripeAccountId: { type: String },
     isOnboarded: { type: Boolean },
+    lat: { type: Number },
+    long: { type: Number },
   },
   { timestamps: true },
 );
