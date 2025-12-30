@@ -17,6 +17,7 @@ router.patch(
   auth("user", "cook", "admin"),
   upload.single("image"),
   (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.file);
     if (req.body.data) {
       req.body = JSON.parse(req.body.data);
     }

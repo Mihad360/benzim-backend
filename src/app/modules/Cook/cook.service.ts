@@ -2,12 +2,11 @@ import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
 import { JwtPayload } from "../../interface/global";
 import { IFileFields } from "./cook.controller";
-import { ICookAvailability, ICookProfile } from "./cook.interface";
+import { ICookAvailability, ICookProfile, ILocation } from "./cook.interface";
 import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
 import mongoose, { Types } from "mongoose";
 import { UserModel } from "../User/user.model";
 import { CookAvailabilityModel, CookProfileModel } from "./cook.model";
-import QueryBuilder from "../../builder/QueryBuilder";
 import { emitCookLocationUpdate } from "../../utils/socket";
 import { ReviewModel } from "../Review/review.model";
 import { MealModel } from "../Meal/meal.model";
@@ -85,13 +84,19 @@ const becomeACook = async (
       Number(cook.lat),
       Number(cook.long),
     );
+    const locationData: ILocation = {
+      type: "Point",
+      coordinates: [cook.long, cook.lat] as [number, number],
+    };
+
     // Prepare the cook profile payload (excluding availability)
     const cookProfilePayload: ICookProfile = {
       ...cook,
       userId: isUserExist._id,
       cookName: isUserExist.name,
       businessNumber: isUserExist.klzhNumber as string,
-      location: address,
+      address: address,
+      location: locationData,
       profileImage: profileImageUrl.secure_url,
       kitchenImages: kitchenImageUrls,
       certificates: certificatesUrls,
@@ -225,35 +230,160 @@ const getCookProfile = async (user: JwtPayload) => {
   };
 };
 
-const cookSearch = ["cookName"];
+// const cookSearch = ["cookName"];
 
 const cooksLocation = async (
-  // payload: { cookIds: string[] },
   query: Record<string, unknown>,
   // user: JwtPayload,
+  payload: { lat: number; long: number },
 ) => {
-  const cookQuery = new QueryBuilder(CookProfileModel.find(), query)
-    .search(cookSearch)
-    .filter();
 
-  const meta = await cookQuery.countTotal();
-  const result = await cookQuery.modelQuery;
+  const userLong = Number(payload.long);
+  const userLat = Number(payload.lat);
+
+  // Extract query parameters
+  const maxDistance = query.maxDistance ? Number(query.maxDistance) : 10000; // Default 5km
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
+  const searchTerm = query.searchTerm as string;
+
+  // Build match stage for filters
+  const matchStage: Record<string, unknown> = {
+    isDeleted: false,
+  };
+
+  // Add filters from query
+  if (query.isCookApproved !== undefined) {
+    matchStage.isCookApproved = query.isCookApproved === "true";
+  }
+
+  if (query.isKlzhRegistered !== undefined) {
+    matchStage.isKlzhRegistered = query.isKlzhRegistered === "true";
+  }
+
+  if (query.rating) {
+    matchStage.rating = { $gte: Number(query.rating) };
+  }
+
+  // Build search conditions
+  const searchConditions: Record<string, unknown>[] = [];
+
+  if (searchTerm) {
+    searchConditions.push(
+      { cookName: { $regex: searchTerm, $options: "i" } },
+      { description: { $regex: searchTerm, $options: "i" } },
+      { shortDescription: { $regex: searchTerm, $options: "i" } },
+      { address: { $regex: searchTerm, $options: "i" } },
+    );
+  }
+
+  // Aggregation pipeline
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pipeline: any[] = [
+    {
+      $geoNear: {
+        near: {
+          type: "Point",
+          coordinates: [userLong, userLat],
+        },
+        distanceField: "distance", // Distance in meters
+        maxDistance: maxDistance,
+        spherical: true,
+        query: matchStage, // Base filters applied in $geoNear
+      },
+    },
+  ];
+
+  // Add search stage if search term exists
+  if (searchConditions.length > 0) {
+    pipeline.push({
+      $match: {
+        $or: searchConditions,
+      },
+    });
+  }
+
+  // Add sorting (by distance, then rating)
+  pipeline.push({
+    $sort: { distance: 1, rating: -1 },
+  });
+
+  // Get total count before pagination
+  const countPipeline = [...pipeline, { $count: "total" }];
+  const countResult = await CookProfileModel.aggregate(countPipeline);
+  const total = countResult.length > 0 ? countResult[0].total : 0;
+
+  // Add pagination
+  pipeline.push({ $skip: skip });
+  pipeline.push({ $limit: limit });
+
+  // Add population for userId if needed
+  pipeline.push({
+    $lookup: {
+      from: "users", // Collection name (usually lowercase + plural)
+      localField: "userId",
+      foreignField: "_id",
+      as: "userDetails",
+    },
+  });
+
+  // Unwind userDetails (optional, if you want user as object not array)
+  pipeline.push({
+    $unwind: {
+      path: "$userDetails",
+      preserveNullAndEmptyArrays: true,
+    },
+  });
+
+  // Project fields (optional - customize what you want to return)
+  pipeline.push({
+    $project: {
+      cookName: 1,
+      businessNumber: 1,
+      description: 1,
+      shortDescription: 1,
+      address: 1,
+      location: 1,
+      profileImage: 1,
+      kitchenImages: 1,
+      certificates: 1,
+      rating: 1,
+      stars: 1,
+      totalReviews: 1,
+      totalOrders: 1,
+      completedOrders: 1,
+      isKlzhRegistered: 1,
+      isCookApproved: 1,
+      distance: 1, // Distance from user in meters
+      distanceInKm: { $divide: ["$distance", 1000] }, // Convert to km
+      "userDetails.name": 1,
+      "userDetails.email": 1,
+      "userDetails.phone": 1,
+      createdAt: 1,
+      updatedAt: 1,
+    },
+  });
+
+  // Execute aggregation
+  const result = await CookProfileModel.aggregate(pipeline);
 
   if (!result || result.length === 0) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Cooks not found");
+    throw new AppError(HttpStatus.NOT_FOUND, "No cooks found nearby");
   }
-  console.log(result);
-  emitCookLocationUpdate(result);
-  // 🔥 Emit socket event for each cook’s userId
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // result.forEach((cook: any) => {
-  //   // console.log(cook);
-  //   if (cook) {
-  //     emitCookLocationUpdate(cook);
-  //   }
-  // });
 
-  return { meta, result };
+  console.log(`Found ${result.length} cooks near user location`);
+  emitCookLocationUpdate(result);
+
+  // Build meta object
+  const meta = {
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  };
+
+  return { meta: meta, result };
 };
 
 // const getCooksByRate = async (query: Record<string, unknown>) => {
@@ -282,7 +412,7 @@ const getEachCook = async (cookId: string) => {
     .limit(20);
 
   if (!meals.length) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Meals not found");
+    console.log("meals are not available for now");
   }
 
   // 3. Attach cook rating to each meal

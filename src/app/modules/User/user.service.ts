@@ -55,6 +55,7 @@ const editUserProfile = async (
     // ================================
     // 2️⃣ Upload Image if Provided
     // ================================
+    // console.log(file);
     if (file) {
       const imageName = payload.name || "profile";
       const imageInfo = await sendFileToCloudinary(

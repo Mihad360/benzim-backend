@@ -12,7 +12,8 @@ export interface ICookProfile {
   businessNumber: string; // Business phone number
   description: string; // Description of the cook profile
   shortDescription: string; // Short description of the cook
-  location?: string; // Location of the cook
+  address?: string;
+  location?: ILocation; // Location of the cook
   profileImage: string; // URL to the cook's profile image
   kitchenImages: string[]; // Array of URLs to the kitchen images
   certificates: string[]; // Array of URLs to the kitchen images

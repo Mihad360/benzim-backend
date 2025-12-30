@@ -26,7 +26,17 @@ const CookProfileSchema = new Schema<ICookProfile>(
       type: String,
       required: true,
     },
-    location: { type: String },
+    address: { type: String },
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+      },
+    },
     profileImage: {
       type: String,
     },

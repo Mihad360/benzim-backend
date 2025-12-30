@@ -137,6 +137,7 @@ const getOrders = async (user: JwtPayload, query: Record<string, unknown>) => {
     orderQuery = CartModel.find({
       cookId: isCookExist._id,
       isDeleted: false,
+      status: { $nin: ["completed", "cancelled"] }, // ✅ Exclude completed and cancelled
     })
       .populate({ path: "mealId", select: "imageUrls mealName price" })
       .populate({ path: "cookId", select: "rating" });
@@ -144,6 +145,7 @@ const getOrders = async (user: JwtPayload, query: Record<string, unknown>) => {
     orderQuery = CartModel.find({
       userId: isUserExist._id,
       isDeleted: false,
+      status: { $nin: ["completed", "cancelled"] }, // ✅ Exclude completed and cancelled
     })
       .populate({ path: "mealId", select: "imageUrls mealName price" })
       .populate({ path: "cookId", select: "rating" });

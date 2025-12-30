@@ -20,7 +20,7 @@ const PaymentSchema = new Schema<IOrders>(
     ],
     conversationId: {
       type: [Schema.Types.ObjectId],
-      ref: "Conversaton",
+      ref: "Conversation",
     },
     totalAmount: {
       type: Number,

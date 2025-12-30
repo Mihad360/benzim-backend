@@ -45,6 +45,7 @@ const editUserProfile = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;
   const id = user.user as string;
   const file = req.file as Express.Multer.File;
+  // console.log(file);
   const result = await userServices.editUserProfile(id, file, req.body);
 
   sendResponse(res, {

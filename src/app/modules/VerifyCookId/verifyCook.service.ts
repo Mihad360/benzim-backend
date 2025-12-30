@@ -195,6 +195,7 @@ const approveCook = async (cookId: string) => {
 
 const cookApprovals = async (query: Record<string, unknown>) => {
   const cookQuery = new QueryBuilder(QuizCookResultModel.find(), query)
+    .search(["verifyCookInfo.businessNumber"])
     .filter()
     .paginate()
     .fields()

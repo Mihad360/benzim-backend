@@ -6,6 +6,7 @@ import { ConversationModel } from "../Conversation/conversation.model";
 import { IMessage } from "./message.interface";
 import mongoose, { Types } from "mongoose";
 import { MessageModel } from "./message.model";
+import { emitMessage } from "../../utils/socket";
 
 const sendMessage = async (
   conversationId: string,
@@ -59,6 +60,7 @@ const sendMessage = async (
         "Something went wrong during conversation update",
       );
     }
+    emitMessage(conversationId, result[0]);
 
     // Commit transaction after everything is done
     await session.commitTransaction();

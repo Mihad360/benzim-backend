@@ -49,17 +49,16 @@ const getCookProfile = catchAsync(async (req, res) => {
 
 const cooksLocation = catchAsync(async (req, res) => {
   const result = await cookServices.cooksLocation(
-    // req.body,
     req.query,
     // req.user as JwtPayload,
+    req.body,
   );
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
     success: true,
     message: "OTP verified successfully",
-    meta: result.meta,
-    data: result.result,
+    data: result,
   });
 });
 

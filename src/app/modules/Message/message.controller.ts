@@ -20,7 +20,7 @@ const sendMessage = catchAsync(async (req, res) => {
 const getAllMessage = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;
   const result = await messageServices.getAllMessage(
-    req.body.conversationId,
+    req.params.conversationId,
     user,
   );
 

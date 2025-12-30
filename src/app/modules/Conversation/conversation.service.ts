@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import HttpStatus from "http-status";
 import AppError from "../../erros/AppError";
 import { ConversationModel } from "./conversation.model";
@@ -15,20 +16,31 @@ const getMyConversation = async (user: JwtPayload) => {
       userId: userObjectId,
       isDeleted: false,
     })
+      .sort({ createdAt: -1 })
       .populate({
         path: "cookId",
         select: "name profileImage role isActive updatedAt",
       })
       .populate({
         path: "lastMsg",
-        select: "msg createdAt sender_id", // customize if needed
-      });
+        select: "msg createdAt sender_id",
+      })
+      .lean();
 
     if (!conversations || conversations.length === 0) {
       throw new AppError(HttpStatus.NOT_FOUND, "No conversations found");
     }
 
-    return conversations;
+    // Transform data: move cookId to opponentUser
+    const transformedConversations = conversations.map((conv: any) => {
+      const { cookId, ...rest } = conv;
+      return {
+        ...rest,
+        opponentUser: cookId,
+      };
+    });
+
+    return transformedConversations;
   }
 
   if (user.role === "cook") {
@@ -37,6 +49,7 @@ const getMyConversation = async (user: JwtPayload) => {
       cookId: userObjectId,
       isDeleted: false,
     })
+      .sort({ createdAt: -1 })
       .populate({
         path: "userId",
         select: "name profileImage role isActive updatedAt",
@@ -44,13 +57,23 @@ const getMyConversation = async (user: JwtPayload) => {
       .populate({
         path: "lastMsg",
         select: "msg createdAt sender_id",
-      });
+      })
+      .lean();
 
     if (!conversations || conversations.length === 0) {
       throw new AppError(HttpStatus.NOT_FOUND, "No conversations found");
     }
 
-    return conversations;
+    // Transform data: move userId to opponentUser
+    const transformedConversations = conversations.map((conv: any) => {
+      const { userId, ...rest } = conv;
+      return {
+        ...rest,
+        opponentUser: userId,
+      };
+    });
+
+    return transformedConversations;
   }
 
   // INVALID ROLE
