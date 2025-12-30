@@ -871,3 +871,164 @@
 {"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/cook-verify/cook-approvals ⏱️ Response Time: 1 ms","size":"0","timestamp":"30-12-2025 16:00:30"}
 {"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/cook-verify/cook-approvals ⏱️ Response Time: 251 ms","size":0,"timestamp":"30-12-2025 16:00:31"}
 {"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 330 ms","size":0,"timestamp":"30-12-2025 16:00:31"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/offer/offers?limit=10&page=1 ⏱️ Response Time: 261 ms","size":"921","timestamp":"30-12-2025 16:09:07"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 87 ms","size":"171","timestamp":"30-12-2025 16:14:45"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 154 ms","size":"823","timestamp":"30-12-2025 16:14:45"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 565 ms","size":"16165","timestamp":"30-12-2025 16:14:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/conversation/ ⏱️ Response Time: 243 ms","size":"622","timestamp":"30-12-2025 16:14:50"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 422 ms","size":"7146","timestamp":"30-12-2025 16:14:52"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 465 ms","size":"316","timestamp":"30-12-2025 16:14:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 420 ms","size":"319","timestamp":"30-12-2025 16:15:03"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 77 ms","size":"171","timestamp":"30-12-2025 16:15:38"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 170 ms","size":"823","timestamp":"30-12-2025 16:15:38"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 575 ms","size":"16165","timestamp":"30-12-2025 16:15:43"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 415 ms","size":"3736","timestamp":"30-12-2025 16:15:52"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 83 ms","size":"171","timestamp":"30-12-2025 16:18:11"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 149 ms","size":"823","timestamp":"30-12-2025 16:18:12"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 84 ms","size":"171","timestamp":"30-12-2025 16:18:14"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 461 ms","size":"823","timestamp":"30-12-2025 16:18:15"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 882 ms","size":"16165","timestamp":"30-12-2025 16:18:17"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 562 ms","size":"16165","timestamp":"30-12-2025 16:18:17"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/conversation/ ⏱️ Response Time: 235 ms","size":"626","timestamp":"30-12-2025 16:18:21"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 409 ms","size":"7947","timestamp":"30-12-2025 16:18:23"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 408 ms","size":"3736","timestamp":"30-12-2025 16:18:28"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 428 ms","size":"318","timestamp":"30-12-2025 16:18:33"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 420 ms","size":"8348","timestamp":"30-12-2025 16:19:21"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 96 ms","size":"171","timestamp":"30-12-2025 16:19:31"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 173 ms","size":"823","timestamp":"30-12-2025 16:19:31"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 604 ms","size":"16165","timestamp":"30-12-2025 16:19:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/conversation/ ⏱️ Response Time: 256 ms","size":"625","timestamp":"30-12-2025 16:19:38"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 414 ms","size":"8348","timestamp":"30-12-2025 16:19:40"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 409 ms","size":"8348","timestamp":"30-12-2025 16:19:49"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 388 ms","size":"171","timestamp":"30-12-2025 16:20:04"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 156 ms","size":"823","timestamp":"30-12-2025 16:20:04"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 557 ms","size":"16165","timestamp":"30-12-2025 16:20:08"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 398 ms","size":"3736","timestamp":"30-12-2025 16:20:22"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 402 ms","size":"1202","timestamp":"30-12-2025 16:20:27"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 413 ms","size":"3736","timestamp":"30-12-2025 16:20:29"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 418 ms","size":"317","timestamp":"30-12-2025 16:20:30"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 424 ms","size":"1202","timestamp":"30-12-2025 16:20:33"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 399 ms","size":"3736","timestamp":"30-12-2025 16:20:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 397 ms","size":"3736","timestamp":"30-12-2025 16:20:37"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 421 ms","size":"8748","timestamp":"30-12-2025 16:21:06"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 407 ms","size":"8748","timestamp":"30-12-2025 16:21:18"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 94 ms","size":"171","timestamp":"30-12-2025 16:21:36"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 185 ms","size":"823","timestamp":"30-12-2025 16:21:37"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 85 ms","size":"171","timestamp":"30-12-2025 16:21:37"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 162 ms","size":"823","timestamp":"30-12-2025 16:21:37"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 580 ms","size":"16165","timestamp":"30-12-2025 16:21:39"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 564 ms","size":"16165","timestamp":"30-12-2025 16:21:42"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 419 ms","size":"3736","timestamp":"30-12-2025 16:21:57"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 427 ms","size":"3736","timestamp":"30-12-2025 16:22:01"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 426 ms","size":"3736","timestamp":"30-12-2025 16:22:04"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 423 ms","size":"3736","timestamp":"30-12-2025 16:22:08"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 417 ms","size":"3736","timestamp":"30-12-2025 16:22:14"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 416 ms","size":"3736","timestamp":"30-12-2025 16:22:38"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 417 ms","size":"3736","timestamp":"30-12-2025 16:22:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 85 ms","size":"171","timestamp":"30-12-2025 16:23:43"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 164 ms","size":"823","timestamp":"30-12-2025 16:23:43"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 563 ms","size":"16165","timestamp":"30-12-2025 16:23:46"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/conversation/ ⏱️ Response Time: 257 ms","size":"624","timestamp":"30-12-2025 16:23:49"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 437 ms","size":"8748","timestamp":"30-12-2025 16:23:52"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 448 ms","size":"317","timestamp":"30-12-2025 16:24:16"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 462 ms","size":"330","timestamp":"30-12-2025 16:24:25"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 426 ms","size":"324","timestamp":"30-12-2025 16:24:31"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 86 ms","size":"171","timestamp":"30-12-2025 16:24:55"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 161 ms","size":"823","timestamp":"30-12-2025 16:24:55"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 562 ms","size":"16165","timestamp":"30-12-2025 16:25:00"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/popular-meals?limit=10&page=1 ⏱️ Response Time: 245 ms","size":"3891","timestamp":"30-12-2025 16:25:51"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/popular-meals?limit=10&page=2 ⏱️ Response Time: 246 ms","size":"450","timestamp":"30-12-2025 16:25:57"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 409 ms","size":"3736","timestamp":"30-12-2025 16:26:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 437 ms","size":"321","timestamp":"30-12-2025 16:26:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 414 ms","size":"10372","timestamp":"30-12-2025 16:26:37"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 413 ms","size":"3736","timestamp":"30-12-2025 16:26:39"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 424 ms","size":"323","timestamp":"30-12-2025 16:26:40"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 413 ms","size":"3736","timestamp":"30-12-2025 16:26:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 403 ms","size":"10778","timestamp":"30-12-2025 16:26:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 402 ms","size":"324","timestamp":"30-12-2025 16:26:51"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 405 ms","size":"325","timestamp":"30-12-2025 16:26:55"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 407 ms","size":"374","timestamp":"30-12-2025 16:27:01"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 409 ms","size":"12050","timestamp":"30-12-2025 16:27:07"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 406 ms","size":"322","timestamp":"30-12-2025 16:27:10"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 415 ms","size":"3736","timestamp":"30-12-2025 16:27:13"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 402 ms","size":"3736","timestamp":"30-12-2025 16:27:25"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 408 ms","size":"3736","timestamp":"30-12-2025 16:27:31"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 406 ms","size":"3736","timestamp":"30-12-2025 16:27:35"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 413 ms","size":"3736","timestamp":"30-12-2025 16:27:49"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 389 ms","size":"3736","timestamp":"30-12-2025 16:27:54"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 411 ms","size":"1202","timestamp":"30-12-2025 16:28:00"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 402 ms","size":"1202","timestamp":"30-12-2025 16:28:03"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 414 ms","size":"1202","timestamp":"30-12-2025 16:28:05"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 405 ms","size":"1202","timestamp":"30-12-2025 16:28:07"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 399 ms","size":"1202","timestamp":"30-12-2025 16:28:09"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 401 ms","size":"1202","timestamp":"30-12-2025 16:28:10"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 169 ms","size":"823","timestamp":"30-12-2025 16:28:43"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 389 ms","size":"171","timestamp":"30-12-2025 16:28:44"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 567 ms","size":"16165","timestamp":"30-12-2025 16:28:45"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/popular-meals?limit=10&page=1 ⏱️ Response Time: 251 ms","size":"3891","timestamp":"30-12-2025 16:29:17"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/popular-meals?limit=10&page=2 ⏱️ Response Time: 242 ms","size":"450","timestamp":"30-12-2025 16:29:40"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 82 ms","size":"171","timestamp":"30-12-2025 16:30:27"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 159 ms","size":"823","timestamp":"30-12-2025 16:30:28"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 577 ms","size":"16165","timestamp":"30-12-2025 16:30:32"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 423 ms","size":"3736","timestamp":"30-12-2025 16:31:01"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/conversation/ ⏱️ Response Time: 240 ms","size":"629","timestamp":"30-12-2025 16:31:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 412 ms","size":"12455","timestamp":"30-12-2025 16:31:36"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 390 ms","size":"3736","timestamp":"30-12-2025 16:31:36"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 417 ms","size":"317","timestamp":"30-12-2025 16:31:43"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 413 ms","size":"12855","timestamp":"30-12-2025 16:31:46"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 406 ms","size":"341","timestamp":"30-12-2025 16:31:50"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/message/69490601f7c903a04b9a9496 ⏱️ Response Time: 411 ms","size":"13279","timestamp":"30-12-2025 16:32:48"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/message/send/69490601f7c903a04b9a9496 ⏱️ Response Time: 416 ms","size":"320","timestamp":"30-12-2025 16:32:55"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 410 ms","size":"1202","timestamp":"30-12-2025 16:33:01"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 730 ms","size":"1202","timestamp":"30-12-2025 16:33:03"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=cook&page=1&limit=10 ⏱️ Response Time: 405 ms","size":"1202","timestamp":"30-12-2025 16:33:08"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 415 ms","size":"3736","timestamp":"30-12-2025 16:33:12"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 408 ms","size":"3736","timestamp":"30-12-2025 16:33:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/694bb26a7ff6a4247a21d059 ⏱️ Response Time: 249 ms","size":"925","timestamp":"30-12-2025 16:33:33"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 420 ms","size":"3736","timestamp":"30-12-2025 16:33:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/offer/offers?limit=10&page=1 ⏱️ Response Time: 239 ms","size":"921","timestamp":"30-12-2025 16:33:38"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 390 ms","size":"3736","timestamp":"30-12-2025 16:33:39"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal&page=1&limit=10 ⏱️ Response Time: 416 ms","size":"3736","timestamp":"30-12-2025 16:33:46"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cook/691bf8f92e48d13cd1fd78e3 ⏱️ Response Time: 396 ms","size":"3375","timestamp":"30-12-2025 16:33:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/691c13ab3aee885bcc1f0d5c ⏱️ Response Time: 240 ms","size":"1054","timestamp":"30-12-2025 16:34:26"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart?limit=10&page=1 ⏱️ Response Time: 399 ms","size":"1085","timestamp":"30-12-2025 16:34:32"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart?limit=10&page=1 ⏱️ Response Time: 419 ms","size":"1085","timestamp":"30-12-2025 16:34:33"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/popular-meals?limit=10&page=1 ⏱️ Response Time: 250 ms","size":"3891","timestamp":"30-12-2025 16:34:48"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/popular-meals?limit=10&page=2 ⏱️ Response Time: 256 ms","size":"450","timestamp":"30-12-2025 16:34:50"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 404 ⚠️ /api/v1/cook/locations?limit=10&page=1 ⏱️ Response Time: 258 ms","size":"169","timestamp":"30-12-2025 16:34:55"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/694bb26a7ff6a4247a21d059 ⏱️ Response Time: 255 ms","size":"925","timestamp":"30-12-2025 16:35:44"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 296 ms","size":"1554","timestamp":"30-12-2025 16:35:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart?limit=10&page=1 ⏱️ Response Time: 408 ms","size":"1085","timestamp":"30-12-2025 16:35:48"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart?limit=10&page=1 ⏱️ Response Time: 425 ms","size":"1085","timestamp":"30-12-2025 16:35:51"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 292 ms","size":"1545","timestamp":"30-12-2025 16:36:17"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/cart/order-meal/694bb26a7ff6a4247a21d059 ⏱️ Response Time: 578 ms","size":"376","timestamp":"30-12-2025 16:41:19"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart?limit=10&page=1 ⏱️ Response Time: 391 ms","size":"1543","timestamp":"30-12-2025 16:41:51"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/cart/order-meal/694bb26a7ff6a4247a21d059 ⏱️ Response Time: 480 ms","size":"377","timestamp":"30-12-2025 16:41:51"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart?limit=10&page=1 ⏱️ Response Time: 405 ms","size":"1544","timestamp":"30-12-2025 16:41:54"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/cart/order-meal/694bb26a7ff6a4247a21d059 ⏱️ Response Time: 499 ms","size":"377","timestamp":"30-12-2025 16:42:19"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart?limit=10&page=1 ⏱️ Response Time: 414 ms","size":"1544","timestamp":"30-12-2025 16:42:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/cart/exclude-order/6953ac4f398af7bd639d918e ⏱️ Response Time: 499 ms","size":"424","timestamp":"30-12-2025 16:42:39"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart?limit=10&page=1 ⏱️ Response Time: 414 ms","size":"1544","timestamp":"30-12-2025 16:42:40"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/cart/order-meal/694bb26a7ff6a4247a21d059 ⏱️ Response Time: 512 ms","size":"377","timestamp":"30-12-2025 16:43:25"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?type=meal ⏱️ Response Time: 425 ms","size":"3736","timestamp":"30-12-2025 16:46:36"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?page=1&type=meal&limit=1 ⏱️ Response Time: 416 ms","size":"1172","timestamp":"30-12-2025 16:47:07"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?page=2&type=meal&limit=1 ⏱️ Response Time: 416 ms","size":"1391","timestamp":"30-12-2025 16:47:32"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart?limit=10&page=1 ⏱️ Response Time: 414 ms","size":"1544","timestamp":"30-12-2025 16:47:43"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/cart/order-meal/694bb26a7ff6a4247a21d059 ⏱️ Response Time: 509 ms","size":"377","timestamp":"30-12-2025 16:47:50"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart?limit=10&page=1 ⏱️ Response Time: 412 ms","size":"1557","timestamp":"30-12-2025 16:47:55"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cook/691bf8f92e48d13cd1fd78e3 ⏱️ Response Time: 439 ms","size":"3375","timestamp":"30-12-2025 16:48:05"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?page=2&type=meal&limit=1 ⏱️ Response Time: 416 ms","size":"1391","timestamp":"30-12-2025 16:49:08"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?page=2&type=meal&limit=2 ⏱️ Response Time: 420 ms","size":"1402","timestamp":"30-12-2025 16:49:22"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?page=1&type=meal&limit=2 ⏱️ Response Time: 414 ms","size":"2448","timestamp":"30-12-2025 16:49:36"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/favorites/my-favorites?page=2&type=meal&limit=2 ⏱️ Response Time: 412 ms","size":"1402","timestamp":"30-12-2025 16:49:51"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 86 ms","size":"171","timestamp":"30-12-2025 16:50:59"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 165 ms","size":"823","timestamp":"30-12-2025 16:50:59"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 651 ms","size":"16165","timestamp":"30-12-2025 16:51:03"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 83 ms","size":"171","timestamp":"30-12-2025 16:51:35"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 165 ms","size":"823","timestamp":"30-12-2025 16:51:35"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 583 ms","size":"16165","timestamp":"30-12-2025 16:51:38"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cook/691bf8f92e48d13cd1fd78e3 ⏱️ Response Time: 414 ms","size":"3375","timestamp":"30-12-2025 16:51:41"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/cart/order-meal/691c13ab3aee885bcc1f0d5c ⏱️ Response Time: 588 ms","size":"377","timestamp":"30-12-2025 16:51:44"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/category/ ⏱️ Response Time: 88 ms","size":"171","timestamp":"30-12-2025 16:52:41"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 169 ms","size":"823","timestamp":"30-12-2025 16:52:41"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal?limit=10&page=1 ⏱️ Response Time: 656 ms","size":"16165","timestamp":"30-12-2025 16:52:46"}

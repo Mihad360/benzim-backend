@@ -87,8 +87,7 @@ const getAllMessage = async (conversationId: string, user: JwtPayload) => {
     .populate({
       path: "cookId",
       select: "name profileImage updatedAt isActive role",
-    })
-    .lean();
+    });
 
   if (!conversation) {
     throw new AppError(HttpStatus.NOT_FOUND, "Conversation not found");
@@ -113,8 +112,7 @@ const getAllMessage = async (conversationId: string, user: JwtPayload) => {
       path: "sender_id",
       select: "name profileImage role",
     })
-    .sort({ createdAt: 1 })
-    .lean();
+    .sort({ createdAt: -1 });
 
   if (!messages || messages.length === 0) {
     throw new AppError(HttpStatus.NOT_FOUND, "No messages found");
