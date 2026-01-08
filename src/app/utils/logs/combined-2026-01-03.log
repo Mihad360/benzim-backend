@@ -1,0 +1,4 @@
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 8 ms","size":"0","timestamp":"03-01-2026 18:03:19"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 500 🔥 /api/v1/users/ ⏱️ Response Time: 15 ms","size":"235","timestamp":"03-01-2026 18:03:19"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 2 ms","size":"0","timestamp":"03-01-2026 18:04:03"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 500 🔥 /api/v1/users/ ⏱️ Response Time: 9 ms","size":"235","timestamp":"03-01-2026 18:04:03"}

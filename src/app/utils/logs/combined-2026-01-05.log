@@ -1,0 +1,15 @@
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 / ⏱️ Response Time: 21 ms","size":"2","timestamp":"05-01-2026 11:57:56"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 404 ⚠️ /favicon.ico ⏱️ Response Time: 3 ms","size":"57","timestamp":"05-01-2026 11:57:57"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 3 ms","size":"0","timestamp":"05-01-2026 11:58:14"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 500 🔥 /api/v1/users/ ⏱️ Response Time: 19 ms","size":"235","timestamp":"05-01-2026 11:58:15"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 500 🔥 /api/v1/users/ ⏱️ Response Time: 10 ms","size":"235","timestamp":"05-01-2026 11:58:19"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/auth/login ⏱️ Response Time: 1 ms","size":"0","timestamp":"05-01-2026 11:58:51"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 429 ms","size":"1487","timestamp":"05-01-2026 11:58:52"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"05-01-2026 11:58:52"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/ ⏱️ Response Time: 777 ms","size":"7511","timestamp":"05-01-2026 11:58:53"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"05-01-2026 11:58:57"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 327 ms","size":0,"timestamp":"05-01-2026 11:58:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"05-01-2026 11:59:09"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 360 ms","size":0,"timestamp":"05-01-2026 11:59:10"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"05-01-2026 11:59:18"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 322 ms","size":0,"timestamp":"05-01-2026 11:59:18"}
