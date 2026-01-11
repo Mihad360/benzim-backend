@@ -24,6 +24,7 @@ export default {
   twilio_auth_token: process.env.TWILIO_AUTH_TOKEN,
   twilio_number: process.env.TWILIO_PHONE_NUMBER,
   twilio_reciever_number: process.env.TWILIO_RECIEVER_NUMBER,
+  klzh_email: process.env.KLZH_EMAIL,
   // super_admin_password: process.env.SUPER_ADMIN_PASSWORD,
   // bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
   // default_pass: process.env.DEFAULT_PASS,

@@ -7,8 +7,8 @@ import Stripe from "stripe";
 import { handleCheckoutSessionCompleted } from "./webhookFunctionHandler";
 import { UserModel } from "../../modules/User/user.model";
 
-const platformEndpointSecret = config.stripe_client_webhook_1 as string;
-const connectedEndpointSecret = config.stripe_client_webhook_3 as string;
+const platformEndpointSecret = config.stripe_platform_webhook as string;
+const connectedEndpointSecret = config.stripe_connected_webhook as string;
 
 export const stripeWebhookHandler = catchAsync(async (req, res) => {
   let event: Stripe.Event;
@@ -41,6 +41,7 @@ export const stripeWebhookHandler = catchAsync(async (req, res) => {
       case "checkout.session.completed":
         const session = event.data.object as Stripe.Checkout.Session;
         console.log("✅ Checkout session completed");
+        console.log(session.metadata);
         await handleCheckoutSessionCompleted(session);
         break;
 

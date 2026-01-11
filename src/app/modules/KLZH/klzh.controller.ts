@@ -6,7 +6,10 @@ import { klzhServices } from "./klzh.service";
 
 const registerKlzh = catchAsync(async (req, res) => {
   const user = req.user as JwtPayload;
-  const result = await klzhServices.registerKlzh(req.body, user);
+  const result = await klzhServices.registerKlzh(
+    req.file as Express.Multer.File,
+    user,
+  );
 
   sendResponse(res, {
     statusCode: HttpStatus.OK,
@@ -17,7 +20,7 @@ const registerKlzh = catchAsync(async (req, res) => {
 });
 
 const verifyBusinessNumber = catchAsync(async (req, res) => {
-  const id = req.params.klzhId;
+  // const id = req.params.klzhId;
   const user = req.user as JwtPayload;
   const result = await klzhServices.verifyBusinessNumber(user, req.body);
 

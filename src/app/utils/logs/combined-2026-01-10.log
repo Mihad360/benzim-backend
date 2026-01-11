@@ -1,0 +1,11 @@
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 979 ms","size":"3439","timestamp":"10-01-2026 10:40:55"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/auth/login ⏱️ Response Time: 388 ms","size":"1545","timestamp":"10-01-2026 10:49:36"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/popular-meals?limit=2&page=2 ⏱️ Response Time: 273 ms","size":"872","timestamp":"10-01-2026 10:50:15"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/meal/popular-meals ⏱️ Response Time: 255 ms","size":"3891","timestamp":"10-01-2026 10:50:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/cart/order-meal/6948eb41f7c903a04b9a9444 ⏱️ Response Time: 639 ms","size":"373","timestamp":"10-01-2026 10:50:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/cart/order-meal/69427f46c287149e3fc08b8b ⏱️ Response Time: 508 ms","size":"379","timestamp":"10-01-2026 10:50:59"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/cart/ ⏱️ Response Time: 446 ms","size":"1963","timestamp":"10-01-2026 10:51:17"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/order/create ⏱️ Response Time: 843 ms","size":"578","timestamp":"10-01-2026 10:52:27"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 400 ⚠️ /api/v1/payment/create-payment ⏱️ Response Time: 1163 ms","size":"173","timestamp":"10-01-2026 10:52:59"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 400 ⚠️ /api/v1/payment/create-payment ⏱️ Response Time: 1040 ms","size":"173","timestamp":"10-01-2026 10:54:15"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/klzh/register-klzh ⏱️ Response Time: 16 ms","size":"235","timestamp":"10-01-2026 14:39:02"}

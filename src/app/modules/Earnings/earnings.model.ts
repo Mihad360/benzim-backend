@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { IEarning } from "./earnings.interface";
 
-const EarningSchema = new Schema<IEarning>(
+const earningSchema = new Schema<IEarning>(
   {
     orderId: {
       type: String,
@@ -9,41 +9,39 @@ const EarningSchema = new Schema<IEarning>(
       index: true,
     },
 
-    saleAmount: {
+    totalPaidByCustomer: {
       type: Number,
       required: true,
+      min: 0,
     },
 
-    customerEndCommissionRate: {
+    cookEarnings: {
       type: Number,
       required: true,
-      default: 7.5,
+      min: 0,
     },
 
-    customerEndCommissionAmount: {
+    cookEarningsRate: {
       type: Number,
       required: true,
+      min: 0,
+      max: 1,
     },
 
-    cookEndCommissionRate: {
+    adminEarn: {
       type: Number,
       required: true,
-      default: 7.5,
+      min: 0,
     },
 
-    cookEndCommissionAmount: {
-      type: Number,
-      required: true,
-    },
-
-    commissionAmount: {
+    adminEarnRate: {
       type: Number,
       required: true,
     },
 
     date: {
       type: Date,
-      required: true,
+      default: Date.now,
     },
 
     status: {
@@ -51,10 +49,15 @@ const EarningSchema = new Schema<IEarning>(
       enum: ["pending", "completed", "failed"],
       default: "pending",
     },
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   },
 );
 
-export const EarningModel = model<IEarning>("Earnings", EarningSchema);
+export const EarningModel = model<IEarning>("Earning", earningSchema);

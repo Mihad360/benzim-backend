@@ -2,23 +2,22 @@ import HttpStatus from "http-status";
 import mongoose, { Types } from "mongoose";
 import { JwtPayload } from "../../interface/global";
 import { UserModel } from "../User/user.model";
-import { KLZHFormData } from "./klzh.interface";
-import KLZHModel from "./klzh.model";
-import {
-  generateKLZHRegistrationPDFs,
-  generateUniqueBusinessNumber,
-  sendBusinessNumberEmail,
-  sendKlzhPdfEmail,
-} from "./klzh.utils";
 import AppError from "../../erros/AppError";
+import { sendFileToCloudinary } from "../../utils/sendImageToCloudinary";
+import { sendEmail } from "../../utils/sendEmail";
+import config from "../../config";
+import { KLZHModel } from "./klzh.model";
 
-const registerKlzh = async (payload: KLZHFormData, user: JwtPayload) => {
+const registerKlzh = async (file: Express.Multer.File, user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
+
   const isAlreadyKlzhExist = await KLZHModel.findOne({
     userId: userId,
     isDeleted: false,
   });
+
   const isUserKlzh = await UserModel.findById(userId);
+
   if (isAlreadyKlzhExist && isUserKlzh && isUserKlzh.isKlzhRegistered) {
     throw new AppError(
       HttpStatus.BAD_REQUEST,
@@ -26,15 +25,34 @@ const registerKlzh = async (payload: KLZHFormData, user: JwtPayload) => {
     );
   }
 
-  const session = await mongoose.startSession(); // Start a Mongoose session
-  session.startTransaction(); // Begin transaction
+  if (!file) {
+    throw new AppError(HttpStatus.BAD_REQUEST, "PDF file is required");
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
-    const businessNumber = await generateUniqueBusinessNumber();
-    payload.userId = userId;
-    // Step 1: Save KLZHFormData within the session
-    const klzhData = await KLZHModel.create([payload], { session });
-    // Step 2: Update the user with the generated business number and expiration date (+7 days)
+    const fileName = `${isUserKlzh?.name}.KLZH`;
+    const fileInfo = await sendFileToCloudinary(
+      file.buffer,
+      fileName,
+      file.mimetype,
+    );
+    const pdfUrl = fileInfo.secure_url;
+
+    // Save KLZH data with PDF URL
+    const klzhData = await KLZHModel.create(
+      [
+        {
+          userId: userId,
+          pdfUrl: pdfUrl,
+        },
+      ],
+      { session },
+    );
+
+    // Update user
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + 7);
 
@@ -44,7 +62,7 @@ const registerKlzh = async (payload: KLZHFormData, user: JwtPayload) => {
         klzhNumberExpiry: expirationDate,
         pdfSent: true,
       },
-      { session },
+      { session, new: true },
     );
 
     if (!userUpdate) {
@@ -52,34 +70,51 @@ const registerKlzh = async (payload: KLZHFormData, user: JwtPayload) => {
       throw new AppError(HttpStatus.BAD_REQUEST, "User update failed");
     }
 
-    const pdfPath = await generateKLZHRegistrationPDFs(
-      klzhData[0],
-      "ahmedmihad962@gmail.com",
-    );
-    const pdfSent = await sendKlzhPdfEmail(user.email as string, pdfPath);
-    if (!pdfSent) {
-      throw new AppError(HttpStatus.BAD_REQUEST, "Pdf sending failed");
-    }
+    // Send PDF email with attachment
+    const emailSubject = "KLZH Registration - Your PDF Document";
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; padding: 20px;">
+        <h2>KLZH Registration Successful</h2>
+        <p>Dear ${isUserKlzh?.name},</p>
+        <p>Your KLZH registration has been completed successfully.</p>
+        <p>Please find your registration document attached to this email.</p>
+        <p>You can also access your document at: <a href="${pdfUrl}">View Document</a></p>
+        <br/>
+        <p>Best regards,<br/>KLZH Team</p>
+      </div>
+    `;
 
-    // Step 3: Send the generated business number to the user's email
-    const emailSent = await sendBusinessNumberEmail(
-      user.email as string,
-      businessNumber,
+    const emailAttachments = [
+      {
+        filename: `${fileName}.pdf`,
+        path: pdfUrl, // Cloudinary URL
+      },
+    ];
+
+    const emailSent = await sendEmail(
+      config.klzh_email as string,
+      emailSubject,
+      emailHtml,
+      emailAttachments,
     );
-    if (!emailSent) {
+
+    if (!emailSent || !emailSent.success) {
       await session.abortTransaction();
       throw new AppError(HttpStatus.BAD_REQUEST, "Email sending failed");
     }
 
     await session.commitTransaction();
 
-    return klzhData;
+    return klzhData[0];
   } catch (error) {
     console.error("Error registering KLZH:", error);
-    await session.abortTransaction(); // Ensure transaction is aborted on error
-    throw new AppError(HttpStatus.BAD_REQUEST, "Something went wrong");
+    await session.abortTransaction();
+    throw new AppError(
+      HttpStatus.BAD_REQUEST,
+      error instanceof Error ? error.message : "Something went wrong",
+    );
   } finally {
-    session.endSession(); // End the session
+    session.endSession();
   }
 };
 

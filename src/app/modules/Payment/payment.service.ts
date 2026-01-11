@@ -2,7 +2,6 @@ import HttpStatus from "http-status";
 import mongoose, { Types } from "mongoose";
 import { JwtPayload } from "../../interface/global";
 import { IPayment, IPaymentMetadata } from "./payment.interface";
-import { PaymentModel } from "./payment.model";
 import AppError from "../../erros/AppError";
 import { Payment } from "../../utils/STRIPE/stripePayment";
 import { OrderModel } from "../Orders/orders.model";
@@ -68,30 +67,6 @@ export const createPayment = async (
   }
 };
 
-export const payAmount = async (payload: IPaymentMetadata) => {
-  const result = await PaymentModel.create(payload);
-  if (result) {
-    await PaymentModel.findByIdAndUpdate(
-      result._id,
-      {
-        paymentStatus: "completed",
-        created_At: new Date(),
-      },
-      { new: true },
-    );
-  }
-  return result;
-};
-
 export const paymentServices = {
   createPayment,
 };
-
-
-
-
-
-// stripe publish = 
-// stripe secret = 
-// webhook payment = 
-// webhook account = 

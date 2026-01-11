@@ -170,17 +170,23 @@ const loginUser = async (payload: IAuth) => {
 
   let onboardingUrl = null;
 
-  // if (!user.stripeAccountId && !user.isOnboarded && user.role === "cook") {
-  //   // 1. Create connected account
-  //   console.log('hello');
-  //   const account = await stripe.accounts.create({
-  //     type: "express", // or "standard" if you want
-  //     // country: "CH",
-  //     email: user.email,
-  //   });
-  //   console.log(account);
-  //   onboardingUrl = await createOnboardingLink(account.id);
-  // }
+  if (!user.stripeAccountId && !user.isOnboarded && user.role === "cook") {
+    // 1. Create connected account
+    console.log("hello");
+    const account = await stripe.accounts.create({
+      type: "express", // or "standard" if you want
+      // country: "CH",
+      // country: "US",
+      email: user.email,
+      // capabilities: {
+      //   card_payments: { requested: true },
+      //   transfers: { requested: true },
+      // },
+      // business_type: "individual",
+    });
+    console.log(account);
+    onboardingUrl = await createOnboardingLink(account.id);
+  }
 
   return {
     role: userData ? userData.role : user.role,

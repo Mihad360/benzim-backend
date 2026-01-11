@@ -30,13 +30,21 @@ export const Payment = async (metadata: IPaymentMetadata) => {
     if (!totalAmount || totalAmount <= 0) {
       throw new AppError(HttpStatus.BAD_REQUEST, "Invalid total amount");
     }
-    // 5️⃣ ADMIN FEE — 7%
-    const adminFeePercent = 0.07;
 
-    // Floating-point-safe calculation
-    const rawAdminFeeAmount = totalAmount * adminFeePercent;
-    const adminFeeAmount = roundToCent(rawAdminFeeAmount); // fixes floating issues
-    const adminFeeInCents = Math.round(adminFeeAmount * 100);
+    // 💰 FINANCIAL BREAKDOWN
+    const adminEarnRate = 0.07; // 7% admin commission
+
+    // Calculate admin earnings
+    const adminEarn = roundToCent(totalAmount * adminEarnRate);
+    const adminEarnInCents = Math.round(adminEarn * 100);
+
+    // Calculate cook earnings (what remains after admin cut)
+    const cookEarnings = roundToCent(totalAmount - adminEarn);
+    const cookEarningsRate = roundToCent(cookEarnings / totalAmount);
+
+    // Calculate percentage representations (for display/metadata)
+    const cookEarningsPercentage = roundToCent(cookEarningsRate * 100);
+    const adminEarnPercentage = roundToCent(adminEarnRate * 100);
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -44,7 +52,7 @@ export const Payment = async (metadata: IPaymentMetadata) => {
       line_items: [
         {
           price_data: {
-            currency: "usd",
+            currency: "chf",
             unit_amount: Math.round(totalAmount * 100), // Stripe expects cents
             product_data: {
               name: `Order #${order.orderNo}`,
@@ -57,21 +65,32 @@ export const Payment = async (metadata: IPaymentMetadata) => {
 
       payment_intent_data: {
         transfer_data: {
-          destination: cookUser.stripeAccountId, // 👈 send to cook automatically
+          destination: cookUser.stripeAccountId, // Transfer to cook
         },
-        application_fee_amount: adminFeeInCents, // 👈 admin cut
+        application_fee_amount: adminEarnInCents, // Admin's cut
       },
 
-      success_url: "http://localhost:5173/stripe/success",
+      success_url:
+        "http://localhost:5173/stripe/success?session_id={CHECKOUT_SESSION_ID}",
       cancel_url: "http://localhost:5000/stripe/cancel",
+
       metadata: {
+        // User & Order Info
         userId: userId.toString(),
         orderId: orderId.toString(),
         totalAmount: totalAmount.toString(),
-        adminFeeAmount: adminFeeInCents,
+        // Financial Breakdown (all in CHF decimal format)
+        totalPaidByCustomer: totalAmount.toString(),
+
+        cookEarnings: cookEarnings.toString(),
+        cookEarningsRate: cookEarningsRate.toString(),
+        cookEarningsPercentage: cookEarningsPercentage.toString(),
+
+        adminEarn: adminEarn.toString(),
+        adminEarnRate: adminEarnRate.toString(),
+        adminEarnPercentage: adminEarnPercentage.toString(),
       },
     });
-
     return session.url;
   } catch (error) {
     console.error("❌ Stripe payment creation error:", error);

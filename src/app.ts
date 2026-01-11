@@ -5,7 +5,7 @@ import globalErrorHandler from "./app/middlewares/globalErrorHandler";
 import notFound from "./app/middlewares/notFound";
 import router from "./app/routes";
 import cookieParser from "cookie-parser";
-import { stripeWebhookHandler } from "./app/utils/STRIPE/webhook";
+import { stripeConnectedWebhookHandler, stripeWebhookHandler } from "./app/utils/STRIPE/webhook";
 import { logger, logHttpRequests } from "./app/utils/logger";
 
 const app: Application = express();
@@ -14,11 +14,16 @@ const app: Application = express();
 app.post(
   "/stripe/webhook",
   express.raw({ type: "application/json" }),
-  (req, res, next) => {
-    console.log("Raw body:", req.body.toString()); // should be raw JSON string
-    next();
-  },
+  // (req, res, next) => {
+  //   console.log("Raw body:", req.body.toString()); // should be raw JSON string
+  //   next();
+  // },
   stripeWebhookHandler,
+);
+app.post(
+  "/stripe/connected-webhook",
+  express.raw({ type: "application/json" }),
+  stripeConnectedWebhookHandler,
 );
 
 // 🔴 Now add other middleware AFTER the webhook route
