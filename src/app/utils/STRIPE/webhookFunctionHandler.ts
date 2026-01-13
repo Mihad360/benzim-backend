@@ -8,7 +8,7 @@ export const handleCheckoutSessionCompleted = async (
   session: Stripe.Checkout.Session,
 ) => {
   const { metadata } = session;
-
+  console.log(metadata);
   if (!metadata) {
     throw new AppError(HttpStatus.NOT_FOUND, "Metadata not found");
   }
@@ -31,7 +31,7 @@ export const handleCheckoutSessionCompleted = async (
   // 2️⃣ Create earning payload from metadata
   const earningPayload = {
     orderId: metadata.orderId,
-
+    orderNo: metadata.orderNo,
     totalPaidByCustomer: Number(metadata.totalPaidByCustomer),
 
     cookEarnings: Number(metadata.cookEarnings),

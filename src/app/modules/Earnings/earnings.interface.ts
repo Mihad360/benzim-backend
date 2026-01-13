@@ -1,6 +1,6 @@
 export interface IEarning {
   orderId: string;
-
+  orderNo: string;
   // What customer paid
   totalPaidByCustomer: number;
 

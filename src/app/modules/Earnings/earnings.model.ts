@@ -6,32 +6,30 @@ const earningSchema = new Schema<IEarning>(
     orderId: {
       type: String,
       required: true,
-      index: true,
+    },
+    orderNo: {
+      type: String,
+      required: true,
     },
 
     totalPaidByCustomer: {
       type: Number,
       required: true,
-      min: 0,
     },
 
     cookEarnings: {
       type: Number,
       required: true,
-      min: 0,
     },
 
     cookEarningsRate: {
       type: Number,
       required: true,
-      min: 0,
-      max: 1,
     },
 
     adminEarn: {
       type: Number,
       required: true,
-      min: 0,
     },
 
     adminEarnRate: {

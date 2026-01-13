@@ -19,6 +19,7 @@ import { reviewRoutes } from "../modules/Review/review.route";
 import { cardRoutes } from "../modules/Card/card.route";
 import { conversationRoutes } from "../modules/Conversation/conversation.route";
 import { favouriteRoutes } from "../modules/Favourite/favourite.route";
+import { earningRoutes } from "../modules/Earnings/earnings.route";
 
 const router = Router();
 
@@ -102,6 +103,10 @@ const moduleRoutes = [
   {
     path: "/favorites",
     route: favouriteRoutes,
+  },
+  {
+    path: "/earnings",
+    route: earningRoutes,
   },
 ];
 

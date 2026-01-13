@@ -78,6 +78,7 @@ export const Payment = async (metadata: IPaymentMetadata) => {
         // User & Order Info
         userId: userId.toString(),
         orderId: orderId.toString(),
+        orderNo: order.orderNo.toString(),
         totalAmount: totalAmount.toString(),
         // Financial Breakdown (all in CHF decimal format)
         totalPaidByCustomer: totalAmount.toString(),
