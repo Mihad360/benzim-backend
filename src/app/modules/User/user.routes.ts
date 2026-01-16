@@ -25,5 +25,6 @@ router.patch(
   },
   userControllers.editUserProfile,
 );
+router.delete("/:id", userControllers.removeUser);
 
 export const userRoutes = router;

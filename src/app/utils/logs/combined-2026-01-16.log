@@ -327,3 +327,71 @@
 {"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/earnings/dashboard-stats?year=2026 ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:36:50"}
 {"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/earnings/dashboard-stats ⏱️ Response Time: 606 ms","size":0,"timestamp":"16-01-2026 15:36:50"}
 {"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/earnings/dashboard-stats?year=2026 ⏱️ Response Time: 696 ms","size":0,"timestamp":"16-01-2026 15:36:51"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 4 ms","size":"0","timestamp":"16-01-2026 15:39:57"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 381 ms","size":0,"timestamp":"16-01-2026 15:39:57"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/earnings/dashboard-stats ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:39:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 384 ms","size":0,"timestamp":"16-01-2026 15:39:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/earnings/dashboard-stats?year=2026 ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:39:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/earnings/dashboard-stats ⏱️ Response Time: 555 ms","size":0,"timestamp":"16-01-2026 15:39:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/earnings/dashboard-stats?year=2026 ⏱️ Response Time: 531 ms","size":0,"timestamp":"16-01-2026 15:39:59"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/cook-verify/cook-approvals ⏱️ Response Time: 0 ms","size":"0","timestamp":"16-01-2026 15:39:59"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/cook-verify/cook-approvals ⏱️ Response Time: 271 ms","size":0,"timestamp":"16-01-2026 15:39:59"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 5 ms","size":"0","timestamp":"16-01-2026 15:45:42"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 398 ms","size":0,"timestamp":"16-01-2026 15:45:42"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:47:23"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 377 ms","size":0,"timestamp":"16-01-2026 15:47:23"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:47:39"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 373 ms","size":0,"timestamp":"16-01-2026 15:47:39"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:48:21"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 355 ms","size":0,"timestamp":"16-01-2026 15:48:22"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/695a3243c72c170cfabc2d50 ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:48:26"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 DELETE ❌ 404 ⚠️ /api/v1/users/695a3243c72c170cfabc2d50 ⏱️ Response Time: 3 ms","size":"57","timestamp":"16-01-2026 15:48:26"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 363 ms","size":0,"timestamp":"16-01-2026 15:48:26"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/695a3243c72c170cfabc2d50 ⏱️ Response Time: 5 ms","size":"0","timestamp":"16-01-2026 15:54:55"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 DELETE ❌ 404 ⚠️ /api/v1/users/695a3243c72c170cfabc2d50 ⏱️ Response Time: 7 ms","size":"57","timestamp":"16-01-2026 15:54:55"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:54:55"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 767 ms","size":0,"timestamp":"16-01-2026 15:54:56"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/[object%20Object] ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:55:52"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 DELETE ❌ 404 ⚠️ /api/v1/users/[object%20Object] ⏱️ Response Time: 3 ms","size":"57","timestamp":"16-01-2026 15:55:52"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:55:52"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 374 ms","size":0,"timestamp":"16-01-2026 15:55:53"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 2 ms","size":"0","timestamp":"16-01-2026 15:55:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 399 ms","size":0,"timestamp":"16-01-2026 15:55:58"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/[object%20Object] ⏱️ Response Time: 2 ms","size":"0","timestamp":"16-01-2026 15:56:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 DELETE ❌ 404 ⚠️ /api/v1/users/[object%20Object] ⏱️ Response Time: 1 ms","size":"57","timestamp":"16-01-2026 15:56:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 0 ms","size":"0","timestamp":"16-01-2026 15:56:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 397 ms","size":0,"timestamp":"16-01-2026 15:56:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:57:30"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 405 ms","size":0,"timestamp":"16-01-2026 15:57:30"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/695a3243c72c170cfabc2d50 ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 15:57:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 DELETE ❌ 404 ⚠️ /api/v1/users/695a3243c72c170cfabc2d50 ⏱️ Response Time: 4 ms","size":"57","timestamp":"16-01-2026 15:57:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 370 ms","size":0,"timestamp":"16-01-2026 15:57:34"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 11 ms","size":"0","timestamp":"16-01-2026 16:00:44"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 458 ms","size":0,"timestamp":"16-01-2026 16:00:45"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/695a3243c72c170cfabc2d50 ⏱️ Response Time: 3 ms","size":"0","timestamp":"16-01-2026 16:00:49"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 DELETE ❌ 404 ⚠️ /api/v1/users/695a3243c72c170cfabc2d50 ⏱️ Response Time: 6 ms","size":"57","timestamp":"16-01-2026 16:00:49"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 16:00:49"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 465 ms","size":0,"timestamp":"16-01-2026 16:00:49"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 8 ms","size":"0","timestamp":"16-01-2026 16:05:29"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 456 ms","size":0,"timestamp":"16-01-2026 16:05:29"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/695a3243c72c170cfabc2d50 ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 16:05:33"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 DELETE ❌ 200 🎉 /api/v1/users/695a3243c72c170cfabc2d50 ⏱️ Response Time: 198 ms","size":"747","timestamp":"16-01-2026 16:05:33"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/ ⏱️ Response Time: 361 ms","size":"7512","timestamp":"16-01-2026 16:05:33"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 16:06:14"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 399 ms","size":0,"timestamp":"16-01-2026 16:06:15"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/69524315180330f546bf4ea1 ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 16:06:19"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 DELETE ❌ 200 🎉 /api/v1/users/69524315180330f546bf4ea1 ⏱️ Response Time: 184 ms","size":"895","timestamp":"16-01-2026 16:06:19"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 16:06:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/ ⏱️ Response Time: 375 ms","size":"7393","timestamp":"16-01-2026 16:06:20"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 2 ms","size":"0","timestamp":"16-01-2026 16:06:42"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 419 ms","size":0,"timestamp":"16-01-2026 16:06:42"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/693a5a3ac6d160fcf843b7ea ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 16:06:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 DELETE ❌ 200 🎉 /api/v1/users/693a5a3ac6d160fcf843b7ea ⏱️ Response Time: 200 ms","size":"746","timestamp":"16-01-2026 16:06:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 0 ms","size":"0","timestamp":"16-01-2026 16:06:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/ ⏱️ Response Time: 400 ms","size":"7394","timestamp":"16-01-2026 16:06:47"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/earnings/dashboard-stats ⏱️ Response Time: 2 ms","size":"0","timestamp":"16-01-2026 16:06:54"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/users/ ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 16:06:54"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 304 ❗ /api/v1/users/ ⏱️ Response Time: 356 ms","size":0,"timestamp":"16-01-2026 16:06:54"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 OPTIONS Unknown 😢☹️ 204 🎉 /api/v1/earnings/dashboard-stats?year=2026 ⏱️ Response Time: 1 ms","size":"0","timestamp":"16-01-2026 16:06:54"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/earnings/dashboard-stats ⏱️ Response Time: 542 ms","size":"516","timestamp":"16-01-2026 16:06:54"}
+{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/earnings/dashboard-stats?year=2026 ⏱️ Response Time: 525 ms","size":"516","timestamp":"16-01-2026 16:06:55"}

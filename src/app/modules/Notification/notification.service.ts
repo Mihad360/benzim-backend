@@ -1,23 +1,26 @@
 import HttpStatus from "http-status";
-import mongoose from "mongoose";
+import { ClientSession } from "mongoose";
 import { INotification } from "./notification.interface";
 import AppError from "../../erros/AppError";
 import { NotificationModel } from "./notification.model";
 
-export const createAdminNotification = async (
+export const createNotification = async (
   payload: INotification,
-  session?: mongoose.ClientSession,
+  session?: ClientSession, // Typing session with Mongoose ClientSession
 ) => {
   try {
     if (!payload) {
       throw new AppError(HttpStatus.NOT_FOUND, "Response not found");
     }
 
-    // Use session if provided
+    // Create notification with session to ensure it's part of the transaction
     const sendNot = await NotificationModel.create([payload], { session });
 
-    if (!sendNot || sendNot.length === 0) {
-      throw new AppError(HttpStatus.BAD_REQUEST, "Notification create failed");
+    if (!sendNot) {
+      throw new AppError(
+        HttpStatus.BAD_REQUEST,
+        "Notification creation failed",
+      );
     }
 
     return sendNot[0];

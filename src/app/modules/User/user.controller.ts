@@ -56,9 +56,23 @@ const editUserProfile = catchAsync(async (req, res) => {
   });
 });
 
+const removeUser = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  const result = await userServices.removeUser(id);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "User edit succesfully",
+    data: result,
+  });
+});
+
 export const userControllers = {
   editUserProfile,
   getMe,
   trackPagesUpdate,
   getAllUsers,
+  removeUser,
 };

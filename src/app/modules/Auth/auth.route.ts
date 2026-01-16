@@ -25,6 +25,6 @@ router.post(
   auth("admin", "user", "cook"),
   authControllers.changePassword,
 );
-router.delete("/:email", authControllers.deleteUser);
+// router.delete("/:email", authControllers.deleteUser);
 
 export const authRoutes = router;

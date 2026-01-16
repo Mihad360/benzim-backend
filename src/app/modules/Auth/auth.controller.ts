@@ -118,17 +118,17 @@ const getUsers = catchAsync(async (req, res) => {
   });
 });
 
-const deleteUser = catchAsync(async (req, res) => {
-  const email = req.params.email;
-  const result = await authServices.deleteUser(email);
+// const deleteUser = catchAsync(async (req, res) => {
+//   const email = req.params.email;
+//   const result = await authServices.deleteUser(email);
 
-  sendResponse(res, {
-    statusCode: HttpStatus.OK,
-    success: true,
-    message: "Password reset email sent successfully",
-    data: result,
-  });
-});
+//   sendResponse(res, {
+//     statusCode: HttpStatus.OK,
+//     success: true,
+//     message: "Password reset email sent successfully",
+//     data: result,
+//   });
+// });
 
 const createStripeDashboard = catchAsync(async (req, res) => {
   const id = req.params.userId;
@@ -150,7 +150,7 @@ export const authControllers = {
   changePassword,
   verifyOtp,
   resendOtp,
-  deleteUser,
+  // deleteUser,
   getUsers,
   createStripeDashboard,
 };
