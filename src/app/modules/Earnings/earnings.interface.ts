@@ -12,7 +12,7 @@ export interface IEarning {
   adminEarn: number;
   adminEarnRate: number; // e.g., 0.07 (7%)
 
-  date: Date;
+  date: string;
   status: "pending" | "completed" | "failed";
   isDeleted: boolean;
 }

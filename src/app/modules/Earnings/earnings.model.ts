@@ -38,8 +38,7 @@ const earningSchema = new Schema<IEarning>(
     },
 
     date: {
-      type: Date,
-      default: Date.now,
+      type: String,
     },
 
     status: {

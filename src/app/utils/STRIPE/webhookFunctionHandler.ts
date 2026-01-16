@@ -3,6 +3,7 @@ import Stripe from "stripe";
 import { PaymentModel } from "../../modules/Payment/payment.model";
 import { EarningModel } from "../../modules/Earnings/earnings.model";
 import AppError from "../../erros/AppError";
+import dayjs from "dayjs";
 
 export const handleCheckoutSessionCompleted = async (
   session: Stripe.Checkout.Session,
@@ -40,7 +41,7 @@ export const handleCheckoutSessionCompleted = async (
     adminEarn: Number(metadata.adminEarn),
     adminEarnRate: Number(metadata.adminEarnRate),
 
-    date: new Date(),
+    date: dayjs().format("YYYY-MM-DD"),
     status: payment.paymentStatus === "completed" ? "completed" : "failed",
   };
 

@@ -15,6 +15,19 @@ const getEarnings = catchAsync(async (req, res) => {
   });
 });
 
+const getDashboardStats = catchAsync(async (req, res) => {
+  const year = Number(req.query.year);
+  const result = await earningServices.getDashboardStats(year);
+
+  sendResponse(res, {
+    statusCode: HttpStatus.OK,
+    success: true,
+    message: "account created successfully",
+    data: result,
+  });
+});
+
 export const earningControllers = {
   getEarnings,
+  getDashboardStats,
 };
