@@ -4,11 +4,15 @@ import { IEarning } from "./earnings.interface";
 const earningSchema = new Schema<IEarning>(
   {
     orderId: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
     },
     orderNo: {
       type: String,
+      required: true,
+    },
+    cookId: {
+      type: Schema.Types.ObjectId,
       required: true,
     },
 

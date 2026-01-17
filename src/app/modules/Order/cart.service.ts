@@ -17,65 +17,109 @@ export const orderSearchTerms: string[] = [
   "orderId", // Added orderId to search terms
 ];
 
+import mongoose from "mongoose";
+
 const addToCartMeal = async (
   mealId: string,
   payload: ICart,
   user: JwtPayload,
 ) => {
-  const userId = new Types.ObjectId(user.user);
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  // 🧩 1️⃣ Validate user
-  const isUserExist = await UserModel.findById(userId);
-  if (!isUserExist) {
-    throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+  try {
+    const userId = new Types.ObjectId(user.user);
+    const quantity = payload.quantity || 1;
+
+    // 🧩 1️⃣ Validate user
+    const isUserExist = await UserModel.findById(userId).session(session);
+    if (!isUserExist) {
+      throw new AppError(HttpStatus.NOT_FOUND, "User not found");
+    }
+
+    // 🧩 2️⃣ Validate meal
+    const meal = await MealModel.findById(mealId).session(session);
+    if (!meal) {
+      throw new AppError(HttpStatus.NOT_FOUND, "Meal not found");
+    }
+
+    // 🧩 3️⃣ Validate cook
+    const cook = await CookProfileModel.findById(meal.cookId).session(session);
+    if (!cook) {
+      throw new AppError(HttpStatus.NOT_FOUND, "Cook not found for this meal");
+    }
+
+    // 🧩 3.5️⃣ Single-cook cart validation
+    const cartFromAnotherCook = await CartModel.findOne({
+      userId: isUserExist._id,
+      cookId: { $ne: cook._id },
+      isDeleted: false,
+    }).session(session);
+
+    if (cartFromAnotherCook) {
+      throw new AppError(
+        HttpStatus.BAD_REQUEST,
+        "You can only order meals from one cook at a time. Please clear your cart first.",
+      );
+    }
+
+    // 🧩 4️⃣ Update existing cart item (atomic)
+    const updatedCart = await CartModel.findOneAndUpdate(
+      {
+        userId: isUserExist._id,
+        mealId: meal._id,
+        cookId: cook._id,
+        isDeleted: false,
+      },
+      {
+        $inc: { quantity },
+        $set: {
+          totalPrice: meal.price * quantity,
+        },
+      },
+      {
+        new: true,
+        session,
+      },
+    );
+
+    if (updatedCart) {
+      await session.commitTransaction();
+      session.endSession();
+      return updatedCart;
+    }
+
+    // 🆕 5️⃣ Create new cart item
+    const orderId = await generateOrderId();
+
+    const [newOrder] = await CartModel.create(
+      [
+        {
+          orderId,
+          userId: isUserExist._id,
+          cookId: cook._id,
+          mealId: meal._id,
+          quantity,
+          totalPrice: meal.price * quantity,
+          status: "pending",
+        },
+      ],
+      { session },
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+    return newOrder;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
   }
-
-  // 🧩 2️⃣ Validate meal
-  const meal = await MealModel.findById(mealId);
-  if (!meal) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Meal not found");
-  }
-
-  // 🧩 3️⃣ Find cook
-  const cook = await CookProfileModel.findById(meal.cookId);
-  if (!cook) {
-    throw new AppError(HttpStatus.NOT_FOUND, "Cook not found for this meal");
-  }
-
-  // 🧩 4️⃣ Check if this user already has an active order for the same meal
-  const existingOrder = await CartModel.findOne({
-    userId: isUserExist._id,
-    mealId: meal._id,
-    cookId: cook._id,
-    isDeleted: false,
-  });
-
-  if (existingOrder) {
-    // 🔄 Update existing order
-    existingOrder.quantity += payload.quantity || 1;
-    existingOrder.totalPrice = meal.price * existingOrder.quantity;
-    await existingOrder.save();
-    return existingOrder;
-  }
-
-  // 🆕 Otherwise, create a new order
-  const orderId = await generateOrderId();
-  const newOrder = await CartModel.create({
-    orderId,
-    userId: isUserExist._id,
-    cookId: cook._id,
-    mealId: meal._id,
-    quantity: payload.quantity || 1,
-    totalPrice: meal.price * (payload.quantity || 1),
-    status: "pending", // Add default status
-  });
-
-  return newOrder;
 };
 
 const excludeAoRder = async (cartId: string, user: JwtPayload) => {
   const userId = new Types.ObjectId(user.user);
-  console.log(cartId);
+  // console.log(cartId);
   // 1️⃣ Validate user
   const userExist = await UserModel.findById(userId);
   if (!userExist) {

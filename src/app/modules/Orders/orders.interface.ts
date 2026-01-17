@@ -3,9 +3,9 @@ import { IMeal } from "../Meal/meal.interface";
 
 export interface IOrders {
   userId: Types.ObjectId;
-  cookId: Types.ObjectId[];
+  cookId: Types.ObjectId;
   cartIds: Types.ObjectId[]; // references Meal documents
-  conversationId?: Types.ObjectId[];
+  conversationId?: Types.ObjectId;
   totalAmount: number;
   tip?: number;
   discountedAmount: number;

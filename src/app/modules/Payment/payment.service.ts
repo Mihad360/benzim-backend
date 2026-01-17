@@ -26,7 +26,7 @@ export const createPayment = async (
         Number(order.stripeFixedFee),
     );
 
-    const finalAmount = roundToCent(order.totalAmount + stripeFee);
+    const finalAmount = order.totalAmount;
 
     console.log("💰 Base Amount:", order.totalAmount);
     console.log("💸 Stripe Fee:", stripeFee);

@@ -33,6 +33,7 @@ export const handleCheckoutSessionCompleted = async (
   const earningPayload = {
     orderId: metadata.orderId,
     orderNo: metadata.orderNo,
+    cookId: metadata.cookId,
     totalPaidByCustomer: Number(metadata.totalPaidByCustomer),
 
     cookEarnings: Number(metadata.cookEarnings),

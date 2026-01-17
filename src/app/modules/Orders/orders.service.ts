@@ -20,7 +20,7 @@ export const roundToCent = (value: number) => {
 const createOrder = async (payload: IOrders, user: JwtPayload) => {
   const session = await mongoose.startSession();
   session.startTransaction();
-  console.log(payload.cartIds);
+
   try {
     const userId = new Types.ObjectId(user.user);
 
@@ -28,164 +28,139 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
       throw new AppError(HttpStatus.BAD_REQUEST, "No cartIds provided");
     }
 
-    // Fetch carts (must belong to user)
+    // Fetch carts
     const carts = await CartModel.find(
       {
         _id: { $in: payload.cartIds },
         userId,
         isDeleted: false,
+        status: "pending",
       },
       null,
       { session },
     )
-      .populate({ path: "cookId", select: "cookName" })
-      .populate({ path: "mealId", select: "availablePortion" });
+      .populate({ path: "cookId", select: "userId cookName" })
+      .populate({ path: "mealId", select: "availablePortion name" });
 
-    if (!carts || carts.length === 0) {
+    if (!carts.length) {
       throw new AppError(HttpStatus.NOT_FOUND, "No valid carts found");
     }
 
-    // Calculate total amount
-    const totalAmount = carts.reduce((acc, cart) => acc + cart.totalPrice, 0);
+    // ===============================
+    // 🔒 Ensure all carts belong to ONE cook
+    // ===============================
+    const firstCookId = carts[0].cookId._id.toString();
+
+    const hasDifferentCook = carts.some(
+      (cart) => cart.cookId._id.toString() !== firstCookId,
+    );
+
+    if (hasDifferentCook) {
+      throw new AppError(
+        HttpStatus.BAD_REQUEST,
+        "You cannot place an order from multiple cooks",
+      );
+    }
+
+    const cookId = new mongoose.Types.ObjectId(firstCookId);
+
+    // ===============================
+    // 💬 Create / Find conversation
+    // ===============================
+    let conversation = await ConversationModel.findOne(
+      {
+        cookId: (carts[0].cookId as any).userId,
+        userId,
+        isDeleted: false,
+      },
+      null,
+      { session },
+    );
+
+    if (!conversation) {
+      const conversationData = await ConversationModel.create(
+        [
+          {
+            cookId: (carts[0].cookId as any).userId,
+            userId,
+          },
+        ],
+        { session },
+      );
+
+      conversation = conversationData[0];
+    }
+
+    // ===============================
+    // 💰 Calculate amounts
+    // ===============================
+    const totalAmount = carts?.reduce((acc, cart) => acc + cart.totalPrice, 0);
 
     const tip = payload.tip ?? 0;
     const orderNo = await generateOrderNo();
-
+    const STRIPE_FEE_PERCENT = 2.9;
+    // 🔥 Calculate Stripe fee (cash)
+    const stripeFeeCash = (totalAmount * STRIPE_FEE_PERCENT) / 100;
+    // 🔥 Final payable amount
+    const payableAmount = totalAmount + stripeFeeCash + tip;
     const statusHistory = [{ status: "new", changedAt: new Date() }];
-
-    // ================================
-    // Extract unique cook IDs from carts
-    // ================================
-    const uniqueCookIds = [
-      ...new Set(
-        carts
-          .map(
-            (cart) => cart.cookId?._id?.toString() || cart.cookId?.toString(),
-          )
-          .filter(Boolean),
-      ),
-    ].map((id) => new mongoose.Types.ObjectId(id));
-
     // ===============================
-    // 💬 Create/Find conversations for all unique cooks
+    // 🧾 Create order
     // ===============================
-    const conversationIds: mongoose.Types.ObjectId[] = [];
-
-    if (uniqueCookIds.length > 0) {
-      for (const cookId of uniqueCookIds) {
-        const cookProfile = await CookProfileModel.findById(cookId, null, {
-          session,
-        });
-
-        if (cookProfile) {
-          // Check if conversation already exists
-          let conversation = await ConversationModel.findOne(
-            {
-              cookId: cookProfile.userId,
-              userId,
-              isDeleted: false,
-            },
-            null,
-            { session },
-          );
-
-          // Create conversation if it doesn't exist
-          if (!conversation) {
-            const conversationData = await ConversationModel.create(
-              [
-                {
-                  cookId: cookProfile.userId,
-                  userId,
-                },
-              ],
-              { session },
-            );
-
-            if (!conversationData?.length) {
-              throw new AppError(
-                HttpStatus.BAD_REQUEST,
-                "Failed to create conversation",
-              );
-            }
-
-            conversation = conversationData[0];
-          }
-
-          // Collect conversation ID
-          conversationIds.push(conversation._id);
-        }
-      }
-    }
-
-    // ================================
-    // Create order with conversation IDs
-    // ================================
     const orderData: IOrders = {
       ...payload,
       userId,
-      cookId: uniqueCookIds, // Array of cook ObjectIds
-      conversationId: conversationIds, // Array of conversation ObjectIds
-      totalAmount: roundToCent(totalAmount + tip),
+      cookId, // ✅ single cookId
+      conversationId: conversation._id, // ✅ single conversation
+      totalAmount: roundToCent(payableAmount),
       tip: Number(tip),
       orderNo,
       status: "new",
       statusHistory,
     };
 
-    // Create order
-    const newOrder = await OrderModel.create([orderData], { session });
+    const [newOrder] = await OrderModel.create([orderData], { session });
 
     // ===============================
     // 🔥 Validate meal availability
     // ===============================
-    const insufficientMeals: string[] = [];
-
     for (const cart of carts) {
       const meal: any = cart.mealId;
       const orderedQty = cart.quantity || 1;
 
-      if (!meal) {
-        insufficientMeals.push("Unknown meal");
-        continue;
-      }
-
-      if (meal.availablePortion < orderedQty) {
-        insufficientMeals.push(
-          `${meal.name || "This meal"} (available: ${meal.availablePortion}, requested: ${orderedQty})`,
+      if (!meal || meal.availablePortion < orderedQty) {
+        throw new AppError(
+          HttpStatus.BAD_REQUEST,
+          `${meal?.name || "Meal"} is not available in requested quantity`,
         );
       }
     }
 
-    // 🚫 If any meal is insufficient, block order
-    if (insufficientMeals.length > 0) {
-      throw new AppError(
-        HttpStatus.BAD_REQUEST,
-        `Some meals are not available in the requested quantity: ${insufficientMeals.join(
-          ", ",
-        )}`,
-      );
-    }
-
     // ===============================
-    // 🔥 Update Meal availablePortion
+    // 🔥 Update meal stock
     // ===============================
     for (const cart of carts) {
-      const orderedQty = cart.quantity || 1;
-
       await MealModel.findByIdAndUpdate(
         (cart.mealId as any)._id,
-        { $inc: { availablePortion: -orderedQty } },
+        { $inc: { availablePortion: -(cart.quantity || 1) } },
         { session },
       );
     }
 
-    // ✅ Commit transaction
+    // ===============================
+    // 🧹 Soft delete carts after order
+    // ===============================
+    await CartModel.updateMany(
+      { _id: { $in: payload.cartIds } },
+      { isDeleted: true },
+      { session },
+    );
+
     await session.commitTransaction();
     session.endSession();
 
-    return newOrder[0];
+    return newOrder;
   } catch (error) {
-    // ❌ Rollback everything
     await session.abortTransaction();
     session.endSession();
     throw error;

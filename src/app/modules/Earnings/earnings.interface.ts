@@ -1,6 +1,9 @@
+import { Types } from "mongoose";
+
 export interface IEarning {
-  orderId: string;
+  orderId: Types.ObjectId;
   orderNo: string;
+  cookId: Types.ObjectId;
   // What customer paid
   totalPaidByCustomer: number;
 

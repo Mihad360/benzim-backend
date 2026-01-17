@@ -5,6 +5,11 @@ import auth from "../../middlewares/auth";
 const router = express.Router();
 
 router.get(
+  "/my-earnings",
+  auth("admin", "cook"),
+  earningControllers.getMyEarnings,
+);
+router.get(
   "/dashboard-stats",
   auth("admin"),
   earningControllers.getDashboardStats,

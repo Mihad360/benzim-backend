@@ -4,7 +4,8 @@ import AppError from "../../erros/AppError";
 import { EarningModel } from "./earnings.model";
 import { UserModel } from "../User/user.model";
 import { CookProfileModel } from "../Cook/cook.model";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
+import { JwtPayload } from "../../interface/global";
 
 const searchEarnings = ["orderNo", "status"];
 
@@ -123,7 +124,52 @@ const getDashboardStats = async (year?: number) => {
   }
 };
 
+const getMyEarnings = async (user: JwtPayload) => {
+  const userId = new Types.ObjectId(user.user);
+  // Find the user to check role
+  const userDoc = await UserModel.findById(userId);
+
+  if (!userDoc) {
+    throw new Error("User not found");
+  }
+
+  if (userDoc.role === "cook") {
+    // Aggregate earnings for this cook
+    const result = await EarningModel.aggregate([
+      {
+        $match: {
+          cookId: userId,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalEarnings: { $sum: "$cookEarnings" },
+        },
+      },
+    ]);
+
+    const cookEarn = result.length > 0 ? result[0].totalEarnings : 0;
+    return { cookEarn: cookEarn };
+  } else if (userDoc.role === "admin") {
+    // Aggregate all admin earnings (no cookId match)
+    const result = await EarningModel.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalEarnings: { $sum: "$adminEarn" },
+        },
+      },
+    ]);
+    const adminEarn = result.length > 0 ? result[0].totalEarnings : 0;
+    return { adminEarn: adminEarn };
+  } else {
+    throw new Error("Unauthorized role to view earnings");
+  }
+};
+
 export const earningServices = {
   getEarnings,
   getDashboardStats,
+  getMyEarnings,
 };
