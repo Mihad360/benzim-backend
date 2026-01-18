@@ -40,7 +40,7 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
       { session },
     )
       .populate({ path: "cookId", select: "userId cookName" })
-      .populate({ path: "mealId", select: "availablePortion name" });
+      .populate({ path: "mealId", select: "availablePortion name price" }); // ✅ Added 'price'
 
     if (!carts.length) {
       throw new AppError(HttpStatus.NOT_FOUND, "No valid carts found");
@@ -92,18 +92,42 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
     }
 
     // ===============================
-    // 💰 Calculate amounts
+    // 💰 Calculate amounts - FIXED
     // ===============================
-    const totalAmount = carts?.reduce((acc, cart) => acc + cart.totalPrice, 0);
+    // ✅ Calculate total by multiplying each meal's price by its quantity
+    let totalAmount = 0;
+
+    carts.forEach((cart) => {
+      const mealPrice = (cart.mealId as any)?.price || 0;
+      const quantity = cart.quantity || 1;
+      const cartTotal = mealPrice * quantity;
+
+      totalAmount += cartTotal;
+
+      // Debug log
+      console.log(
+        `Cart: Meal=${(cart.mealId as any)?.name}, Price=${mealPrice}, Qty=${quantity}, Total=${cartTotal}`,
+      );
+    });
+
+    console.log(`Order Total (before fees): ${totalAmount}`);
 
     const tip = payload.tip ?? 0;
     const orderNo = await generateOrderNo();
     const STRIPE_FEE_PERCENT = 2.9;
+
     // 🔥 Calculate Stripe fee (cash)
     const stripeFeeCash = (totalAmount * STRIPE_FEE_PERCENT) / 100;
+
     // 🔥 Final payable amount
     const payableAmount = totalAmount + stripeFeeCash + tip;
+
+    console.log(
+      `Stripe Fee: ${stripeFeeCash}, Tip: ${tip}, Final Amount: ${payableAmount}`,
+    );
+
     const statusHistory = [{ status: "new", changedAt: new Date() }];
+
     // ===============================
     // 🧾 Create order
     // ===============================
@@ -113,6 +137,7 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
       cookId, // ✅ single cookId
       conversationId: conversation._id, // ✅ single conversation
       totalAmount: roundToCent(payableAmount),
+      stripeFee: roundToCent(stripeFeeCash),
       tip: Number(tip),
       orderNo,
       status: "new",
@@ -150,11 +175,11 @@ const createOrder = async (payload: IOrders, user: JwtPayload) => {
     // ===============================
     // 🧹 Soft delete carts after order
     // ===============================
-    await CartModel.updateMany(
-      { _id: { $in: payload.cartIds } },
-      { isDeleted: true },
-      { session },
-    );
+    // await CartModel.updateMany(
+    //   { _id: { $in: payload.cartIds } },
+    //   { status: true },
+    //   { session },
+    // );
 
     await session.commitTransaction();
     session.endSession();
@@ -359,14 +384,14 @@ const getEachOrder = async (orderId: string, user: JwtPayload) => {
   const order = await OrderModel.findOne({ _id: orderId })
     .populate({
       path: "cartIds",
-      select: "mealId quantity totalPrice",
+      select: "mealId quantity totalPrice stripeFee",
       populate: {
         path: "mealId",
         select: "mealName imageUrls pricePerPortion price description",
       },
     })
     .populate({
-      path: "cookId", // This is now an array
+      path: "cookId",
       select: "cookName profileImage rating _id",
     });
 
@@ -374,28 +399,30 @@ const getEachOrder = async (orderId: string, user: JwtPayload) => {
     throw new AppError(HttpStatus.NOT_FOUND, "Order not found");
   }
 
-  // Handle cookId as array
-  const cooks: any = order.cookId; // This is an array now
+  // Handle cookId as a single object (not an array)
+  const cook: any = order.cookId;
 
   const formattedOrder = {
     orderId: order._id,
     orderNo: order.orderNo,
     totalAmount: order.totalAmount,
+    stripeFee: order.stripeFee,
     tip: order.tip || 0,
-    conversationId: order.conversationId || [], // Array of conversation IDs
+    conversationId: order.conversationId || [],
     promoCode: order.promoCode || null,
     status: order.status,
     shipingAddress: order.shipingAddress,
     createdAt: order.createdAt,
 
-    // Map all cooks (now supporting multiple cooks)
-    cooks:
-      cooks?.map((cook: any) => ({
-        cookId: cook?._id,
-        cookName: cook?.cookName,
-        image: cook?.profileImage || null,
-        rating: cook?.rating || 0,
-      })) || [],
+    // Single cook object instead of array
+    cook: cook
+      ? {
+          cookId: cook._id,
+          cookName: cook.cookName,
+          image: cook.profileImage || null,
+          rating: cook.rating || 0,
+        }
+      : null,
 
     carts: order.cartIds.map((cart: any) => ({
       quantity: cart.quantity,

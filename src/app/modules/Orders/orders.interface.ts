@@ -10,6 +10,7 @@ export interface IOrders {
   tip?: number;
   discountedAmount: number;
   orderNo: string;
+  stripeFee: number;
   stripeFeePercentage: number;
   stripeFixedFee: number;
   status:

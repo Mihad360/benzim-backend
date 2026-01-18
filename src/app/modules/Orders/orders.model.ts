@@ -45,7 +45,7 @@ const PaymentSchema = new Schema<IOrders>(
     maxCompleted: {
       type: Number,
     },
-
+    stripeFee: { type: Number },
     // NEW STRIPE FEE FIELDS
     stripeFeePercentage: {
       type: Number,

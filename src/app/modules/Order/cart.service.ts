@@ -181,15 +181,14 @@ const getOrders = async (user: JwtPayload, query: Record<string, unknown>) => {
     orderQuery = CartModel.find({
       cookId: isCookExist._id,
       isDeleted: false,
-      status: { $nin: ["completed", "cancelled"] }, // ✅ Exclude completed and cancelled
+      status: { $nin: ["completed", "cancelled"] },
     })
       .populate({ path: "mealId", select: "imageUrls mealName price" })
       .populate({ path: "cookId", select: "rating" });
   } else if (isUserExist.role === "user") {
     orderQuery = CartModel.find({
       userId: isUserExist._id,
-      isDeleted: false,
-      status: { $nin: ["completed", "cancelled"] }, // ✅ Exclude completed and cancelled
+      status: { $nin: ["completed", "cancelled"] },
     })
       .populate({ path: "mealId", select: "imageUrls mealName price" })
       .populate({ path: "cookId", select: "rating" });
@@ -211,10 +210,41 @@ const getOrders = async (user: JwtPayload, query: Record<string, unknown>) => {
     throw new AppError(HttpStatus.NOT_FOUND, "Orders not found");
   }
 
-  const totalQuantity = result.reduce((sum, res) => sum + res.quantity, 0);
-  const totalPrice = result.reduce((sum, res) => sum + res.totalPrice, 0);
+  // ✅ Calculate totals for all carts
+  let totalQuantity = 0;
+  let totalPrice = 0;
 
-  return { meta, quantities: totalQuantity, totalPrice: totalPrice, result };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  result.forEach((cart: any) => {
+    const quantity = cart.quantity || 0;
+    const mealPrice = cart?.totalPrice || 0;
+
+    // Add quantity to total
+    totalQuantity += quantity;
+
+    // Calculate price for this cart and add to total
+    // Each cart's contribution = mealPrice × quantity
+    const cartTotal = mealPrice * quantity;
+    totalPrice += cartTotal;
+
+    // Debug log for each cart
+    console.log(
+      `Cart: Meal Price: ${mealPrice}, Quantity: ${quantity}, Cart Total: ${cartTotal}`,
+    );
+  });
+
+  console.log("Final Summary:", {
+    totalQuantity,
+    totalPrice,
+    numberOfCarts: result.length,
+  });
+
+  return {
+    meta,
+    quantities: totalQuantity,
+    totalPrice: totalPrice,
+    result,
+  };
 };
 
 const removeOrder = async (orderId: string) => {
