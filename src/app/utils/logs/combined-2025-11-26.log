@@ -1,8 +1,0 @@
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/payment/create-payment ⏱️ Response Time: 877 ms","size":"501","timestamp":"26-11-2025 10:10:39"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/payment/create-payment ⏱️ Response Time: 933 ms","size":"501","timestamp":"26-11-2025 10:43:57"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/payment/create-payment ⏱️ Response Time: 904 ms","size":"501","timestamp":"26-11-2025 10:45:18"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/payment/create-payment ⏱️ Response Time: 1856 ms","size":"501","timestamp":"26-11-2025 10:47:49"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 400 ⚠️ /api/v1/payment/create-payment ⏱️ Response Time: 1185 ms","size":"173","timestamp":"26-11-2025 10:57:16"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/payment/create-payment ⏱️ Response Time: 916 ms","size":"501","timestamp":"26-11-2025 11:08:12"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/payment/create-payment ⏱️ Response Time: 908 ms","size":"501","timestamp":"26-11-2025 11:16:12"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 400 ⚠️ /api/v1/payment/create-payment ⏱️ Response Time: 1158 ms","size":"173","timestamp":"26-11-2025 11:41:11"}

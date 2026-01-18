@@ -1,7 +1,0 @@
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 400 ⚠️ /api/v1/payment/create-payment ⏱️ Response Time: 1954 ms","size":"173","timestamp":"09-12-2025 08:57:56"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 538 ms","size":"3413","timestamp":"09-12-2025 08:58:17"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 532 ms","size":"3413","timestamp":"09-12-2025 08:58:26"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 846 ms","size":"3413","timestamp":"09-12-2025 11:17:32"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 819 ms","size":"3413","timestamp":"09-12-2025 11:19:31"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 719 ms","size":"3413","timestamp":"09-12-2025 11:20:09"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 500 🔥 /api/v1/auth/login ⏱️ Response Time: 756 ms","size":"3413","timestamp":"09-12-2025 11:20:21"}

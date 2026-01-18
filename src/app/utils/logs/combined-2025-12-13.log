@@ -1,5 +1,0 @@
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/freelance ⏱️ Response Time: 169 ms","size":"371","timestamp":"13-12-2025 14:31:49"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/hygiene-compliance/ ⏱️ Response Time: 161 ms","size":"66","timestamp":"13-12-2025 16:36:13"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/hygiene-compliance/ ⏱️ Response Time: 151 ms","size":"66","timestamp":"13-12-2025 16:36:19"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/hygiene-compliance/upload-pdf ⏱️ Response Time: 5348 ms","size":"453","timestamp":"13-12-2025 16:36:46"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/hygiene-compliance/ ⏱️ Response Time: 165 ms","size":"453","timestamp":"13-12-2025 16:36:59"}

@@ -1,6 +1,15 @@
+# Environment files
 .env
-node_modules
-dist
-'./uploads'
-'./src/app/builder'
-'./src/app/modules'
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Logs
+*.log
+src/app/utils/logs/
+
+# Uploads (runtime files)
+uploads/

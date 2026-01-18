@@ -1,5 +1,0 @@
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/conversation/ ⏱️ Response Time: 5 ms","size":"189","timestamp":"17-11-2025 10:05:13"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 404 ⚠️ /api/v1/conversation/ ⏱️ Response Time: 101 ms","size":"171","timestamp":"17-11-2025 10:06:22"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 404 ⚠️ /api/v1/order/recent-orders ⏱️ Response Time: 102 ms","size":"171","timestamp":"17-11-2025 11:16:20"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/order/recent-orders ⏱️ Response Time: 162 ms","size":"369","timestamp":"17-11-2025 11:16:53"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/order/recent-orders ⏱️ Response Time: 170 ms","size":"383","timestamp":"17-11-2025 11:21:45"}

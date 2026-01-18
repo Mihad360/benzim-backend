@@ -1,4 +1,0 @@
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/auth/stripe-dashboard/692834fdabc89e1d42f49aca ⏱️ Response Time: 792 ms","size":"197","timestamp":"02-12-2025 11:14:07"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 POST ✏️ 200 🎉 /api/v1/payment/create-payment ⏱️ Response Time: 2044 ms","size":"501","timestamp":"02-12-2025 14:51:48"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 401 ⚠️ /api/v1/users/me ⏱️ Response Time: 26 ms","size":"151","timestamp":"02-12-2025 15:18:07"}
-{"level":"info","message":"🖥️ IP: ::1 🌐 GET 🔍 200 🎉 /api/v1/users/me ⏱️ Response Time: 118 ms","size":"781","timestamp":"02-12-2025 15:18:18"}
