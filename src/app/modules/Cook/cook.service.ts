@@ -20,7 +20,7 @@ const becomeACook = async (
 ) => {
   const userId = new Types.ObjectId(user.user);
   const { profileImage, kitchenImages, certificates } = files;
-
+  console.log(files);
   // Check if the required images are provided
   if (!profileImage || !kitchenImages) {
     throw new AppError(HttpStatus.NOT_FOUND, "Images not found");
@@ -43,7 +43,7 @@ const becomeACook = async (
       "The User already has a cook profile",
     );
   }
-
+  console.log("helllllllllllllllllllll");
   // Start a session for MongoDB transaction
   const session = await mongoose.startSession();
 
@@ -70,16 +70,22 @@ const becomeACook = async (
 
     // Upload kitchen images to Cloudinary
     const certificatesUrls = [];
-    // eslint-disable-next-line prefer-const
-    for (let cer of certificates) {
-      const result = await sendFileToCloudinary(
-        cer.buffer,
-        cer.originalname,
-        cer.mimetype,
-      );
-      certificatesUrls.push(result.secure_url);
+    if (certificates.length > 0) {
+      // eslint-disable-next-line prefer-const
+      for (let cer of certificates) {
+        const result = await sendFileToCloudinary(
+          cer.buffer,
+          cer.originalname,
+          cer.mimetype,
+        );
+        certificatesUrls.push(result.secure_url);
+      }
     }
-
+    console.log(
+      "lksfdjlasfjalsjfslakfjslk",
+      kitchenImageUrls,
+      certificatesUrls,
+    );
     const address = await getAddressFromCoordinates(
       Number(cook.lat),
       Number(cook.long),
@@ -136,6 +142,7 @@ const becomeACook = async (
     // Abort the transaction if any operation fails
     await session.abortTransaction();
     session.endSession();
+    console.log(error);
     throw new AppError(HttpStatus.INTERNAL_SERVER_ERROR, "Transaction failed");
   }
 };
@@ -237,7 +244,6 @@ const cooksLocation = async (
   // user: JwtPayload,
   payload: { lat: number; long: number },
 ) => {
-
   const userLong = Number(payload.long);
   const userLat = Number(payload.lat);
 

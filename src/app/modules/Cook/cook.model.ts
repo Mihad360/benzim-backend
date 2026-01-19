@@ -45,6 +45,7 @@ const CookProfileSchema = new Schema<ICookProfile>(
     },
     certificates: {
       type: [String],
+      default: null,
     },
     approvedAt: {
       type: Date,

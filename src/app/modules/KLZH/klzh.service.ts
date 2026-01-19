@@ -105,7 +105,7 @@ const registerKlzh = async (file: Express.Multer.File, user: JwtPayload) => {
 
     await session.commitTransaction();
 
-    return klzhData[0];
+    return { klzh: klzhData[0], user: isUserKlzh };
   } catch (error) {
     console.error("Error registering KLZH:", error);
     await session.abortTransaction();

@@ -70,9 +70,8 @@ export const Payment = async (metadata: IPaymentMetadata) => {
         application_fee_amount: adminEarnInCents, // Admin's cut
       },
 
-      success_url:
-        "http://localhost:5173/stripe/success?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "http://localhost:5000/stripe/cancel",
+      success_url: "https://success-murex.vercel.app",
+      cancel_url: "https://failed-dun.vercel.app",
 
       metadata: {
         // User & Order Info

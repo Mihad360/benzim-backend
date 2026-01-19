@@ -1,13 +1,13 @@
+import { KLZHFormData } from "./klzh.interface";
 import { sendEmail } from "../../utils/sendEmail";
-import KLZHFormDataModel from "./klzh.model";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import jsPDF from "jspdf";
-import { KLZHFormData } from "./klzh.interface";
+import { KLZHModel } from "./klzh.model";
 
 export const generateUniqueBusinessNumber = async (): Promise<string> => {
   try {
     // Step 1: Find the last business number in the database (based on descending order)
-    const lastKLZH = await KLZHFormDataModel.findOne()
+    const lastKLZH = await KLZHModel.findOne()
       .sort({ betriebsnummer: -1 })
       .exec();
 
